@@ -244,6 +244,7 @@ export default function App() {
 
         .hire { border:1px solid #E3E3E8; border-radius:14px; padding:20px 18px; }
         .hire .ph { width:74px; height:74px; border-radius:50%; margin:0 auto 14px; }
+        .hire-logo { width:74px; height:74px; border-radius:50%; object-fit:contain; margin:0 auto 14px; display:block; }
         .hire p { font-size:13px; line-height:1.5; color:#3B3B42; margin:0 0 15px; }
 
         .main-title { font-size:13px; color:#8A8A92; margin:0 0 18px; }
@@ -338,7 +339,7 @@ export default function App() {
               </select>
             </div>
             <div className="hire">
-              <Ph variant="prof" />
+              <img className="hire-logo" src="./project-alpaca-logo.png" alt="Project Alpaca" />
               <p>Want to hire one of our Alpacees? Reach out to us and we'll make an introduction!</p>
               <button className="btn">Contact <Arrow /></button>
             </div>
