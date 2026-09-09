@@ -1,4 +1,4 @@
-# Project Alpaca — Alpacee Directory
+# Project Alpaca
 
 Meet the **Alpacees**: the students and alumni of Project Alpaca.
 
