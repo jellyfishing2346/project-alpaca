@@ -14,7 +14,7 @@ export const SHEET_CSV_URL = "PASTE_PUBLISHED_CSV_URL_HERE";
 //    Tweak the right-hand strings if your headers differ.
 const COLUMN_MAP = {
   name:      "Name",
-  cohort:    "Cohort Name",
+  cohort:    "Cohort",
   school:    "School",
   major:     "Major",
   grad:      "Graduation Year",
@@ -24,6 +24,8 @@ const COLUMN_MAP = {
   portfolio: "Website / Portfolio",
   quote:     "Testimonial about Project Alpaca",
   skills:    "Skills",
+  photo:     "Photo link",
+  bio:       "Bio",
 };
 // NOTE: "Email", "race", "immigrant", "first_gen_college" are deliberately absent above.
 
@@ -60,6 +62,32 @@ const clean = (v) => {
   return s && s.toUpperCase() !== "N/A" ? s : "";
 };
 
+// Google Drive share links don't embed in <img>. Convert to a direct-image URL.
+const toDirectImage = (url) => {
+  if (!url) return "";
+  const m = url.match(/\/file\/d\/([-\w]+)/) || url.match(/[?&]id=([-\w]+)/);
+  return m ? `https://lh3.googleusercontent.com/d/${m[1]}` : url;
+};
+
+// Skills cells are often free-written ("Programming Languages: Python, Java; AI: PyTorch").
+// Normalize into clean short tags.
+const splitList = (v) => {
+  if (!v) return [];
+  return v
+    // treat newlines, bullets, slashes-between-words and "Category:" prefixes as separators
+    .replace(/[•\n]+/g, ",")
+    .split(/[,;|]| and /i)
+    .map((s) =>
+      s
+        .replace(/^[^:]*:\s*/, "") // drop a leading "Category:" label
+        .replace(/\([^)]*\)/g, "") // drop parenthetical asides
+        .replace(/[()]/g, "")      // drop orphaned parens
+        .trim()
+    )
+    .filter((s) => s && s.length <= 32) // skip empties and run-on fragments
+    .filter((s, i, a) => a.indexOf(s) === i); // dedupe
+};
+
 // Returns an array of public-safe Alpacee records, or [] if no URL is set / sheet is empty.
 export async function loadAlpacees() {
   if (!SHEET_CSV_URL || SHEET_CSV_URL.startsWith("PASTE_")) return [];
@@ -93,8 +121,10 @@ export async function loadAlpacees() {
       company: get("company"),
       linkedin: get("linkedin"),
       portfolio: get("portfolio"),
+      bio: get("bio"),
       quote: get("quote"),
-      skills: get("skills"),
+      skills: splitList(get("skills")),
+      photo: toDirectImage(get("photo")),
     });
   }
   return out;
