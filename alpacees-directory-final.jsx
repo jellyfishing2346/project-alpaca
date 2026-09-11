@@ -46,9 +46,9 @@ const RAW = [
   {"id": 16, "c": 2, "name": "Selicia Graham", "school": "Brooklyn College", "major": "Studio Art: Digital Art", "grad": "2023", "linkedin": "https://www.linkedin.com/in/seliciagraham/"},
   {"id": 17, "c": 2, "name": "Tajrin Kashem", "school": "Brooklyn College", "major": "Computer Science", "grad": "2023"},
   {"id": 18, "c": 2, "name": "Tamaya Sara", "school": "CUNY Lehman College", "major": "Computer Science", "grad": "Fall 2023", "linkedin": "https://www.linkedin.com/in/tamaya-sara/"},
-  {"id": 19, "c": 3, "name": "Sukhdeep Singh", "school": "Hunter College", "major": "Computer Science", "grad": "2023", "role": "Developer / Analyst"},
-  {"id": 20, "c": 3, "name": "Maggie Ma", "school": "CUNY Hunter College", "major": "Computer Science", "grad": "2024", "role": "Product Manager", "company": "Kodely", "quote": "Each panelist has a different vibe. It was very comforting, and I learned that anyone can do anything. Some advice I got: build something you like and get it done.", "linkedin": "https://www.linkedin.com/in/maggeema/"},
-  {"id": 21, "c": 3, "name": "Candice Arichabala", "school": "Lehman College", "major": "Computer Graphics", "grad": "2023", "role": "Graphic Designer / UX Designer"},
+  {"id": 19, "c": 3, "name": "Sukhdeep Singh", "school": "Hunter College", "major": "Computer Science", "grad": "2023", "role": "Developer / Analyst", "resume": "https://docs.google.com/document/d/1GdejhinYW5VQ-egxcX4AMJUMf83m6lL_WsY5__lRPEk/edit?usp=sharing"},
+  {"id": 20, "c": 3, "name": "Maggie Ma", "school": "CUNY Hunter College", "major": "Computer Science", "grad": "2024", "role": "Product Manager", "company": "Kodely", "quote": "Each panelist has a different vibe. It was very comforting, and I learned that anyone can do anything. Some advice I got: build something you like and get it done.", "linkedin": "https://www.linkedin.com/in/maggeema/", "resume": "https://docs.google.com/document/d/1hpoPFyLbLGPBboNZN55X3ogn_NZSTdzo2DKJqBNi_Jo/edit"},
+  {"id": 21, "c": 3, "name": "Candice Arichabala", "school": "Lehman College", "major": "Computer Graphics", "grad": "2023", "role": "Graphic Designer / UX Designer", "resume": "https://docs.google.com/document/d/1Rbql8JR9ZSJX1eJhVnl0AsKWyViR_bbxXe_NG8qnXdc/edit?usp=sharing"},
   {"id": 22, "c": 3, "name": "Aakash Gharti Chhetri", "school": "LaGuardia Community College", "major": "Computer Science"},
   {"id": 23, "c": 3, "name": "Aasim Joseph Jr", "school": "LaGuardia Community College", "major": "Information Technology"},
   {"id": 24, "c": 3, "name": "Asad Ali", "school": "LaGuardia Community College", "major": "Computer Science"},
@@ -82,7 +82,7 @@ const RAW = [
   {"id": 52, "c": 5, "name": "Alexa Montilla", "school": "Lehman College", "major": "Computer Graphics and Imagery"},
   {"id": 53, "c": 5, "name": "Alexander Escamilla", "school": "Lehman College", "major": "Computer Science"},
   {"id": 54, "c": 5, "name": "Ariana Walcott", "school": "New York City College of Technology"},
-  {"id": 55, "c": 5, "name": "Faizan Khan", "school": "Brooklyn College", "major": "Computer Science", "grad": "May 2026", "role": "Software Engineer / TA", "company": "CodePath.org", "bio": "I’m a software engineer who loves the puzzle of turning a complex, abstract problem into a practical tool that people actually enjoy using. While my technical background is rooted in the rigor of building and deploying AI platforms, my real focus is on the human element. I believe technology should serve a clear purpose, namely making lives easier and businesses smarter. For me, success isn't just about writing elegant code or leveraging the latest models. Instead, it’s about collaborating across teams to build robust, scalable solutions that deliver genuine, measurable value to the real world.", "quote": "The combination of collaborative project work and direct access to industry experts helped me sharpen my technical skills and better position myself for competitive fintech roles.", "linkedin": "https://www.linkedin.com/in/faizan-khan234", "portfolio": "https://myportfolio-xi-liart-28.vercel.app", "skills": ["Python", "TypeScript/JavaScript", "Java", "C++", "SQL", "Go", "Rust", "Bash", "PyTorch", "TensorFlow", "Scikit-learn", "LLM Integration", "RAG Pipelines", "Predictive Modeling", "Quantitative Trading Strategies", "Financial Modeling", "Time-series Analysis", "Backtesting Frameworks", "Data Visualization", "AWS EC2", "S3", "Lambda", "EKS", "GCP", "Docker", "Kubernetes", "CI/CD Pipelines", "Node.js/Express", "FastAPI", "RESTful APIs", "Distributed Microservices", "Database Management PostgreSQL", "MongoDB", "Redis"], "photo": "https://lh3.googleusercontent.com/d/1D5GUX4rwR2aCeMeD1U2Oegq6e0qIshgy"},
+  {"id": 55, "c": 5, "name": "Faizan Khan", "school": "Brooklyn College", "major": "Computer Science", "grad": "May 2026", "role": "Software Engineer / TA", "company": "CodePath.org", "bio": "I’m a software engineer who loves the puzzle of turning a complex, abstract problem into a practical tool that people actually enjoy using. While my technical background is rooted in the rigor of building and deploying AI platforms, my real focus is on the human element. I believe technology should serve a clear purpose, namely making lives easier and businesses smarter. For me, success isn't just about writing elegant code or leveraging the latest models. Instead, it’s about collaborating across teams to build robust, scalable solutions that deliver genuine, measurable value to the real world.", "quote": "The combination of collaborative project work and direct access to industry experts helped me sharpen my technical skills and better position myself for competitive fintech roles.", "linkedin": "https://www.linkedin.com/in/faizan-khan234", "portfolio": "https://myportfolio-xi-liart-28.vercel.app", "resume": "https://www.overleaf.com/read/jtqnrbkyjqdq#95d7f1", "skills": ["Python", "TypeScript/JavaScript", "Java", "C++", "SQL", "Go", "Rust", "Bash", "PyTorch", "TensorFlow", "Scikit-learn", "LLM Integration", "RAG Pipelines", "Predictive Modeling", "Quantitative Trading Strategies", "Financial Modeling", "Time-series Analysis", "Backtesting Frameworks", "Data Visualization", "AWS EC2", "S3", "Lambda", "EKS", "GCP", "Docker", "Kubernetes", "CI/CD Pipelines", "Node.js/Express", "FastAPI", "RESTful APIs", "Distributed Microservices", "Database Management PostgreSQL", "MongoDB", "Redis"], "photo": "https://lh3.googleusercontent.com/d/1D5GUX4rwR2aCeMeD1U2Oegq6e0qIshgy"},
   {"id": 56, "c": 5, "name": "Fernando Woolcott", "school": "Columbia University", "major": "Computer Science"},
   {"id": 57, "c": 5, "name": "Javier Hernandez", "school": "LaGuardia Community College", "major": "Computer Science"},
   {"id": 58, "c": 5, "name": "Jericho Faderon", "school": "Lehman College", "major": "Computer Science"},
@@ -175,8 +175,10 @@ function Profile({ p, onBack }) {
               <p className="prof-role">{p.role ? `${p.role}${p.company ? ` at ${p.company}` : ""}` : <span className="muted">Role</span>}</p>
             </div>
             <div className="prof-actions">
-              <button className="btn btn-primary">Contact {first(p.name)} <Arrow /></button>
-              <button className="dl" disabled title="No résumé link in the sheet">Download Resume ⌄</button>
+              {p.linkedin
+                ? <a className="btn btn-primary" href={p.linkedin} target="_blank" rel="noreferrer">Contact {first(p.name)} <Arrow /></a>
+                : <button className="btn btn-primary" disabled>Contact {first(p.name)} <Arrow /></button>}
+              {p.resume && <a className="dl" href={p.resume} target="_blank" rel="noreferrer">Download Résumé ⌄</a>}
             </div>
           </div>
 
@@ -286,7 +288,7 @@ export default function App() {
         .empty { grid-column:1/-1; text-align:center; padding:60px; color:#8A8A92; }
 
         .btn { display:inline-flex; align-items:center; gap:8px; background:${NAVY}; color:#fff; border:0;
-          padding:10px 18px; border-radius:999px; font:inherit; font-weight:600; font-size:13px; cursor:pointer; }
+          padding:10px 18px; border-radius:999px; font:inherit; font-weight:600; font-size:13px; cursor:pointer; text-decoration:none; }
         .btn:disabled { opacity:.55; cursor:default; }
 
         .prof { max-width:940px; margin:0 auto; padding:32px 40px; }
@@ -302,7 +304,7 @@ export default function App() {
         .prof-sub { font-size:13.5px; color:#6B6B73; margin:0; }
         .prof-role { font-size:14px; color:#33333A; margin:3px 0 0; }
         .prof-actions { display:flex; flex-direction:column; align-items:flex-end; gap:12px; flex:none; }
-        .dl { background:none; border:0; color:${NAVY}; font:inherit; font-weight:600; font-size:13px; opacity:.55; cursor:default; }
+        .dl { background:none; border:0; color:${NAVY}; font:inherit; font-weight:600; font-size:13px; cursor:pointer; text-decoration:none; display:inline-block; }
         .prof-about { font-size:15px; line-height:1.65; color:#3B3B42; margin:14px 0 26px; max-width:66ch; }
         .prof-h { font-size:19px; font-weight:700; margin:0 0 12px; }
         .proj-empty { border:1px dashed #D6D6DE; border-radius:12px; padding:18px; font-size:13px; color:#8A8A92; background:#FBFBFC; margin-bottom:16px; }

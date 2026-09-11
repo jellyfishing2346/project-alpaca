@@ -35,6 +35,7 @@ const COLUMN_MAP = {
   skills:    "Skills",
   photo:     "Photo link",
   bio:       "Bio",
+  resume:    "Resume Link",
 };
 // NOTE: "Email", "race", "immigrant", "first_gen_college" are deliberately absent above.
 
@@ -131,6 +132,7 @@ export async function loadAlpacees() {
       linkedin: get("linkedin"),
       portfolio: get("portfolio"),
       bio: get("bio"),
+      resume: get("resume"),
       quote: get("quote"),
       skills: splitList(get("skills")),
       photo: toDirectImage(get("photo")),
