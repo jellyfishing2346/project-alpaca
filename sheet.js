@@ -1,14 +1,23 @@
-// sheet.js — loads the Alpacee roster from a published Google Sheet (CSV).
+// sheet.js — loads the Alpacee roster live from a Google Sheet.
 //
 // PRIVACY: only the public-safe columns in COLUMN_MAP are ever read. Email and the
 // demographic columns (race, immigrant, first_gen_college) are intentionally NOT mapped,
-// so even if they appear in the CSV they never reach the app.
+// so even if they appear in the response they never reach the app.
 
-// 1) Publish a PUBLIC-COLUMNS-ONLY tab of the sheet:
-//    File → Share → Publish to web → choose the tab → "Comma-separated values (.csv)".
-//    Paste that URL here (looks like:
-//    https://docs.google.com/spreadsheets/d/e/XXXX/pub?gid=0&single=true&output=csv )
-export const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/1ADZgC4L81O27dSX-7SXJ6PLeOucaJ-T0SLd8JTULUFA/edit?gid=1999310915#gid=1999310915";
+// --- Data source: gviz endpoint (near real-time — no ~5 min publish cache) --------
+// SETUP:
+//  1) Share the sheet: Share → General access → "Anyone with the link" → Viewer.
+//  2) Set SHEET_ID and GID below. Both are in the sheet's URL:
+//       docs.google.com/spreadsheets/d/<SHEET_ID>/edit#gid=<GID>
+//  The site then reads current data on every page load (a few seconds fresh),
+//  instead of waiting on Publish-to-web's cache.
+const SHEET_ID = "1ADZgC4L81O27dSX-7SXJ6PLeOucaJ-T0SLd8JTULUFA";
+const GID = "1999310915"; // the tab to read (use your Public tab's gid to exclude sensitive columns)
+
+// Uses gviz CSV. If you'd rather paste a full CSV URL, replace the whole string below.
+export const SHEET_CSV_URL =
+  `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&headers=1&gid=${GID}`;
+
 
 // 2) Map app fields → the EXACT column-header text in your sheet's first row.
 //    Tweak the right-hand strings if your headers differ.
