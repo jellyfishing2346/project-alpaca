@@ -8,7 +8,7 @@
 //    File → Share → Publish to web → choose the tab → "Comma-separated values (.csv)".
 //    Paste that URL here (looks like:
 //    https://docs.google.com/spreadsheets/d/e/XXXX/pub?gid=0&single=true&output=csv )
-export const SHEET_CSV_URL = "PASTE_PUBLISHED_CSV_URL_HERE";
+export const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/1ADZgC4L81O27dSX-7SXJ6PLeOucaJ-T0SLd8JTULUFA/edit?gid=1999310915#gid=1999310915";
 
 // 2) Map app fields → the EXACT column-header text in your sheet's first row.
 //    Tweak the right-hand strings if your headers differ.
