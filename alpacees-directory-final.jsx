@@ -209,62 +209,87 @@ function Footer() {
   );
 }
 
-function Profile({ p, onBack }) {
+function Profile({ p, all, onOpen, onBack }) {
+  const similar = (all || []).filter((x) => x.category === p.category && x.id !== p.id).slice(0, 3);
+  const tags = p.skills?.length ? p.skills : [p.focus];
   return (
-    <div className="prof">
-      <button className="back" onClick={onBack}>← All Alpacees</button>
-      <div className="prof-grid">
-        <aside className="prof-side">
-          <PersonPhoto p={p} variant="prof" />
+    <div className="np">
+      <button className="np-back" onClick={onBack}>← Back to directory</button>
+      <div className="np-grid">
+        <aside className="np-side">
+          <img className="np-photo" src={p.photo || avatarPlaceholder} alt={p.name} />
           <div>
-            <div className="side-label">Skills</div>
-            <div className="pills">
-              {p.skills?.length
-                ? p.skills.map((s) => <span key={s} className="pill">{s}</span>)
-                : <span className="pill">{p.focus}</span>}
+            <div className="np-label">Education</div>
+            <p className="np-line"><b>{p.school || "—"}</b>{p.grad ? ` · ${p.grad}` : ""}</p>
+            {p.major && <p className="np-sub">{p.major}</p>}
+          </div>
+          {(p.company || p.role) && (
+            <div>
+              <div className="np-label">Experience</div>
+              <p className="np-line"><b>{p.company || p.role}</b></p>
+              {p.company && p.role && <p className="np-sub">{p.role}</p>}
             </div>
-            {!p.skills?.length && <p className="pending">Real skill tags pending a Skills column.</p>}
-          </div>
-          <div>
-            <div className="side-label">University</div>
-            <p className="side-p">{p.school || "—"}{p.major ? <><br />{p.major}</> : null}{p.grad ? <><br />Class of {p.grad}</> : null}</p>
-          </div>
+          )}
         </aside>
 
-        <main className="prof-main">
-          <div className="prof-head">
+        <main className="np-main">
+          <div className="np-kicker">{COHORTS[p.c]?.label ?? "Alpacee"}{p.category ? ` · ${p.category}` : ""}</div>
+          <div className="np-head">
             <div>
-              <h2 className="prof-name">{p.name}<span className="prof-status"><span className="dot" />Status</span></h2>
-              <p className="prof-sub">{COHORTS[p.c]?.label ?? ""}</p>
-              <p className="prof-role">{p.role ? `${p.role}${p.company ? ` at ${p.company}` : ""}` : <span className="muted">Role</span>}</p>
+              <h1 className="np-name">{p.name} <span className="np-open"><span className="dot-green" /> Open to opportunities</span></h1>
+              <p className="np-role">{p.role ? `${p.role}${p.company ? ` at ${p.company}` : ""}` : "Alpacee at Project Alpaca"}</p>
+              <div className="np-tags">{tags.map((s) => <span key={s} className="np-tag">{s}</span>)}</div>
             </div>
-            <div className="prof-actions">
+            <div className="np-actions">
               {p.linkedin
-                ? <a className="btn btn-primary" href={p.linkedin} target="_blank" rel="noreferrer">Contact {first(p.name)} <Arrow /></a>
-                : <button className="btn btn-primary" disabled>Contact {first(p.name)} <Arrow /></button>}
-              {p.resume && <a className="dl" href={p.resume} target="_blank" rel="noreferrer">Download Résumé ⌄</a>}
+                ? <a className="btn-green" href={p.linkedin} target="_blank" rel="noreferrer">Contact <Arrow /></a>
+                : <button className="btn-green" disabled>Contact <Arrow /></button>}
+              {p.resume && <a className="np-resume" href={p.resume} target="_blank" rel="noreferrer">Download résumé ⌄</a>}
             </div>
           </div>
 
-          <p className="prof-about">{p.bio || p.quote || <span className="muted">Bio pending.</span>}</p>
+          <div className="np-section">
+            <div className="np-label">About</div>
+            <p className="np-body">{p.bio || p.quote || "Bio coming soon."}</p>
+          </div>
 
-          <h3 className="prof-h">End-of-year Project:</h3>
-          <div className="proj-empty">Project write-up + gallery — pending content in the sheet.</div>
-          <div className="proj-imgs"><Ph variant="proj" /><Ph variant="proj" /><Ph variant="proj" /></div>
-          <button className="btn btn-primary btn-inline" disabled>Read more <Arrow /></button>
+          <div className="np-section">
+            <div className="np-label">Project Showcase</div>
+            <div className="np-project">Project write-up + gallery — pending content in the sheet.</div>
+          </div>
 
-          <div className="tcard">
-            <span className="tquote">“</span>
-            <p className="ttext">{p.quote || "Testimonial pending."}</p>
-            <div className="tperson">
-              <LogoImage className="tavatar" />
-              <div className="tname">{p.name}</div>
-              <div className="ttitle">{COHORTS[p.c]?.label ?? "Cohort"} · Project Alpaca</div>
+          {(p.quote || p.bio) && (
+            <div className="np-section">
+              <div className="np-label">Recommendations</div>
+              <blockquote className="np-quote">“{p.quote || p.bio}”</blockquote>
+              <div className="np-attr"><b>{p.name}</b><span>{COHORTS[p.c]?.label ?? ""} · Project Alpaca</span></div>
             </div>
-            <div className="tdots"><span className="td on" /><span className="td" /><span className="td" /><span className="td" /><span className="td" /></div>
+          )}
+
+          <div className="np-hire">
+            <div><b>Interested in hiring {first(p.name)}?</b><br />Project Alpaca will make an introduction for you.</div>
+            {p.linkedin
+              ? <a className="btn-green" href={p.linkedin} target="_blank" rel="noreferrer">Contact <Arrow /></a>
+              : <button className="btn-green" disabled>Contact <Arrow /></button>}
           </div>
         </main>
       </div>
+
+      {similar.length > 0 && (
+        <div className="np-similar">
+          <div className="np-label">Other Alpacees with similar skills</div>
+          <div className="np-similar-grid">
+            {similar.map((s) => (
+              <button key={s.id} className="np-sim" onClick={() => onOpen(s.id)}>
+                <img src={s.photo || avatarPlaceholder} alt={s.name} />
+                <div><b>{s.name}</b><span>{s.role || "Alpacee at Project Alpaca"}</span></div>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <Footer />
     </div>
   );
 }
@@ -443,6 +468,42 @@ export default function App() {
         .footer-bottom { margin-top:32px; padding-top:20px; border-top:1px solid #3A362E; font-size:12px; color:#8A8272; }
         @media (max-width:900px){ .pgrid{grid-template-columns:repeat(2,1fr);} .gi-grid{grid-template-columns:repeat(2,1fr);} .news{grid-template-columns:1fr;} .footer-cols{grid-template-columns:repeat(2,1fr);} .footer-top{flex-direction:column;gap:28px;} }
         @media (max-width:560px){ .pgrid{grid-template-columns:1fr;} .nav{padding:16px 24px;} .home{padding:28px 24px 0;} }
+
+        /* ===== Stage 2: profile visual design ===== */
+        .np { max-width:1200px; margin:0 auto; padding:28px 48px 0; }
+        .np-back { background:none; border:0; color:#211E1A; font:inherit; font-weight:700; font-size:12px; letter-spacing:.04em; text-transform:uppercase; cursor:pointer; padding:0; margin-bottom:24px; }
+        .np-grid { display:grid; grid-template-columns:360px 1fr; gap:48px; }
+        .np-side { display:flex; flex-direction:column; gap:22px; }
+        .np-photo { width:100%; aspect-ratio:1/1; object-fit:cover; border-radius:16px; background:#E7E1D4; display:block; }
+        .np-label { font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#9A907B; margin-bottom:10px; border-top:1px solid #E4DBC8; padding-top:14px; }
+        .np-line { font-size:15px; color:#211E1A; margin:0; }
+        .np-line b { font-weight:700; }
+        .np-sub { font-size:14px; color:#6E6656; margin:2px 0 0; }
+        .np-main { min-width:0; }
+        .np-kicker { font-size:12px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:#8A8272; margin-bottom:8px; }
+        .np-head { display:flex; justify-content:space-between; align-items:flex-start; gap:24px; margin-bottom:8px; }
+        .np-name { font-size:34px; font-weight:800; letter-spacing:-.02em; margin:0 0 8px; display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+        .np-open { display:inline-flex; align-items:center; gap:7px; font-size:11px; font-weight:700; letter-spacing:.03em; text-transform:uppercase; color:#3E6E1C; background:#EAF7CF; padding:4px 10px; border-radius:999px; }
+        .np-role { font-size:16px; color:#3A352C; margin:0 0 14px; }
+        .np-tags { display:flex; flex-wrap:wrap; gap:8px; }
+        .np-tag { font-size:12px; font-weight:600; padding:5px 12px; border-radius:999px; background:#F0E9D8; border:1px solid #E2D8C2; color:#3A352C; }
+        .np-actions { display:flex; flex-direction:column; align-items:flex-end; gap:10px; flex:none; }
+        .np-resume { color:#211E1A; font-weight:700; font-size:13px; text-decoration:none; border:1px solid #C9BFA8; padding:9px 16px; border-radius:999px; }
+        .np-section { margin:28px 0; }
+        .np-body { font-size:15px; line-height:1.7; color:#3A352C; margin:0; max-width:70ch; }
+        .np-project { border:1px dashed #D8CFBB; border-radius:14px; padding:40px; text-align:center; font-size:13px; color:#8A8272; background:#FBF7EE; }
+        .np-quote { font-size:22px; line-height:1.5; color:#211E1A; margin:0 0 14px; font-weight:500; max-width:60ch; }
+        .np-attr { font-size:13px; color:#6E6656; }
+        .np-attr b { display:block; color:#211E1A; }
+        .np-hire { display:flex; align-items:center; justify-content:space-between; gap:20px; background:#F0E9D8; border:1px solid #E2D8C2; border-radius:16px; padding:24px 28px; margin:36px 0; font-size:15px; }
+        .btn-green:disabled { opacity:.5; cursor:default; }
+        .np-similar { max-width:1200px; margin:12px auto 0; }
+        .np-similar-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:6px; }
+        .np-sim { display:flex; align-items:center; gap:14px; background:#fff; border:1px solid #E9E2D2; border-radius:14px; padding:14px; cursor:pointer; text-align:left; font:inherit; }
+        .np-sim img { width:56px; height:56px; border-radius:10px; object-fit:cover; flex:none; background:#E7E1D4; }
+        .np-sim b { font-size:14px; display:block; }
+        .np-sim span { font-size:12.5px; color:#6E6656; }
+        @media (max-width:900px){ .np-grid{grid-template-columns:1fr;} .np-head{flex-direction:column;} .np-actions{align-items:flex-start;} .np-similar-grid{grid-template-columns:1fr;} .np{padding:24px 24px 0;} }
       `}</style>
 
       <div className="topbar">Want to hire one of our Alpacees? Reach out and we'll make an introduction! <a href="#">Email us</a></div>
@@ -452,7 +513,7 @@ export default function App() {
       </nav>
 
       {person ? (
-        <Profile p={person} onBack={() => setSelected(null)} />
+        <Profile p={person} all={people} onOpen={setSelected} onBack={() => setSelected(null)} />
       ) : (
         <div className="home">
           <p className="intro"><b>Alpacee</b> (Al·puh·kee) Directory is a showcase of emerging NYC tech talent by Project Alpaca, a 501(c)(3) nonprofit training under-resourced college students and connecting them with mentors, recruiters, and career opportunities.</p>
