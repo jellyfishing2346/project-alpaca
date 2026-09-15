@@ -103,7 +103,17 @@ function inferFocus(p) {
   if (/(comput|software|develop|engineer|information systems|information technology|\bit\b|e-business)/.test(t)) return "Software";
   return "Other";
 }
-const FALLBACK = RAW.map((p) => ({ ...p, focus: inferFocus(p) }));
+const CATEGORIES = ["Software Engineering", "Data", "Design", "Business", "Marketing"];
+function inferCategory(p) {
+  const t = `${p.major || ""} ${p.role || ""} ${(p.skills || []).join(" ")}`.toLowerCase();
+  if (/(ux|ui|graphic|design|animation|game|art|creative|multimedia|\bmedia\b)/.test(t)) return "Design";
+  if (/(data|analyt|statistic|machine learning|\bml\b)/.test(t)) return "Data";
+  if (/(market|social media|\bbrand|content strateg)/.test(t)) return "Marketing";
+  if (/(business|finance|econom|account|administration|\bmba\b|real estate|\blaw\b|entrepreneur)/.test(t)) return "Business";
+  return "Software Engineering";
+}
+const withDerived = (p) => ({ ...p, focus: inferFocus(p), category: inferCategory(p) });
+const FALLBACK = RAW.map(withDerived);
 const first = (name) => name.split(/\s+/)[0];
 
 const LogoImage = ({ className }) => (
@@ -125,23 +135,77 @@ const PersonPhoto = ({ p, variant }) => (
 const Ph = ({ variant }) => <div className={`ph ph-${variant}`}><ImgIcon /></div>;
 
 function Card({ p, onOpen }) {
+  const tags = p.skills?.length ? p.skills.slice(0, 3) : [p.category];
   return (
-    <article className="card">
-      <div className="c-status"><span className="dot" /><span>Status</span>
-        {p.dupe && <span className="review" title={p.dupe}>needs review</span>}
+    <article className="pcard" onClick={() => onOpen(p.id)} tabIndex={0}
+      onKeyDown={(e) => e.key === "Enter" && onOpen(p.id)}>
+      <img className="pcard-photo" src={p.photo || avatarPlaceholder} alt={p.name} />
+      <span className="pcard-badge"><span className="dot-green" /> Open to opportunities</span>
+      <div className="pcard-scrim" />
+      <div className="pcard-overlay">
+        <h3 className="pcard-name">{p.name}</h3>
+        <p className="pcard-role">{p.role || `${COHORTS[p.c]?.label ?? ""} · Alpacee`}</p>
+        <div className="pcard-tags">{tags.map((s) => <span key={s} className="pcard-tag">{s}</span>)}</div>
       </div>
-      <PersonPhoto p={p} variant="card" />
-      <h3 className="c-name">{p.name}</h3>
-      <p className="c-meta">{COHORTS[p.c]?.label ?? "Cohort —"}{p.company ? ` · ${p.company}` : ""}</p>
-      <p className="c-role">{p.role || <span className="muted">Role</span>}</p>
-      <div className="pills">
-        {p.skills?.length
-          ? p.skills.slice(0, 4).map((s) => <span key={s} className="pill">{s}</span>)
-          : <><span className="pill">{p.focus}</span><span className="pill pill-ghost" title="Skills column is empty in the sheet">+ skills</span></>}
-      </div>
-      <p className="c-bio">{p.bio || p.quote || <span className="muted">Short intro pending.</span>}</p>
-      <button className="viewlink" onClick={() => onOpen(p.id)}>View Profile</button>
     </article>
+  );
+}
+
+function GetInvolved() {
+  const items = [
+    { t: "Support Us Financially", d: "Sponsor a cohort, host workspace trips, or hire talented graduates for junior roles.", k: "coral" },
+    { t: "Become Our Partner", d: "Build a tailored alliance to support early-career tech talent.", k: "navy" },
+    { t: "Become an Alpaca (Mentor)", d: "Guide an Alpacee 1-on-1 or instruct a class.", k: "green" },
+    { t: "Join as a Volunteer", d: "Lend your skills in administration, events, or technical support.", k: "wool" },
+  ];
+  return (
+    <section className="gi">
+      <h2 className="section-h">Get Involved</h2>
+      <div className="gi-grid">
+        {items.map((i) => (
+          <div key={i.t} className={`gi-card gi-${i.k}`}>
+            <h3>{i.t}</h3><p>{i.d}</p><span className="gi-arrow"><Arrow /></span>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function Newsletter() {
+  return (
+    <section className="news">
+      <div className="news-l"><h2>Newsletter</h2>
+        <p>Subscribe to the Project Alpaca newsletter to stay up to date on our programs, community events, student stories, and ways to get involved.</p>
+      </div>
+      <div className="news-r">
+        <div className="news-row"><input placeholder="First Name" /><input placeholder="Last Name" /></div>
+        <input placeholder="Email" />
+        <button className="btn-green">Subscribe <Arrow /></button>
+      </div>
+    </section>
+  );
+}
+
+function Footer() {
+  const cols = [
+    ["Project Alpaca", ["About", "Latest News", "Annual Reports", "Privacy Policy", "Terms of Service"]],
+    ["Programs", ["Flagship Program", "Community Programs"]],
+    ["Get Involved", ["Meet our Alpacees", "Mentor our Alpacees", "Become our Partner", "Volunteer with Us", "Support Our Work"]],
+    ["Questions?", ["Contact Us", "FAQs"]],
+  ];
+  return (
+    <footer className="footer">
+      <div className="footer-top">
+        <LogoImage className="footer-logo" />
+        <div className="footer-cols">
+          {cols.map(([h, links]) => (
+            <div key={h} className="footer-col"><h4>{h}</h4>{links.map((l) => <a key={l} href="#">{l}</a>)}</div>
+          ))}
+        </div>
+      </div>
+      <div className="footer-bottom">© {new Date().getFullYear()} Project Alpaca. All rights reserved.</div>
+    </footer>
   );
 }
 
@@ -207,29 +271,25 @@ function Profile({ p, onBack }) {
 
 export default function App() {
   const [q, setQ] = useState("");
-  const [foci, setFoci] = useState([]);
-  const [cohort, setCohort] = useState("all");
+  const [cats, setCats] = useState([]);
   const [selected, setSelected] = useState(null);
   const [people, setPeople] = useState(FALLBACK);
 
   useEffect(() => {
     loadAlpacees()
-      .then((rows) => { if (rows.length) setPeople(rows.map((p) => ({ ...p, focus: inferFocus(p) }))); })
+      .then((rows) => { if (rows.length) setPeople(rows.map(withDerived)); })
       .catch((err) => console.warn("Using inline roster —", err.message));
   }, []);
 
-  const FOCI = useMemo(() => [...new Set(people.map((p) => p.focus))].sort(), [people]);
-
-  const toggleFocus = (f) => setFoci((cur) => (cur.includes(f) ? cur.filter((x) => x !== f) : [...cur, f]));
+  const toggleCat = (c) => setCats((cur) => (cur.includes(c) ? cur.filter((x) => x !== c) : [...cur, c]));
   const filtered = useMemo(() => {
     const term = q.trim().toLowerCase();
     return people.filter((p) => {
-      if (cohort !== "all" && String(p.c) !== cohort) return false;
-      if (foci.length && !foci.includes(p.focus)) return false;
+      if (cats.length && !cats.includes(p.category)) return false;
       if (term && !p.name.toLowerCase().includes(term)) return false;
       return true;
     });
-  }, [q, foci, cohort, people]);
+  }, [q, cats, people]);
   const person = people.find((p) => p.id === selected);
 
   return (
@@ -323,52 +383,93 @@ export default function App() {
         .td.on { background:${NAVY}; }
 
         @media (max-width:860px){ .layout{grid-template-columns:1fr;} .side{position:static;} .prof-grid{grid-template-columns:1fr;} .prof-head{flex-direction:column;} .prof-actions{align-items:flex-start;} }
+
+        /* ===== Stage 1: directory-home visual design ===== */
+        .root { background:#FFFBF3; color:#211E1A; }
+        .topbar { background:#211E1A; color:#F3EFE6; font-size:12.5px; text-align:center; padding:8px 20px; }
+        .topbar a { color:#C6F24E; font-weight:600; text-decoration:none; }
+        .nav { background:#FFFBF3; border-bottom:1px solid #E9E2D2; padding:18px 48px; }
+        .nav-name { color:#211E1A; font-weight:700; letter-spacing:.04em; text-transform:uppercase; font-size:11.5px; }
+        .nav-r { display:flex; gap:28px; }
+        .nav-r a { color:#211E1A; font-weight:700; font-size:11.5px; letter-spacing:.06em; text-transform:uppercase; text-decoration:none; }
+        .home { max-width:1200px; margin:0 auto; padding:36px 48px 0; }
+        .intro { font-size:16px; line-height:1.6; color:#3A352C; max-width:82ch; margin:8px 0 28px; }
+        .intro b { font-weight:800; }
+        .filters { display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-bottom:28px; }
+        .fsearch { padding:10px 14px; border:1px solid #D8CFBB; border-radius:999px; font:inherit; font-size:13.5px; background:#fff; min-width:200px; }
+        .fsearch:focus { outline:2px solid #211E1A; outline-offset:1px; border-color:transparent; }
+        .cat { padding:9px 16px; border:1px solid #C9BFA8; border-radius:999px; background:transparent; font:inherit; font-size:13px; font-weight:600; color:#3A352C; cursor:pointer; }
+        .cat:hover { border-color:#211E1A; }
+        .cat-on { background:#211E1A; color:#FFFBF3; border-color:#211E1A; }
+        .clear { background:none; border:0; font:inherit; font-size:12px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:#E8663D; cursor:pointer; }
+        .pgrid { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+        .pcard { position:relative; aspect-ratio:3/4; border-radius:16px; overflow:hidden; cursor:pointer; background:#E7E1D4; }
+        .pcard-photo { width:100%; height:100%; object-fit:cover; display:block; transition:transform .4s ease; }
+        .pcard:hover .pcard-photo { transform:scale(1.04); }
+        .pcard-scrim { position:absolute; inset:0; background:linear-gradient(to top, rgba(20,18,15,.92) 0%, rgba(20,18,15,.35) 38%, transparent 62%); }
+        .pcard-badge { position:absolute; top:12px; right:12px; background:#FFFBF3; color:#2A2A1E; font-size:9.5px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; padding:5px 9px; border-radius:999px; display:inline-flex; align-items:center; gap:6px; }
+        .dot-green { width:7px; height:7px; border-radius:50%; background:#6FB93B; }
+        .pcard-overlay { position:absolute; left:0; right:0; bottom:0; padding:18px; color:#fff; }
+        .pcard-name { font-size:21px; font-weight:800; letter-spacing:-.01em; margin:0 0 3px; }
+        .pcard-role { font-size:12.5px; line-height:1.35; color:#EDE8DC; margin:0 0 10px; }
+        .pcard-tags { display:flex; flex-wrap:wrap; gap:6px; }
+        .pcard-tag { font-size:10.5px; font-weight:600; padding:3px 10px; border-radius:999px; background:rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.35); color:#fff; }
+        .empty { grid-column:1/-1; text-align:center; padding:60px; color:#8A8272; }
+        .section-h { font-size:26px; font-weight:800; letter-spacing:-.01em; margin:0 0 20px; }
+        .gi { margin:64px 0; }
+        .gi-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+        .gi-card { border-radius:16px; padding:22px; min-height:200px; position:relative; }
+        .gi-card h3 { font-size:17px; font-weight:800; margin:0 0 8px; }
+        .gi-card p { font-size:13px; line-height:1.5; margin:0; }
+        .gi-arrow { position:absolute; bottom:20px; left:22px; }
+        .gi-coral { background:#E8663D; color:#fff; }
+        .gi-navy { background:#211E1A; color:#F3EFE6; }
+        .gi-green { background:#C6F24E; color:#25340A; }
+        .gi-wool { background:#F0E9D8; color:#2A2620; border:1px solid #E2D8C2; }
+        .news { display:grid; grid-template-columns:1fr 1fr; gap:40px; align-items:center; background:#211E1A; color:#F3EFE6; border-radius:22px; padding:44px; margin:56px 0; }
+        .news h2 { font-size:34px; font-weight:800; margin:0 0 12px; }
+        .news p { font-size:14px; line-height:1.6; color:#CFC7B6; margin:0; max-width:44ch; }
+        .news-r { display:flex; flex-direction:column; gap:12px; }
+        .news-row { display:flex; gap:12px; }
+        .news input { flex:1; padding:13px 15px; border:0; border-radius:10px; font:inherit; font-size:14px; background:#F3EFE6; color:#211E1A; width:100%; }
+        .btn-green { align-self:flex-start; display:inline-flex; align-items:center; gap:8px; background:#C6F24E; color:#25340A; border:0; padding:12px 22px; border-radius:999px; font:inherit; font-weight:700; font-size:13.5px; cursor:pointer; }
+        .footer { background:#211E1A; color:#E6DECF; margin:0 -48px; padding:56px 48px 28px; border-radius:22px 22px 0 0; }
+        .footer-top { display:flex; gap:60px; }
+        .footer-logo { width:60px; height:60px; object-fit:contain; filter:brightness(0) invert(1); }
+        .footer-cols { display:grid; grid-template-columns:repeat(4,1fr); gap:32px; flex:1; }
+        .footer-col h4 { font-size:14px; font-weight:800; margin:0 0 14px; color:#fff; }
+        .footer-col a { display:block; font-size:13px; color:#B7AE9C; text-decoration:none; margin-bottom:9px; }
+        .footer-col a:hover { color:#fff; }
+        .footer-bottom { margin-top:32px; padding-top:20px; border-top:1px solid #3A362E; font-size:12px; color:#8A8272; }
+        @media (max-width:900px){ .pgrid{grid-template-columns:repeat(2,1fr);} .gi-grid{grid-template-columns:repeat(2,1fr);} .news{grid-template-columns:1fr;} .footer-cols{grid-template-columns:repeat(2,1fr);} .footer-top{flex-direction:column;gap:28px;} }
+        @media (max-width:560px){ .pgrid{grid-template-columns:1fr;} .nav{padding:16px 24px;} .home{padding:28px 24px 0;} }
       `}</style>
 
+      <div className="topbar">Want to hire one of our Alpacees? Reach out and we'll make an introduction! <a href="#">Email us</a></div>
       <nav className="nav">
         <div className="nav-l"><LogoImage className="nav-logo" /><span className="nav-name">Alpacee Directory</span></div>
-        <button className="donate">Donate</button>
+        <div className="nav-r"><a href="#">Meet the Alpacees</a><a href="#">See Projects</a></div>
       </nav>
 
       {person ? (
         <Profile p={person} onBack={() => setSelected(null)} />
       ) : (
-        <div className="layout">
-          <aside className="side">
-            <div className="fg"><h4>Search</h4>
-              <input className="input" placeholder="Search by name" value={q} onChange={(e) => setQ(e.target.value)} />
-            </div>
-            <div className="fg"><h4>Skills</h4>
-              {FOCI.map((f) => (
-                <label key={f} className="check"><input type="checkbox" checked={foci.includes(f)} onChange={() => toggleFocus(f)} /> {f}</label>
-              ))}
-              <p className="pending">Inferred from major/role — placeholder for a real Skills field.</p>
-            </div>
-            <div className="fg"><h4>Open to opportunities</h4>
-              <label className="check"><input type="checkbox" disabled /> Open</label>
-              <label className="check"><input type="checkbox" disabled /> Not at the moment</label>
-              <p className="pending">Needs a new sheet column — no data yet.</p>
-            </div>
-            <div className="fg"><h4>Cohort year</h4>
-              <select className="select" value={cohort} onChange={(e) => setCohort(e.target.value)}>
-                <option value="all">All</option>
-                {Object.entries(COHORTS).map(([k, v]) => <option key={k} value={k}>{v.label} ({v.years})</option>)}
-              </select>
-            </div>
-            <div className="hire">
-              <LogoImage className="hire-logo" />
-              <p>Want to hire one of our Alpacees? Reach out to us and we'll make an introduction!</p>
-              <button className="btn">Contact <Arrow /></button>
-            </div>
-          </aside>
-
-          <main>
-            <p className="main-title">{filtered.length} {filtered.length === 1 ? "Alpacee" : "Alpacees"}</p>
-            <div className="grid">
-              {filtered.length ? filtered.map((p) => <Card key={p.id} p={p} onOpen={setSelected} />)
-                : <div className="empty">No matches. Try a different name, skill, or cohort.</div>}
-            </div>
-          </main>
+        <div className="home">
+          <p className="intro"><b>Alpacee</b> (Al·puh·kee) Directory is a showcase of emerging NYC tech talent by Project Alpaca, a 501(c)(3) nonprofit training under-resourced college students and connecting them with mentors, recruiters, and career opportunities.</p>
+          <div className="filters">
+            <input className="fsearch" placeholder="Search by name" value={q} onChange={(e) => setQ(e.target.value)} />
+            {CATEGORIES.map((c) => (
+              <button key={c} className={`cat ${cats.includes(c) ? "cat-on" : ""}`} onClick={() => toggleCat(c)}>{c}</button>
+            ))}
+            {cats.length > 0 && <button className="clear" onClick={() => setCats([])}>Clear all</button>}
+          </div>
+          <div className="pgrid">
+            {filtered.length ? filtered.map((p) => <Card key={p.id} p={p} onOpen={setSelected} />)
+              : <div className="empty">No matches. Try a different name or category.</div>}
+          </div>
+          <GetInvolved />
+          <Newsletter />
+          <Footer />
         </div>
       )}
     </div>
