@@ -273,3 +273,25 @@
 .support h2 { font-size:28px; font-weight:800; margin:0 0 12px; }
 .support p { font-size:15px; line-height:1.6; color:#3A352C; max-width:70ch; margin:0 auto 22px; }
 @media (max-width:900px){ .hist{grid-template-columns:repeat(2,1fr);} .people{grid-template-columns:1fr;} .press{grid-template-columns:repeat(2,1fr);} }
+
+/* ===== Community Programs ===== */
+.prog-desc { font-size:15px; line-height:1.65; color:#3A352C; max-width:88ch; margin:0 0 24px; }
+.po-grid { display:grid; grid-template-columns:1fr 1fr; gap:32px; margin-bottom:20px; }
+.po-label { font-size:13px; font-weight:800; margin:0 0 14px; }
+.po-logos { display:flex; gap:16px; }
+.po-logos .partner .hi-img { width:150px; aspect-ratio:2/1; margin-bottom:6px; }
+.po-logos .partner span { font-size:12px; }
+.outcome { background:#F0E9D8; border:1px solid #E2D8C2; border-radius:12px; padding:22px; display:inline-block; min-width:180px; }
+.outcome b { display:block; font-size:28px; font-weight:800; }
+.outcome span { font-size:13px; color:#6E6656; }
+.cta-bar { display:flex; align-items:center; justify-content:space-between; gap:24px; background:#F0E9D8; border:1px solid #E2D8C2; border-radius:14px; padding:22px 26px; margin-bottom:12px; }
+.cta-bar b { font-size:17px; font-weight:800; }
+.cta-bar p { font-size:13px; color:#6E6656; margin:4px 0 0; }
+.cta-bar .btn-navy { flex:none; }
+.partner-line { font-size:13.5px; color:#6E6656; margin:0; }
+.partner-line a { color:#E8663D; font-weight:700; text-decoration:none; }
+.coming-soon { display:flex; align-items:center; justify-content:space-between; gap:24px; border:1px dashed #D8CFBB; border-radius:14px; padding:24px 28px; background:#FBF7EE; }
+.coming-soon h3 { font-size:17px; font-weight:800; margin:0 0 6px; }
+.coming-soon p { font-size:13.5px; line-height:1.55; color:#3A352C; margin:0; max-width:84ch; }
+.coming-soon .btn-outline { flex:none; }
+@media (max-width:900px){ .po-grid{grid-template-columns:1fr;} .cta-bar,.coming-soon{flex-direction:column;align-items:flex-start;} }

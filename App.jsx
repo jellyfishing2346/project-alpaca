@@ -4,6 +4,7 @@ import DirectoryApp, { Nav, Footer } from "./alpacees-directory-final.jsx";
 import Home from "./Home.jsx";
 import Contact from "./Contact.jsx";
 import About from "./About.jsx";
+import CommunityPrograms from "./CommunityPrograms.jsx";
 import "./styles.css";
 
 // Placeholder page for routes whose real design isn't built yet.
@@ -36,7 +37,7 @@ export default function App() {
         <Route path="/about" element={<About />} />
         <Route path="/donate" element={<Page title="Donate" />} />
         <Route path="/get-involved" element={<Page title="Get Involved" />} />
-        <Route path="/community-programs" element={<Page title="Community Programs" />} />
+        <Route path="/community-programs" element={<CommunityPrograms />} />
         <Route path="/flagship" element={<Page title="Flagship Program" />} />
 
         {/* Anything else falls back to the directory. */}
