@@ -232,3 +232,23 @@
 .inv-card p { font-size:13.5px; line-height:1.55; color:#3A352C; margin:0 0 14px; }
 .inv-cta { display:inline-flex; align-items:center; gap:7px; color:#E8663D; font-weight:700; font-size:13.5px; text-decoration:none; }
 @media (max-width:900px){ .hero{grid-template-columns:1fr;} .partners{grid-template-columns:repeat(3,1fr);} .prog-grid,.tgrid,.inv-grid{grid-template-columns:1fr;} .impact{grid-template-columns:repeat(2,1fr);} .event{flex-wrap:wrap;} .hero-l h1{font-size:36px;} }
+
+/* ===== Contact ===== */
+.cgrid { display:grid; grid-template-columns:1.4fr 1fr; gap:32px; margin-top:28px; align-items:start; }
+.cform { background:#fff; border:1px solid #E9E2D2; border-radius:16px; padding:28px; display:flex; flex-direction:column; gap:14px; }
+.crow { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.cform input, .cform textarea { width:100%; padding:12px 14px; border:1px solid #D8CFBB; border-radius:10px; font:inherit; font-size:14px; background:#FDFCF8; color:#211E1A; resize:vertical; }
+.cform input:focus, .cform textarea:focus { outline:2px solid #211E1A; outline-offset:1px; border-color:transparent; }
+.ccheck { display:flex; align-items:center; gap:9px; font-size:13px; color:#3A352C; }
+.ccheck input { accent-color:#211E1A; width:15px; height:15px; }
+.cform .btn-navy { align-self:flex-start; }
+.cchans { display:flex; flex-direction:column; gap:16px; }
+.cchan { background:#F0E9D8; border:1px solid #E2D8C2; border-radius:16px; padding:22px; }
+.cchan h3 { font-size:17px; font-weight:800; margin:0 0 8px; }
+.cchan p { font-size:13.5px; line-height:1.55; color:#3A352C; margin:0 0 12px; }
+.cchan a { font-size:14px; font-weight:700; color:#E8663D; text-decoration:none; }
+.presskit { display:flex; align-items:center; justify-content:space-between; gap:24px; background:#211E1A; color:#F3EFE6; border-radius:16px; padding:28px 32px; }
+.presskit h3 { font-size:19px; font-weight:800; margin:0 0 6px; }
+.presskit p { font-size:14px; color:#CFC7B6; margin:0; max-width:60ch; }
+.presskit .btn-outline { border-color:#5A554C; color:#F3EFE6; flex:none; }
+@media (max-width:900px){ .cgrid{grid-template-columns:1fr;} .presskit{flex-direction:column;align-items:flex-start;} }
