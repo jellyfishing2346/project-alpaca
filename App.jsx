@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import DirectoryApp, { Nav, Footer } from "./alpacees-directory-final.jsx";
 import Home from "./Home.jsx";
 import Contact from "./Contact.jsx";
+import About from "./About.jsx";
 import "./styles.css";
 
 // Placeholder page for routes whose real design isn't built yet.
@@ -32,7 +33,7 @@ export default function App() {
 
         {/* Stubs — ready to fill with the Figma designs, one at a time. */}
         <Route path="/projects" element={<Page title="Projects" blurb="Alpacee project showcases — coming soon." />} />
-        <Route path="/about" element={<Page title="About" />} />
+        <Route path="/about" element={<About />} />
         <Route path="/donate" element={<Page title="Donate" />} />
         <Route path="/get-involved" element={<Page title="Get Involved" />} />
         <Route path="/community-programs" element={<Page title="Community Programs" />} />
