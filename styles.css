@@ -184,3 +184,51 @@
         .np-sim b { font-size:14px; display:block; }
         .np-sim span { font-size:12.5px; color:#6E6656; }
         @media (max-width:900px){ .np-grid{grid-template-columns:1fr;} .np-head{flex-direction:column;} .np-actions{align-items:flex-start;} .np-similar-grid{grid-template-columns:1fr;} .np{padding:24px 24px 0;} }
+      
+/* ===== Homepage ===== */
+.hero { display:grid; grid-template-columns:1.05fr 0.85fr; gap:44px; align-items:center; padding:56px 0 48px; }
+.hero-l h1 { font-size:46px; line-height:1.08; font-weight:800; letter-spacing:-.02em; margin:0 0 18px; }
+.hero-l p { font-size:17px; line-height:1.6; color:#3A352C; max-width:46ch; margin:0 0 24px; }
+.hero-cta { display:flex; gap:12px; flex-wrap:wrap; }
+.hero-img { aspect-ratio:1.15/1; }
+.btn-navy { display:inline-flex; align-items:center; gap:8px; background:#211E1A; color:#FFFBF3; border:0; padding:12px 22px; border-radius:999px; font:inherit; font-weight:700; font-size:14px; cursor:pointer; text-decoration:none; }
+.btn-navy.sm { padding:9px 18px; font-size:13px; flex:none; }
+.btn-outline { display:inline-flex; align-items:center; gap:8px; background:transparent; color:#211E1A; border:1px solid #C9BFA8; padding:11px 20px; border-radius:999px; font:inherit; font-weight:700; font-size:14px; cursor:pointer; text-decoration:none; }
+.hi-img { background:#EFEBE1; border:1px solid #E4DBC8; border-radius:14px; display:flex; align-items:center; justify-content:center; aspect-ratio:4/3; }
+.hs { padding:40px 0; border-top:1px solid #E9E2D2; }
+.hs-h { font-size:22px; font-weight:800; letter-spacing:-.01em; margin:0 0 22px; }
+.partners { display:grid; grid-template-columns:repeat(6,1fr); gap:18px; }
+.partner { text-align:center; }
+.partner .hi-img { aspect-ratio:2/1; margin-bottom:8px; }
+.partner span { font-size:13px; color:#8A8272; }
+.prog-grid { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
+.prog-card h3 { font-size:22px; font-weight:800; margin:16px 0 8px; }
+.prog-card p { font-size:14px; line-height:1.6; color:#3A352C; margin:0 0 16px; }
+.prog-img { aspect-ratio:16/9; }
+.impact { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+.stat { background:#F0E9D8; border:1px solid #E2D8C2; border-radius:14px; padding:26px; text-align:center; }
+.stat b { display:block; font-size:34px; font-weight:800; letter-spacing:-.02em; }
+.stat span { font-size:13px; color:#6E6656; }
+.events { border:1px solid #E9E2D2; border-radius:16px; overflow:hidden; }
+.event { display:flex; align-items:center; gap:24px; padding:22px 26px; border-bottom:1px solid #E9E2D2; }
+.event:last-child { border-bottom:0; }
+.event-date { width:90px; flex:none; }
+.event-date b { display:block; font-size:20px; font-weight:800; }
+.event-date span { font-size:12px; color:#8A8272; }
+.event-body { flex:1; min-width:0; }
+.event-body h3 { font-size:18px; font-weight:700; margin:0 0 4px; }
+.event-body p { font-size:13.5px; line-height:1.5; color:#6E6656; margin:0; }
+.tgrid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+.tcardh { background:#fff; border:1px solid #E9E2D2; border-radius:16px; padding:26px; }
+.stars { color:#E8663D; font-size:15px; letter-spacing:2px; margin-bottom:12px; }
+.tqm { font-family:Georgia,serif; font-size:40px; color:#D8CFBB; line-height:0.2; display:block; }
+.tcardh p { font-size:14px; line-height:1.6; color:#3A352C; margin:10px 0 18px; }
+.tby b { display:block; font-size:14px; }
+.tby span { font-size:12.5px; color:#8A8272; }
+.inv-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+.inv-card { background:#fff; border:1px solid #E9E2D2; border-radius:16px; padding:20px; }
+.inv-img { aspect-ratio:16/10; margin-bottom:14px; }
+.inv-card h3 { font-size:18px; font-weight:800; margin:0 0 8px; }
+.inv-card p { font-size:13.5px; line-height:1.55; color:#3A352C; margin:0 0 14px; }
+.inv-cta { display:inline-flex; align-items:center; gap:7px; color:#E8663D; font-weight:700; font-size:13.5px; text-decoration:none; }
+@media (max-width:900px){ .hero{grid-template-columns:1fr;} .partners{grid-template-columns:repeat(3,1fr);} .prog-grid,.tgrid,.inv-grid{grid-template-columns:1fr;} .impact{grid-template-columns:repeat(2,1fr);} .event{flex-wrap:wrap;} .hero-l h1{font-size:36px;} }

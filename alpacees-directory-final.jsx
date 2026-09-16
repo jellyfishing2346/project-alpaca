@@ -174,7 +174,7 @@ function GetInvolved() {
   );
 }
 
-function Newsletter() {
+export function Newsletter() {
   return (
     <section className="news">
       <div className="news-l"><h2>Newsletter</h2>

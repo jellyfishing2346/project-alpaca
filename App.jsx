@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import DirectoryApp, { Nav, Footer } from "./alpacees-directory-final.jsx";
+import Home from "./Home.jsx";
 import "./styles.css";
 
 // Placeholder page for routes whose real design isn't built yet.
@@ -25,6 +26,7 @@ export default function App() {
         {/* Directory stays at "/" for now; the marketing Homepage can take "/" later. */}
         <Route path="/" element={<DirectoryApp />} />
         <Route path="/directory" element={<DirectoryApp />} />
+        <Route path="/home" element={<Home />} />
 
         {/* Stubs — ready to fill with the Figma designs, one at a time. */}
         <Route path="/projects" element={<Page title="Projects" blurb="Alpacee project showcases — coming soon." />} />
