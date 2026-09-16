@@ -191,34 +191,62 @@ export function Newsletter() {
 
 export function Nav() {
   return (
-    <>
-      <div className="topbar">Want to hire one of our Alpacees? Reach out and we'll make an introduction! <a href="mailto:hello@projectalpaca.org">Email us</a></div>
-      <nav className="nav">
-        <Link className="nav-l" to="/" style={{ textDecoration: "none" }}><LogoImage className="nav-logo" /><span className="nav-name">Alpacee Directory</span></Link>
-        <div className="nav-r"><Link to="/directory">Meet the Alpacees</Link><Link to="/projects">See Projects</Link></div>
-      </nav>
-    </>
+    <nav className="nav">
+      <Link className="nav-l" to="/" style={{ textDecoration: "none" }}><LogoImage className="nav-logo" /><span className="nav-name">Project Alpaca</span></Link>
+      <div className="nav-r">
+        <div className="nav-item">
+          <button className="nav-trigger">Programs ▾</button>
+          <div className="nav-menu">
+            <Link to="/flagship">Flagship Program</Link>
+            <Link to="/community-programs">Community Programs</Link>
+          </div>
+        </div>
+        <Link to="/get-involved">Get Involved</Link>
+        <div className="nav-item">
+          <button className="nav-trigger">About ▾</button>
+          <div className="nav-menu">
+            <Link to="/about">About</Link>
+            <Link to="/contact">Contact</Link>
+          </div>
+        </div>
+        <Link className="donate-btn" to="/donate">Donate</Link>
+      </div>
+    </nav>
   );
 }
 
 export function Footer() {
   const cols = [
-    ["Project Alpaca", ["About", "Latest News", "Annual Reports", "Privacy Policy", "Terms of Service"]],
-    ["Programs", ["Flagship Program", "Community Programs"]],
-    ["Get Involved", ["Meet our Alpacees", "Mentor our Alpacees", "Become our Partner", "Volunteer with Us", "Support Our Work"]],
-    ["Questions?", ["Contact Us", "FAQs"]],
+    ["Explore", [["Flagship Program", "/flagship"], ["Community Programs", "/community-programs"], ["Meet our Alpacees", "/directory"], ["Mentor our Alpacees", "/get-involved"], ["Become our Partner", "/get-involved"], ["Volunteer with Us", "/get-involved"]]],
+    ["Resources", [["Annual Reports", "#"], ["Student Work", "/directory"], ["Mentor Guide", "#"], ["Sponsorship Guide", "#"], ["Latest News", "#"], ["FAQs", "#"]]],
+    ["Legal", [["Privacy Policy", "#"], ["Terms of Service", "#"], ["Cookie Settings", "#"], ["Nondiscrimination", "#"], ["IRS 501(c)(3) Status", "#"], ["Donor Rights", "#"]]],
   ];
   return (
     <footer className="footer">
       <div className="footer-top">
-        <LogoImage className="footer-logo" />
+        <div className="footer-brand">
+          <LogoImage className="footer-logo" />
+          <div className="footer-contact">
+            <b>Project Alpaca</b>
+            <p>Email: hello@projectalpaca.org<br />Address: 100 W 33rd St, New York, NY 10001<br />Cohort meets: Fridays 5:30–7:30 PM</p>
+            <p>Partnerships: partnership@projectalpaca.org<br />Inquiries: hello@projectalpaca.org</p>
+          </div>
+        </div>
         <div className="footer-cols">
           {cols.map(([h, links]) => (
-            <div key={h} className="footer-col"><h4>{h}</h4>{links.map((l) => <a key={l} href="#">{l}</a>)}</div>
+            <div key={h} className="footer-col">
+              <h4>{h}</h4>
+              {links.map(([l, to]) => (to.startsWith("/") ? <Link key={l} to={to}>{l}</Link> : <a key={l} href={to}>{l}</a>))}
+            </div>
           ))}
         </div>
       </div>
-      <div className="footer-bottom">© {new Date().getFullYear()} Project Alpaca. All rights reserved.</div>
+      <div className="footer-bottom">
+        <span>© {new Date().getFullYear()} Project Alpaca. All rights reserved.</span>
+        <span className="footer-social">
+          {["in", "ig", "yt", "f"].map((s) => <a key={s} href="#" aria-label={s}>{s}</a>)}
+        </span>
+      </div>
     </footer>
   );
 }
