@@ -303,3 +303,17 @@
 .role p { font-size:13px; line-height:1.5; color:#6E6656; margin:0; }
 .role .btn-outline { flex:none; }
 @media (max-width:900px){ .roles{grid-template-columns:1fr;} .role{flex-direction:column;align-items:flex-start;} }
+
+/* ===== Flagship ===== */
+.overview { display:grid; grid-template-columns:1fr 1fr; gap:40px; align-items:center; }
+.overview p { font-size:15px; line-height:1.7; color:#3A352C; margin:0 0 16px; }
+.overview-img { aspect-ratio:4/3; }
+.flow { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+.flow-card { background:#fff; border:1px solid #E9E2D2; border-radius:16px; padding:22px; }
+.flow-n { font-size:26px; font-weight:800; color:#E8663D; letter-spacing:-.02em; }
+.module-m { font-size:12px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:#E8663D; }
+.flow-card h3 { font-size:17px; font-weight:800; margin:8px 0 8px; }
+.flow-card p { font-size:13px; line-height:1.55; color:#3A352C; margin:0; }
+.meet-row { display:flex; align-items:center; justify-content:space-between; gap:32px; }
+.meet-row .btn-navy { flex:none; }
+@media (max-width:900px){ .overview{grid-template-columns:1fr;} .flow{grid-template-columns:repeat(2,1fr);} .meet-row{flex-direction:column;align-items:flex-start;} }

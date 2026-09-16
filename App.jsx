@@ -6,6 +6,7 @@ import Contact from "./Contact.jsx";
 import About from "./About.jsx";
 import CommunityPrograms from "./CommunityPrograms.jsx";
 import GetInvolved from "./GetInvolved.jsx";
+import Flagship from "./Flagship.jsx";
 import "./styles.css";
 
 // Placeholder page for routes whose real design isn't built yet.
@@ -39,7 +40,7 @@ export default function App() {
         <Route path="/donate" element={<Page title="Donate" />} />
         <Route path="/get-involved" element={<GetInvolved />} />
         <Route path="/community-programs" element={<CommunityPrograms />} />
-        <Route path="/flagship" element={<Page title="Flagship Program" />} />
+        <Route path="/flagship" element={<Flagship />} />
 
         {/* Anything else falls back to the directory. */}
         <Route path="*" element={<DirectoryApp />} />
