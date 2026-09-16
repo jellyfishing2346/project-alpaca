@@ -36,6 +36,7 @@ const COLUMN_MAP = {
   photo:     "Photo link",
   bio:       "Bio",
   resume:    "Resume Link",
+  completion: "Completion",
 };
 // NOTE: "Email", "race", "immigrant", "first_gen_college" are deliberately absent above.
 
@@ -119,6 +120,7 @@ export async function loadAlpacees() {
     const get = (f) => (idx[f] >= 0 ? clean(cells[idx[f]]) : "");
     const name = get("name");
     if (!name) continue; // skip blank rows
+    if (get("completion").toLowerCase() === "no") continue; // hide non-completers
 
     out.push({
       id: r,
