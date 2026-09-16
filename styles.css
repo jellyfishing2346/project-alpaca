@@ -317,3 +317,22 @@
 .meet-row { display:flex; align-items:center; justify-content:space-between; gap:32px; }
 .meet-row .btn-navy { flex:none; }
 @media (max-width:900px){ .overview{grid-template-columns:1fr;} .flow{grid-template-columns:repeat(2,1fr);} .meet-row{flex-direction:column;align-items:flex-start;} }
+
+/* ===== Donate ===== */
+.widget { background:#fff; border:1px solid #E9E2D2; border-radius:18px; padding:26px; margin-top:24px; }
+.wtoggle { display:inline-flex; background:#F0E9D8; border-radius:999px; padding:4px; margin-bottom:18px; }
+.wtoggle button { border:0; background:transparent; padding:9px 20px; border-radius:999px; font:inherit; font-weight:700; font-size:13px; cursor:pointer; color:#6E6656; }
+.wtoggle button.on { background:#211E1A; color:#FFFBF3; }
+.wamounts { display:grid; grid-template-columns:repeat(5,1fr); gap:10px; margin-bottom:18px; }
+.wamounts button, .wamounts input { padding:14px 0; border:1px solid #D8CFBB; border-radius:12px; font:inherit; font-size:15px; font-weight:700; background:#FDFCF8; cursor:pointer; text-align:center; color:#211E1A; }
+.wamounts button.on { background:#211E1A; color:#FFFBF3; border-color:#211E1A; }
+.wamounts input { font-weight:600; }
+.wamounts input:focus { outline:2px solid #211E1A; outline-offset:1px; }
+.wbtn { width:100%; justify-content:center; padding:15px; font-size:15px; }
+.wnote { font-size:12px; color:#A6A6AE; text-align:center; margin:12px 0 0; }
+.corp { display:grid; grid-template-columns:1fr 1fr; gap:40px; align-items:center; background:#F0E9D8; border:1px solid #E2D8C2; border-radius:18px; padding:36px; }
+.corp p { font-size:15px; line-height:1.65; color:#3A352C; margin:0; }
+.corp-contact { display:flex; flex-direction:column; align-items:flex-start; gap:10px; }
+.corp-label { font-size:11px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:#8A8272; }
+.corp-contact > a:first-of-type { font-size:20px; font-weight:800; color:#211E1A; text-decoration:none; }
+@media (max-width:900px){ .corp{grid-template-columns:1fr;} .wamounts{grid-template-columns:repeat(3,1fr);} }

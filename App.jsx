@@ -7,6 +7,7 @@ import About from "./About.jsx";
 import CommunityPrograms from "./CommunityPrograms.jsx";
 import GetInvolved from "./GetInvolved.jsx";
 import Flagship from "./Flagship.jsx";
+import Donate from "./Donate.jsx";
 import "./styles.css";
 
 // Placeholder page for routes whose real design isn't built yet.
@@ -37,7 +38,7 @@ export default function App() {
         {/* Stubs — ready to fill with the Figma designs, one at a time. */}
         <Route path="/projects" element={<Page title="Projects" blurb="Alpacee project showcases — coming soon." />} />
         <Route path="/about" element={<About />} />
-        <Route path="/donate" element={<Page title="Donate" />} />
+        <Route path="/donate" element={<Donate />} />
         <Route path="/get-involved" element={<GetInvolved />} />
         <Route path="/community-programs" element={<CommunityPrograms />} />
         <Route path="/flagship" element={<Flagship />} />
