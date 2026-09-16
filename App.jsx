@@ -29,8 +29,8 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Directory stays at "/" for now; the marketing Homepage can take "/" later. */}
-        <Route path="/" element={<DirectoryApp />} />
+        {/* Marketing Homepage is the front door; directory lives at /directory. */}
+        <Route path="/" element={<Home />} />
         <Route path="/directory" element={<DirectoryApp />} />
         <Route path="/home" element={<Home />} />
         <Route path="/contact" element={<Contact />} />
@@ -44,7 +44,7 @@ export default function App() {
         <Route path="/flagship" element={<Flagship />} />
 
         {/* Anything else falls back to the directory. */}
-        <Route path="*" element={<DirectoryApp />} />
+        <Route path="*" element={<Home />} />
       </Routes>
     </BrowserRouter>
   );
