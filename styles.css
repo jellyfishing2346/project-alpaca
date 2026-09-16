@@ -140,7 +140,7 @@
         .btn-green { align-self:flex-start; display:inline-flex; align-items:center; gap:8px; background:#C6F24E; color:#25340A; border:0; padding:12px 22px; border-radius:999px; font:inherit; font-weight:700; font-size:13.5px; cursor:pointer; }
         .footer { background:#211E1A; color:#E6DECF; margin:0 -48px; padding:56px 48px 28px; border-radius:22px 22px 0 0; }
         .footer-top { display:flex; gap:60px; }
-        .footer-logo { width:60px; height:60px; object-fit:contain; filter:brightness(0) invert(1); }
+        .footer-logo { width:60px; height:60px; object-fit:contain; }
         .footer-cols { display:grid; grid-template-columns:repeat(4,1fr); gap:32px; flex:1; }
         .footer-col h4 { font-size:14px; font-weight:800; margin:0 0 14px; color:#fff; }
         .footer-col a { display:block; font-size:13px; color:#B7AE9C; text-decoration:none; margin-bottom:9px; }
