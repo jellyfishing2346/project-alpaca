@@ -235,7 +235,7 @@ export function Footer() {
           <LogoImage className="footer-logo" />
           <div className="footer-contact">
             <b>Project Alpaca</b>
-            <p>Email: hello@projectalpaca.org<br />Address: 100 W 33rd St, New York, NY 10001<br />Cohort meets: Fridays 5:30–7:30 PM</p>
+            <p>Email: hello@projectalpaca.org<br />Address: 123 Main St, New York, NY<br />Cohort meets: Fridays 5:30–7:30 PM</p>
             <p>Partnerships: partnership@projectalpaca.org<br />Inquiries: hello@projectalpaca.org</p>
           </div>
         </div>
