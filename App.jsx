@@ -5,6 +5,7 @@ import Home from "./Home.jsx";
 import Contact from "./Contact.jsx";
 import About from "./About.jsx";
 import CommunityPrograms from "./CommunityPrograms.jsx";
+import GetInvolved from "./GetInvolved.jsx";
 import "./styles.css";
 
 // Placeholder page for routes whose real design isn't built yet.
@@ -36,7 +37,7 @@ export default function App() {
         <Route path="/projects" element={<Page title="Projects" blurb="Alpacee project showcases — coming soon." />} />
         <Route path="/about" element={<About />} />
         <Route path="/donate" element={<Page title="Donate" />} />
-        <Route path="/get-involved" element={<Page title="Get Involved" />} />
+        <Route path="/get-involved" element={<GetInvolved />} />
         <Route path="/community-programs" element={<CommunityPrograms />} />
         <Route path="/flagship" element={<Page title="Flagship Program" />} />
 

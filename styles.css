@@ -295,3 +295,11 @@
 .coming-soon p { font-size:13.5px; line-height:1.55; color:#3A352C; margin:0; max-width:84ch; }
 .coming-soon .btn-outline { flex:none; }
 @media (max-width:900px){ .po-grid{grid-template-columns:1fr;} .cta-bar,.coming-soon{flex-direction:column;align-items:flex-start;} }
+
+/* ===== Get Involved ===== */
+.roles { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.role { display:flex; align-items:center; justify-content:space-between; gap:20px; background:#fff; border:1px solid #E9E2D2; border-radius:14px; padding:20px 22px; }
+.role h3 { font-size:16px; font-weight:800; margin:0 0 4px; }
+.role p { font-size:13px; line-height:1.5; color:#6E6656; margin:0; }
+.role .btn-outline { flex:none; }
+@media (max-width:900px){ .roles{grid-template-columns:1fr;} .role{flex-direction:column;align-items:flex-start;} }
