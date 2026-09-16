@@ -1,6 +1,6 @@
 import React, {useState, useMemo, useEffect} from "react";
 import { createRoot } from "react-dom/client";
-import App from "./alpacees-directory-final.jsx";
+import App from "./App.jsx";
 import { loadAlpacees } from "./sheet.js";
 
 createRoot(document.getElementById("root")).render(
