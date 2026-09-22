@@ -143,15 +143,22 @@ const PersonPhoto = ({ p, variant }) => (
 // generic image placeholder (project screenshots — not people)
 const Ph = ({ variant }) => <div className={`ph ph-${variant}`}><ImgIcon /></div>;
 
+// photo with graceful fallback: initials tile if there's no photo OR the photo fails to load
+function Face({ p, imgClass, tileClass }) {
+  const [broken, setBroken] = useState(false);
+  if (!p.photo || broken) {
+    return <div className={`${imgClass} ${tileClass}`} style={{ background: tileColor(p.name) }}>{initials(p.name)}</div>;
+  }
+  return <img className={imgClass} src={p.photo} alt={p.name} onError={() => setBroken(true)} style={p.photoPos ? { objectPosition: p.photoPos } : undefined} />;
+}
+
 function Card({ p, onOpen }) {
   const tags = p.skills?.length ? p.skills.slice(0, 3) : [p.category];
   return (
     <article className="pcard" onClick={() => onOpen(p.id)} tabIndex={0}
       onKeyDown={(e) => e.key === "Enter" && onOpen(p.id)}>
-      {p.photo
-        ? <img className="pcard-photo" src={p.photo} alt={p.name} style={p.photoPos ? { objectPosition: p.photoPos } : undefined} />
-        : <div className="pcard-photo pcard-initials" style={{ background: tileColor(p.name) }}>{initials(p.name)}</div>}
-      <span className="pcard-badge"><span className="dot-green" /> Open to opportunities</span>
+      <Face p={p} imgClass="pcard-photo" tileClass="pcard-initials" />
+      {p.open !== false && <span className="pcard-badge"><span className="dot-green" /> Open to opportunities</span>}
       <div className="pcard-scrim" />
       <div className="pcard-overlay">
         <h3 className="pcard-name">{p.name}</h3>
@@ -279,9 +286,7 @@ function Profile({ p, all, onOpen, onBack }) {
       <button className="np-back" onClick={onBack}>← Back to directory</button>
       <div className="np-grid">
         <aside className="np-side">
-          {p.photo
-            ? <img className="np-photo" src={p.photo} alt={p.name} />
-            : <div className="np-photo np-photo-initials" style={{ background: tileColor(p.name) }}>{initials(p.name)}</div>}
+          <Face p={p} imgClass="np-photo" tileClass="np-photo-initials" />
           <div>
             <div className="np-label">Education</div>
             <p className="np-line"><b>{p.school || "—"}</b>{p.grad ? ` · ${p.grad}` : ""}</p>
@@ -363,8 +368,11 @@ function Profile({ p, all, onOpen, onBack }) {
 export default function App() {
   const [q, setQ] = useState("");
   const [cats, setCats] = useState([]);
+  const [openOnly, setOpenOnly] = useState(false);
+  const [page, setPage] = useState(1);
   const [selected, setSelected] = useState(null);
   const [people, setPeople] = useState(FALLBACK);
+  const PER_PAGE = 12;
 
   useEffect(() => {
     loadAlpacees()
@@ -377,10 +385,16 @@ export default function App() {
     const term = q.trim().toLowerCase();
     return people.filter((p) => {
       if (cats.length && !cats.includes(p.category)) return false;
+      if (openOnly && p.open === false) return false;
       if (term && !p.name.toLowerCase().includes(term)) return false;
       return true;
     });
-  }, [q, cats, people]);
+  }, [q, cats, openOnly, people]);
+  useEffect(() => { setPage(1); }, [q, cats, openOnly]);
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PER_PAGE));
+  const pageClamped = Math.min(page, totalPages);
+  const pageItems = filtered.slice((pageClamped - 1) * PER_PAGE, pageClamped * PER_PAGE);
   const person = people.find((p) => p.id === selected);
 
   return (
@@ -397,12 +411,22 @@ export default function App() {
             {CATEGORIES.map((c) => (
               <button key={c} className={`cat ${cats.includes(c) ? "cat-on" : ""}`} onClick={() => toggleCat(c)}>{c}</button>
             ))}
-            {cats.length > 0 && <button className="clear" onClick={() => setCats([])}>Clear all</button>}
+            <button className={`cat open-filter ${openOnly ? "cat-on" : ""}`} onClick={() => setOpenOnly((v) => !v)}><span className="dot-green" /> Open to opportunities</button>
+            {(cats.length > 0 || openOnly) && <button className="clear" onClick={() => { setCats([]); setOpenOnly(false); }}>Clear all</button>}
           </div>
           <div className="pgrid">
-            {filtered.length ? filtered.map((p) => <Card key={p.id} p={p} onOpen={setSelected} />)
+            {pageItems.length ? pageItems.map((p) => <Card key={p.id} p={p} onOpen={setSelected} />)
               : <div className="empty">No matches. Try a different name or category.</div>}
           </div>
+          {totalPages > 1 && (
+            <div className="pager">
+              <button className="pager-btn" disabled={pageClamped === 1} onClick={() => setPage(pageClamped - 1)}>← Prev</button>
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => (
+                <button key={n} className={`pager-num ${n === pageClamped ? "on" : ""}`} onClick={() => setPage(n)}>{n}</button>
+              ))}
+              <button className="pager-btn" disabled={pageClamped === totalPages} onClick={() => setPage(pageClamped + 1)}>Next →</button>
+            </div>
+          )}
           <GetInvolved />
           <Newsletter />
           <Footer />

@@ -37,6 +37,8 @@ const COLUMN_MAP = {
   bio:       "Bio",
   resume:    "Resume Link",
   completion: "Completion",
+  photoPos: "Photo Position",
+  open: "Open to Opportunities",
 };
 // NOTE: "Email", "race", "immigrant", "first_gen_college" are deliberately absent above.
 
@@ -73,11 +75,38 @@ const clean = (v) => {
   return s && s.toUpperCase() !== "N/A" ? s : "";
 };
 
-// Google Drive share links don't embed in <img>. Convert to a direct-image URL.
+// slugify a name the same way the files in public/photos are named
+const slugify = (s) => s.toLowerCase()
+  .replace(/[()_.]/g, " ")
+  .replace(/[^a-z0-9]+/g, "-")
+  .replace(/^-+|-+$/g, "");
+
+// filenames present in public/photos (name-slug -> extension)
+const PHOTO_FILES = {
+  "aakash-gharti-chhetri":"jpg","adrian-benjamin":"jpg","afifah-monir":"png","ajani-king":"jpg",
+  "alexa-montilla":"png","alexander-escamilla":"png","opinderjit-kaur-amy":"jpeg","ariana-walcott":"png",
+  "bi-rong-liu":"jpg","brian-atahualpa":"jpg","candice-arichabala":"png","carrie-yu":"jpg",
+  "cindy-phuong-illas":"png","dontae-richardson":"jpg","edwin-berrouet":"jpg","fahim-sarker":"jpg",
+  "faizan-khan":"jpg","fernando-woolcott":"jpg","franchesca-salas":"png","hannah-chacko":"png",
+  "huda-ayaz":"png","jason-norman":"jpg","javier-hernandez":"jpg","jericho-faderon":"jpg",
+  "jonathan-grande":"jpg","job-jeff-pena":"jpg","kay-kay-zin":"png","kayla-greene":"jpg",
+  "kira-andrews":"jpg","kurk-fisher":"jpg","maggie-ma":"jpg","marcus-demery":"png",
+  "marvellous-nosa":"jpg","miskatul-moon":"jpg","ngozi-fisher":"png","noel-madera-jr":"png",
+  "osadebamwen-imade":"jpg","patricia-pack-falcon":"png","rap-louis-c-regidor":"jpg",
+  "ruckshada-khan":"png","safiyyah-kazim":"jpg","selicia-graham":"png","sumaiya-fatema":"jpg",
+  "taiwo-omosowon":"jpg","tamaya-sara":"jpg","tasfiha-saba":"png","zsoreign-sanchez-de-oliveria":"jpg",
+};
+const photoBySlug = (slug) => PHOTO_FILES[slug] ? `/photos/${slug}.${PHOTO_FILES[slug]}` : "";
+
+// Photo value: explicit filename/URL if given, otherwise auto-match public/photos/<name>.<ext>
 const toDirectImage = (url) => {
   if (!url) return "";
-  const m = url.match(/\/file\/d\/([-\w]+)/) || url.match(/[?&]id=([-\w]+)/);
-  return m ? `https://lh3.googleusercontent.com/d/${m[1]}` : url;
+  const v = url.trim();
+  if (/^https?:\/\//i.test(v)) {
+    const m = v.match(/\/file\/d\/([-\w]+)/) || v.match(/[?&]id=([-\w]+)/);
+    return m ? `https://drive.google.com/thumbnail?id=${m[1]}&sz=w1000` : v;
+  }
+  return `/photos/${v.replace(/^\/+/, "")}`;
 };
 
 // Skills cells are often free-written ("Programming Languages: Python, Java; AI: PyTorch").
@@ -137,7 +166,9 @@ export async function loadAlpacees() {
       resume: get("resume"),
       quote: get("quote"),
       skills: splitList(get("skills")),
-      photo: toDirectImage(get("photo")),
+      photo: toDirectImage(get("photo")) || photoBySlug(slugify(name)),
+      photoPos: get("photoPos"),
+      open: /^(no|false|closed|not)/i.test(get("open")) ? false : true,
     });
   }
   return out;
