@@ -129,9 +129,16 @@ const ImgIcon = ({ s = 26 }) => (
 const Arrow = () => (
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
 );
-// headshot: real photo when present, otherwise your imported avatar placeholder
+// name -> initials, and a stable brand color per person (for photo-less cards)
+const initials = (name = "") => name.replace(/[(),.]/g, "").split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0]).join("").toUpperCase();
+const TILE = ["#3E52C6", "#157F7B", "#B26A00", "#B23A78", "#1F8F5F", "#5A4FCF", "#C2417E"];
+const tileColor = (name = "") => TILE[[...name].reduce((a, c) => a + c.charCodeAt(0), 0) % TILE.length];
+
+// headshot: real photo when present, otherwise an initials tile
 const PersonPhoto = ({ p, variant }) => (
-  <img className={`ph ph-${variant} ph-photo`} src={p.photo || avatarPlaceholder} alt={p.name} />
+  p.photo
+    ? <img className={`ph ph-${variant} ph-photo`} src={p.photo} alt={p.name} style={p.photoPos ? { objectPosition: p.photoPos } : undefined} />
+    : <div className={`ph ph-${variant} ph-initials`} style={{ background: tileColor(p.name) }}>{initials(p.name)}</div>
 );
 // generic image placeholder (project screenshots — not people)
 const Ph = ({ variant }) => <div className={`ph ph-${variant}`}><ImgIcon /></div>;
@@ -141,7 +148,9 @@ function Card({ p, onOpen }) {
   return (
     <article className="pcard" onClick={() => onOpen(p.id)} tabIndex={0}
       onKeyDown={(e) => e.key === "Enter" && onOpen(p.id)}>
-      <img className="pcard-photo" src={p.photo || avatarPlaceholder} alt={p.name} />
+      {p.photo
+        ? <img className="pcard-photo" src={p.photo} alt={p.name} style={p.photoPos ? { objectPosition: p.photoPos } : undefined} />
+        : <div className="pcard-photo pcard-initials" style={{ background: tileColor(p.name) }}>{initials(p.name)}</div>}
       <span className="pcard-badge"><span className="dot-green" /> Open to opportunities</span>
       <div className="pcard-scrim" />
       <div className="pcard-overlay">
@@ -235,7 +244,7 @@ export function Footer() {
           <LogoImage className="footer-logo" />
           <div className="footer-contact">
             <b>Project Alpaca</b>
-            <p>Email: hello@projectalpaca.org<br />Address: 123 Main St, New York, NY<br />Cohort meets: Fridays 5:30–7:30 PM</p>
+            <p>Email: hello@projectalpaca.org<br />Address: 100 W 33rd St, New York, NY 10001<br />Cohort meets: Fridays 5:30–7:30 PM</p>
             <p>Partnerships: partnership@projectalpaca.org<br />Inquiries: hello@projectalpaca.org</p>
           </div>
         </div>
@@ -270,7 +279,9 @@ function Profile({ p, all, onOpen, onBack }) {
       <button className="np-back" onClick={onBack}>← Back to directory</button>
       <div className="np-grid">
         <aside className="np-side">
-          <img className="np-photo" src={p.photo || avatarPlaceholder} alt={p.name} />
+          {p.photo
+            ? <img className="np-photo" src={p.photo} alt={p.name} />
+            : <div className="np-photo np-photo-initials" style={{ background: tileColor(p.name) }}>{initials(p.name)}</div>}
           <div>
             <div className="np-label">Education</div>
             <p className="np-line"><b>{p.school || "—"}</b>{p.grad ? ` · ${p.grad}` : ""}</p>
@@ -334,7 +345,9 @@ function Profile({ p, all, onOpen, onBack }) {
           <div className="np-similar-grid">
             {similar.map((s) => (
               <button key={s.id} className="np-sim" onClick={() => onOpen(s.id)}>
-                <img src={s.photo || avatarPlaceholder} alt={s.name} />
+                {s.photo
+                  ? <img src={s.photo} alt={s.name} />
+                  : <div className="np-sim-initials" style={{ background: tileColor(s.name) }}>{initials(s.name)}</div>}
                 <div><b>{s.name}</b><span>{s.role || "Alpacee at Project Alpaca"}</span></div>
               </button>
             ))}
