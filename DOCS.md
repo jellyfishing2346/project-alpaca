@@ -1,189 +1,269 @@
-# Technical Documentation — Alpacee Directory
+# Project Alpaca — Alpacee Directory · Technical Documentation
 
-Technical reference for the Project Alpaca **Alpacee Directory**. The public-facing
-overview lives in [`README.md`](./README.md); this file covers how the app is built, run,
-and deployed, plus the data-handling rules everyone working on it must follow.
+_Last updated: September 2026_
+
+This document describes the Alpacee Directory web app: what it is, how it's built, how data flows, how to perform common maintenance tasks, and what's still open. It's written for whoever maintains the site next (developer or technically-comfortable team member).
 
 ---
 
-## 1. Overview & architecture
+## 1. What this is
 
-The directory is a **static React site**. There is no backend server and no database.
+The **Alpacee Directory** is a public web app that showcases Project Alpaca's students ("Alpacees") — under-resourced NYC college students entering tech — so mentors, recruiters, and employers can browse profiles and reach out. It pulls its roster live from a Google Sheet and displays each person as a photo card that opens into a full profile.
 
-- The roster is a small set of read-only records (~75 people, plain text).
-- Nothing is written back from the site — no logins, no user accounts, no forms saving data.
-- Because of that, the whole thing can be served as static files from a CDN.
+- **Live site:** `https://project-alpaca.pages.dev`
+- **Repo:** `https://github.com/jellyfishing2346/project-alpaca`
+- **Hosting:** Cloudflare Pages (auto-deploys on push to `main`)
 
-Data flow (target state):
-
-```
-Google Sheet (source of truth)  ──►  build/fetch  ──►  static React site  ──►  CDN (Cloudflare Pages)
-   (staff edit here)                                     (this repo)
-```
-
-Staff update the Google Sheet; the site reflects those changes with no code edits.
-
-> The public marketing site is a **separate** project (Framer). This repo is **only the
-> directory**, which can live on its own subdomain (e.g. `alpacees.projectalpaca.org`)
-> and be linked from the marketing site.
+> **Scope note:** The repo also contains marketing pages (Home, About, Get Involved, Community Programs, Flagship, Contact, Donate). Per Michelle, **the marketing site is being built in Framer** (so the team can edit via a CMS without code). Those pages were an exploration and are **not the deliverable** — the **directory is the focus**. They still exist at their routes but shouldn't be treated as the source of truth for marketing content.
 
 ---
 
 ## 2. Tech stack
 
-| Layer | Choice | Notes |
-|-------|--------|-------|
-| UI | React 18 | Function components + hooks |
-| Build | Vite 5 | `@vitejs/plugin-react` |
-| Styling | CSS (currently inline in the component) | Can move to `styles.css` / CSS modules |
-| Data source | Google Sheets | Published CSV or the Sheets API (see §5) |
-| Hosting | Cloudflare Pages (recommended) | Free tier; Vercel / Netlify / GitHub Pages also work |
+| Layer | Choice |
+|---|---|
+| UI | React 18 |
+| Build tool | Vite 5 |
+| Routing | React Router (`react-router-dom`) |
+| Styling | Plain CSS in one global file (`styles.css`) |
+| Data source | Google Sheet via the gviz CSV endpoint |
+| Image hosting | Images committed to the repo under `public/photos/` |
+| Deploy | Cloudflare Pages (free tier), builds on push |
 
-Effective running cost is **$0/month**; the only real expense is a domain (~$10–15/yr).
+No backend server. Everything is a static build plus a client-side fetch of the Google Sheet.
 
 ---
 
-## 3. Project structure
-
-**Current (flat):**
+## 3. File structure
 
 ```
 project-alpaca/
-├── index.html                    # Vite entry HTML (has <div id="root">)
-├── main.jsx                      # mounts <App/> from the component below
-├── alpacees-directory-final.jsx  # the whole app: data + components + styles inline
-├── package.json
-├── package-lock.json
-├── project-alpaca-logo.png
-├── dist/                         # build output (should NOT be committed — see §8)
-├── .gitignore
-├── README.md
-└── DOCS.md
+├── index.html                    # page shell; sets <title> + favicon
+├── main.jsx                      # entry point -> mounts App.jsx
+├── App.jsx                       # React Router: routes + stub pages
+├── alpacees-directory-final.jsx  # the directory + profile + shared Nav/Footer/Newsletter
+├── sheet.js                      # loads + normalizes the roster from Google Sheets
+├── styles.css                    # ALL styling (global stylesheet)
+├── Home.jsx                      # marketing homepage         (out of scope - Framer)
+├── About.jsx                     # marketing About            (out of scope - Framer)
+├── GetInvolved.jsx               # marketing Get Involved      (out of scope - Framer)
+├── CommunityPrograms.jsx         # marketing Community Programs (out of scope - Framer)
+├── Flagship.jsx                  # marketing Flagship Program  (out of scope - Framer)
+├── Contact.jsx                   # marketing Contact           (out of scope - Framer)
+├── Donate.jsx                    # marketing Donate            (out of scope - Framer)
+├── public/
+│   ├── project-alpaca-logo.png       # main logo (dark, for light backgrounds)
+│   ├── project-alpaca-logo-white.png # spare (unused)
+│   ├── _redirects                    # Cloudflare SPA fallback (see section 11)
+│   └── photos/                       # committed headshots, one file per student
+├── vite.config.js
+├── package.json / package-lock.json
+├── DOCS.md                       # this file
+└── README.md
 ```
 
-**Recommended (once it grows):** split the single component into a normal `src/` tree.
+**Render flow:** `index.html` -> `main.jsx` -> `App.jsx` (router) -> either the directory (`alpacees-directory-final.jsx`) or a marketing page. `styles.css` is imported globally so every route is styled. `sheet.js` feeds live data into the directory.
 
+---
+
+## 4. Data flow
+
+1. On load, the directory calls `loadAlpacees()` in `sheet.js`.
+2. That fetches the sheet as CSV from the **gviz endpoint** (near real-time - no publish-cache delay).
+3. The CSV is parsed, and **only the public-safe columns** (see section 6) are read into records.
+4. Each record is enriched (category inferred, skills cleaned, photo resolved) and rendered.
+
+If the fetch fails, the app falls back to a small inline roster baked into the code, so the page never breaks.
+
+**Sheet coordinates** (in `sheet.js`):
 ```
-src/
-├── main.jsx
-├── App.jsx                       # layout + grid ↔ profile view
-├── data/alpacees.js              # roster, or the Google Sheet loader
-├── components/
-│   ├── Nav.jsx  Sidebar.jsx  AlpaceeCard.jsx  AlpaceeProfile.jsx
-└── styles.css
+SHEET_ID = "1ADZgC4L81O27dSX-7SXJ6PLeOucaJ-T0SLd8JTULUFA"
+GID      = "1999310915"   // the tab to read
 ```
+The sheet must be shared **"Anyone with the link -> Viewer"** for the fetch to work.
 
 ---
 
-## 4. Data model (public-safe fields only)
+## 5. The Google Sheet
 
-Each Alpacee record uses only fields that are safe to show publicly:
+- File: **"Consolidated Cohort Students & Alpacees Directory V2"**
+- The app reads the tab identified by `GID` above.
+- The site reads the columns whose headers match `COLUMN_MAP` in `sheet.js`. **Header text must match exactly.**
 
-| Field | Notes |
-|-------|-------|
-| `name` | Display name |
-| `cohort` | 1–5 (2019 → present) |
-| `school`, `major`, `grad` | Grad year is free-text (e.g. "Fall 2023") — display as-is, don't parse as a date |
-| `role`, `company` | Current role, optional |
-| `linkedin`, `portfolio` | Optional links |
-| `quote` | Short testimonial / bio |
-| `skills` | *Not yet in the sheet* — currently inferred from major/role as a placeholder |
+### Columns the app reads
 
----
-
-## 5. Data source & the Google Sheet
-
-Two ways to read the sheet:
-
-1. **Published CSV** (simplest) — File → Share → Publish to web → CSV, then `fetch()` it.
-   The catch: publishing exposes the whole tab publicly, so **only publish a tab that
-   contains public-safe columns.**
-2. **Google Sheets API** (better control) — read a private sheet with an API key or
-   service account and select specific columns. Preferred, because it lets you enforce
-   the public/private split at the source.
-
-**Refresh options:** rebuild on a schedule (GitHub Action) or on a sheet-edit webhook for
-build-time data, **or** fetch the CSV client-side for always-live data (simpler, but
-exposes the CSV endpoint). Build-time is recommended for a public directory.
-
-**Recommended setup:** keep a dedicated **"public" tab** in the sheet holding only the
-safe columns, and point the site at that tab.
+| App field | Sheet column header |
+|---|---|
+| name | `Name` |
+| cohort | `Cohort` |
+| school | `School` |
+| major | `Major` |
+| grad | `Graduation Year` |
+| role | `Current Job / Role` |
+| company | `Current Company` |
+| linkedin | `LinkedIn Profile` |
+| portfolio | `Website / Portfolio` |
+| quote | `Testimonial about Project Alpaca` |
+| skills | `Skills` |
+| photo | `Photo link` |
+| bio | `Bio` |
+| resume | `Resume Link` |
+| completion | `Completion` |
+| photoPos | `Photo Position` (optional) |
+| open | `Open to Opportunities` (optional) |
 
 ---
 
-## 6. ⚠️ Data & privacy rules (required reading)
+## 6. Data & privacy (important)
 
-The source spreadsheet contains fields that must **never** reach the site or the repo:
+The source sheet contains sensitive columns - **Email** and demographic fields (race, immigrant status, first-generation-college). These are **deliberately never mapped** in `COLUMN_MAP`, so even if they appear in the CSV response they never reach the app or the browser. **Do not add these to `COLUMN_MAP`.**
 
-- **Personal email addresses**
-- **Demographic data:** race, Hispanic origin, immigrant status, first-generation status
-
-These are internal reporting fields for grants/metrics — not website content.
-
-**Rules:**
-
-1. **Never commit the real full roster.** Only public-safe columns belong anywhere in
-   this repo or on the site.
-2. Pull data through a **public-only tab or column selection** — never `SELECT *` the
-   whole sheet.
-3. Keep the full sheet (with the sensitive columns) **private/locked down**.
-4. **Repo visibility:** this repo is currently **public**, and it contains the real
-   names/schools. Until the "public vs. gated directory" question is decided, consider
-   keeping the repo **private**, or confirm with the team that publishing the roster is
-   intended.
+Only the public-safe fields listed in section 5 are ever displayed.
 
 ---
 
-## 7. Local development
+## 7. Photos (the hosting system)
 
-```bash
-npm install       # install deps
-npm run dev        # start the dev server (http://localhost:5173)
-npm run build      # production build → dist/
-npm run preview    # preview the production build locally
+**Why not Google Drive:** Drive image links get blocked by browsers (Firefox's "OpaqueResponseBlocking" / ORB) because Drive doesn't return clean image responses. They load inconsistently and fail entirely in Firefox. **Drive is not a viable image host for a public site.**
+
+**The solution:** headshots are committed to the repo under `public/photos/` and matched to people **automatically by name**.
+
+### How matching works
+For each person, `sheet.js`:
+1. If their `Photo link` cell has a value (a filename or full URL), that is used.
+2. Otherwise, it **slugifies their `Name`** and looks for a matching file in `public/photos/`.
+
+**Slug rule:** lowercase, spaces -> hyphens, parentheses/dots/underscores removed. Examples:
+- `Patricia Pack Falcon` -> `patricia-pack-falcon`
+- `Noel Madera, Jr.` -> `noel-madera-jr`
+- `Opinderjit Kaur (Amy)` -> `opinderjit-kaur-amy`
+
+The known filenames + extensions live in the `PHOTO_FILES` map in `sheet.js`, and `photoBySlug()` turns a slug into `/photos/<slug>.<ext>`.
+
+### The golden rule
+**A person's photo shows only if `slugify(their sheet Name)` exactly equals their photo's filename (minus extension).** If they show an initials tile instead of a photo, the name and the filename don't match - fix one to match the other (see section 10).
+
+### Graceful fallback
+If a photo is missing OR fails to load, the `Face` component renders a **colored initials tile** (e.g. "PP") instead of a broken image. So the grid never looks broken, even mid-migration.
+
+---
+
+## 8. Directory features
+
+- **Search by name** - free-text filter.
+- **Category filters** - pills for Software Engineering / Data / Design / Business / Marketing. Category is inferred per person by `inferCategory()` from their role/skills.
+- **"Open to opportunities" toggle** - filters to people marked open. Backed by the optional `Open to Opportunities` sheet column: blank = treated as open; `No`/`Closed`/`False` = hidden when the toggle is on and the card's badge is removed.
+- **Clear all** - resets category + open filters.
+- **Pagination** - 12 per page with page controls (Prev / 1 2 3 ... / Next). Resets to page 1 when a filter or search changes.
+- **Completers-only** - anyone whose `Completion` cell says **`No`** is hidden entirely (both card and profile). Blank/anything else shows. This keeps non-completers off the public directory.
+- **Photo cards** - full-bleed headshot (or initials tile), an "Open to opportunities" badge, and the name/role/skill tags overlaid at the bottom.
+
+---
+
+## 9. Profile pages
+
+Clicking a card opens that person's profile (currently via in-app state, not a separate URL - see section 13).
+
+Layout:
+- **Left rail:** the photo at its **natural proportions** (no forced square crop, so faces aren't cut off), then **Education** (school, grad year, major) and **Experience** (company, role).
+- **Right column:** cohort/category label, name + "Open to opportunities" badge, skill tags, a green **Contact** button and **Download resume** link, an **About** section (bio), a **Project Showcase** slot (placeholder pending data), **Recommendations** (uses their testimonial), and a hiring CTA.
+- **Other Alpacees with similar skills** - three cards from the same category.
+
+Working links: **Contact** -> the person's `LinkedIn Profile`; **Download resume** -> their `Resume Link`.
+
+---
+
+## 10. Common tasks
+
+### Add or update a student's photo
+1. Save the image as `firstname-lastname.<ext>` - **lowercase, hyphens**, matching what `slugify(their sheet Name)` produces. Keep the real extension (`.jpg`, `.png`, `.jpeg`).
+2. Put the file in `public/photos/`.
+3. Add one line to `PHOTO_FILES` in `sheet.js`: `"firstname-lastname":"jpg",`
+4. Commit + push.
+
+If their photo shows as an initials tile, the filename doesn't match `slugify(Name)`. Either rename the file, or fix the sheet Name - they must agree.
+
+### Hide a non-completer
+Put `No` in their `Completion` cell. They disappear from the site on the next load. (Self-maintaining - remove the `No` and they reappear.)
+
+### Mark someone not open to opportunities
+Put `No` in their `Open to Opportunities` cell. Their badge disappears and they're hidden when the "Open to opportunities" filter is on.
+
+### Adjust a photo's crop on the card
+The gallery card crops photos toward the top by default (faces). To fine-tune one, put a CSS `object-position` value in their `Photo Position` cell (e.g. `center top`, `center 40%`, `right center`). The profile photo shows in full, so it's unaffected.
+
+### Add a student to the roster
+Add a row to the sheet with at least a `Name`. Fill the public-safe columns you have. Add their photo per the steps above. They appear on the next load.
+
+---
+
+## 11. Deployment
+
+- Cloudflare Pages watches `main` and rebuilds on every push. No manual deploy step.
+- **SPA fallback:** `public/_redirects` contains `/*  /index.html  200`. This is required so that opening a deep link (e.g. `/directory`) directly doesn't 404 - Cloudflare serves `index.html` and the router takes over.
+- Local build check before pushing: `npm run build` (fails loudly if something's broken).
+
+### Local development
 ```
-
-Entry point: `index.html` → `main.jsx` → the `App` component.
-
----
-
-## 8. Deployment (Cloudflare Pages)
-
-1. Cloudflare dashboard → **Workers & Pages → Create → Pages → Connect to Git** →
-   pick this repo.
-2. Build settings:
-   - **Build command:** `npm run build`
-   - **Output directory:** `dist`
-3. Every push to `main` auto-deploys; pull requests get preview URLs.
-4. Add the custom domain/subdomain in the Pages project settings.
-
-Because Cloudflare builds `dist` for you, **`dist/` should be git-ignored, not committed.**
-Add it to `.gitignore` and remove the committed copy:
-
-```gitignore
-node_modules/
-dist/
-# local data — never commit
-*.local.csv
-/data/private/
+npm install            # first time only
+npm run dev            # local dev server (usually http://localhost:5173)
+npm run build          # production build (verify before committing)
+npm run preview        # preview the production build locally
 ```
+Note: files added to `public/` while `npm run dev` is running aren't picked up until you **restart the dev server**.
 
 ---
 
-## 9. Known cleanup / TODO
+## 12. Routing
 
-- [ ] Add `dist/` to `.gitignore` and remove the committed build output
-- [ ] Add a `vite.config.js` with `@vitejs/plugin-react` (enables Fast Refresh)
-- [ ] Move source into `src/`; rename `alpacees-directory-final.jsx` → `App.jsx`
-- [ ] Add a repo description + topics on GitHub
-- [ ] Decide repo visibility (public vs private) per §6
-- [ ] Wire the live Google Sheet data source (public columns only)
-- [ ] Add sheet columns the design needs: **Skills**, **Open-to-opportunities status**,
-      **project** (name + images), **photos**
-- [ ] Final visual-design pass (see Figma `Visual Design – Desktop`)
-- [ ] Reconcile duplicate/incomplete roster rows (e.g. "Fahim" vs "Fahim Sarker")
+| Path | Renders |
+|---|---|
+| `/` | Marketing Homepage |
+| `/directory` | The Alpacee directory (also the catch-all `*`) |
+| `/about`, `/get-involved`, `/community-programs`, `/flagship`, `/contact`, `/donate` | Marketing pages (out of scope - Framer) |
+| `/projects` | Stub ("coming soon") - never had a design |
+
+Nav + Footer are shared components (defined in `alpacees-directory-final.jsx`) used across all pages.
 
 ---
 
-*This doc could also be named `CONTRIBUTING.md` if you want GitHub to surface it on pull
-requests. Keep it updated as the structure and data source evolve.*
+## 13. Known decisions & deviations
+
+- **Marketing pages -> Framer.** They're built here but out of scope; the team's marketing CMS is Framer.
+- **Unified nav.** The whole site uses one marketing-style nav (Project Alpaca + Programs / Get Involved / About / Donate). The Figma's directory design had its own header ("Meet the Alpacees / See Projects" + a "hire an Alpacee" bar). If matching the Figma exactly is required, the directory nav would need reverting.
+- **Filters simplified vs. Figma.** The Figma shows nested sub-category dropdowns (e.g. "Design: UI Design, UX Research"). Those need a per-person sub-skill taxonomy the sheet doesn't have, so they weren't built. The current directory uses flat category pills + a search box + the open toggle instead.
+- **Profiles are in-app state, not URLs.** Clicking a card opens the profile without changing the URL (no shareable `/alpacee/:id` links yet). A clean fast-follow if wanted.
+
+---
+
+## 14. Placeholder / pending content
+
+These render but await real data from the team:
+- Board members, junior board, mentors, teaching team (on the marketing pages).
+- Program/hero/partner images and press items.
+- Per-profile **Project Showcase** and (real) **Recommendations**.
+- Payment processor for the Donate widget; confirm the emails (`hello@`, `partnership@`, `giving@`) are live inboxes.
+
+---
+
+## 15. Open items / next steps
+
+- **Awaiting founder review.** Michelle shared the live site with Catherine Mann (founder) for feedback. Build against her actual notes rather than pre-emptively reworking.
+- **Directory <-> Figma fidelity** is the current priority per Michelle ("get it as close to the Figma as possible, on brand"). Remaining gaps: sub-category filter dropdowns; the nav deviation.
+- **Subdomain.** `alpacees.projectalpaca.org` was the original plan for the directory (needs a DNS CNAME). Now that this is a full site with a homepage, revisit whether that subdomain is still the plan.
+- **Repo is public** with real student names - confirm with the team that's intentional.
+- **Photo workflow is now a code commit** (not a sheet paste) - make sure the team knows.
+
+---
+
+## 16. Quick reference
+
+| I want to... | Do this |
+|---|---|
+| Add a photo | Drop `name-slug.ext` in `public/photos/`, add a line to `PHOTO_FILES`, commit |
+| Hide a non-completer | `No` in their `Completion` cell |
+| Mark not open to work | `No` in their `Open to Opportunities` cell |
+| Nudge a card's photo crop | CSS value in their `Photo Position` cell |
+| Change footer contact info | Edit the `Footer` component in `alpacees-directory-final.jsx` |
+| Fix a "wrong data" issue | It's almost always the sheet - check the exact column header and cell value |
+| Deploy | `git push` to `main` (Cloudflare rebuilds) |

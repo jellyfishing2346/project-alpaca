@@ -1,38 +1,45 @@
-# Project Alpaca
+# Project Alpaca — Alpacee Directory
 
-Meet the **Alpacees**: the students and alumni of Project Alpaca.
+A public web directory that showcases Project Alpaca's students ("Alpacees") — under-resourced NYC college students entering tech — so mentors, recruiters, and employers can browse profiles and reach out.
 
-## About Project Alpaca
+**Live:** https://project-alpaca.pages.dev
 
-Project Alpaca is a career-prep nonprofit offering multi-layered support to
-under-resourced NYC college students entering the tech industry. Since 2019, we've
-walked alongside cohorts of students from CUNY and partner colleges across New York City
-as they build the skills, network, and confidence to launch careers in tech.
+---
 
-## About this site
+## What it does
 
-This is the **Alpacee Directory** — a place to meet our community. Browse Alpacees by
-cohort, school, and focus area, learn where they came from and where they're headed, and
-see the journeys that Project Alpaca helps make possible.
+- Shows every completed Alpacee as a photo card with their name, role, and skills.
+- Clicking a card opens a full profile (education, experience, about, contact + résumé links).
+- Visitors can **search by name**, **filter by category** (Software Engineering, Data, Design, Business, Marketing), and toggle **"Open to opportunities."**
+- The roster is pulled **live from a Google Sheet** — update the sheet, and the site updates on the next load.
 
-Whether you're a student considering the program, an employer looking to hire, or a
-supporter who wants to see the impact, the directory is the front door to our community.
+## How it's built
 
-## Our community
+- **React + Vite**, deployed on **Cloudflare Pages** (auto-deploys on every push to `main`).
+- Roster data comes from a Google Sheet (only public-safe columns are ever read — email and demographic data are never exposed).
+- Student headshots live in `public/photos/` and are matched to people automatically by name.
 
-- Five cohorts and counting, since 2019
-- Students from CUNY and partner colleges across NYC — Hunter, Brooklyn College, Baruch,
-  Lehman, LaGuardia, BMCC, City Tech, and more
-- Alpacees pursuing software engineering, data, design, cybersecurity, and beyond
+## Running it locally
 
-## Get involved
+```
+npm install     # first time only
+npm run dev      # start the local dev server
+npm run build    # production build
+```
 
-- **Hire an Alpacee** — reach out and we'll make an introduction.
-- **Support the program** — your donation helps the next cohort get started.
-- **Mentor or partner with us** — we'd love to connect.
+## Editing content
 
-## Learn more
+Most content lives in the **Google Sheet**, not the code:
 
-Visit our website or get in touch to learn more about the program and how to support it.
+- **Add / edit a student** → edit their row in the sheet.
+- **Hide a non-completer** → put `No` in their `Completion` cell.
+- **Mark someone not open to work** → put `No` in their `Open to Opportunities` cell.
+- **Add a photo** → drop the image in `public/photos/` named to match their sheet Name (lowercase, hyphens), add a line to `PHOTO_FILES` in `sheet.js`, and commit.
 
-_(Add your real website, donate, and contact links here.)_
+## More detail
+
+See **[DOCS.md](./DOCS.md)** for full technical documentation — architecture, the photo system, data flow, deployment, common tasks, and open items.
+
+---
+
+_Built as part of the Project Alpaca website redesign. The marketing site (Home, About, Donate, etc.) is maintained separately in Framer; this repo is the Alpacee Directory._
