@@ -149,13 +149,21 @@ If a photo is missing OR fails to load, the `Face` component renders a **colored
 
 ## 8. Directory features
 
-- **Search by name** - free-text filter.
-- **Category filters** - pills for Software Engineering / Data / Design / Business / Marketing. Category is inferred per person by `inferCategory()` from their role/skills.
-- **Clear all** - resets category filters.
+**Design source:** Figma file "Web design - Project Alpaca" (`pI4KbsmcNLeNbyQvCtJXn7`), page **Visual Design - Desktop**, frame **Directory - Home** (`1395:8563`), by Studio Haven. (The same file's "Wireframes" page is the older gray wireframe; don't build from that.)
+
+- **Header** - directory-only (`DirHeader`): a "Want to hire one of our Alpacees? Email us" banner (mails partnership@projectalpaca.org), the logo with an "Alpacee Directory" label, and "Meet the Alpacees / See Projects" links. "See Projects" points to `/flagship` until a projects page exists. The marketing pages keep the shared `Nav`.
+- **Search by name** - free-text filter (not in the Figma; kept because it's useful, styled like the filter pills).
+- **Category filter pills** - Software Engineering / Data / Design / Business / Marketing, each opening a dropdown of checkboxes: "All <category>" plus sub-buckets. A pill fills with its category color once anything is picked, and its label lists the picks (e.g. "Design: UI Design, UX Research"), as in the Figma. Picks combine with OR. Category is inferred per person by `inferCategory()`.
+- **Category colors** - `CAT_COLORS` in `alpacees-directory-final.jsx`, from the Studio Haven palette. The same color fills the pill and tints that category's skill tags at 60% (per the Figma "Skill tag" component: Purple = Design, Night Sky = Project management, Mellow Yellow = Technical).
+- **Sub-buckets** - `SUBCATEGORIES` in the same file; the final list is still TBD. Each is a label plus a keyword pattern matched against major/role/skills within that category. Edit there; empty ones hide automatically.
+- **Clear all** - appears once a filter or search is set.
 - (The "Open to opportunities" filter and badge were removed per team decision. The site no longer reads the `Open to Opportunities` sheet column.)
-- **Pagination** - 12 per page with page controls (Prev / 1 2 3 ... / Next). Resets to page 1 when a filter or search changes.
+- **Pagination** - 12 per page; "Previous / 1 2 3 … 5 6 / Next" in GT America caps, per the Figma. Changing page scrolls to the top. Resets to page 1 when a filter or search changes.
 - **Completers-only** - anyone whose `Completion` cell says **`No`** is hidden entirely (both card and profile). Blank/anything else shows. This keeps non-completers off the public directory.
-- **Photo cards** - full-bleed headshot (or initials tile) with the name/role/skill tags overlaid at the bottom.
+- **Photo cards** - 600px tall, full-bleed headshot (or an initials tile in a brand color) with the name (GT America 40px), "role at company" and category-colored skill tags overlaid at the bottom.
+- **Get Involved** - five cards in brand colors (Support Us, Become Our Partner, Become an Alpaca, Join a Cohort, Join as a Volunteer), per the Figma. Photos load from `public/images/get-involved/` as `support.jpg`, `partner.jpg`, `mentor.jpg`, `cohort.jpg`, `volunteer.jpg`; export them from the Figma frame. Until a file exists, its card shows without a photo.
+- **Newsletter and footer** - directory versions (`DirNewsletter`, `DirFooter`) per the Figma; the marketing pages keep the shared `Newsletter` and `Footer`. The newsletter form isn't connected to an email service yet.
+- **Logo files** - `project-alpaca-logo.png` has a white background (the header blends it into the cream with `mix-blend-mode`; the footer shows it on a white tile). `project-alpaca-logo-white.png` is a solid white square and isn't usable; a transparent logo export from Figma would fix both.
 
 ---
 
@@ -226,8 +234,8 @@ Nav + Footer are shared components (defined in `alpacees-directory-final.jsx`) u
 ## 13. Known decisions & deviations
 
 - **Marketing pages -> Framer.** They're built here but out of scope; the team's marketing CMS is Framer.
-- **Unified nav.** The whole site uses one marketing-style nav (Project Alpaca + Programs / Get Involved / About / Donate). The Figma's directory design had its own header ("Meet the Alpacees / See Projects" + a "hire an Alpacee" bar). If matching the Figma exactly is required, the directory nav would need reverting.
-- **Filters simplified vs. Figma.** The Figma shows nested sub-category dropdowns (e.g. "Design: UI Design, UX Research"). Those need a per-person sub-skill taxonomy the sheet doesn't have, so they weren't built. The current directory uses flat category pills + a search box instead.
+- **Directory header** now follows the Figma (see section 8); the marketing pages keep the shared nav.
+- **Where the directory differs from the Figma:** no "Open to opportunities" filter (removed per Michelle); an added search box; Software Engineering, Data and Marketing use palette colors the Figma doesn't assign (only Design, Project management and Technical tags are defined there).
 - **Profiles are in-app state, not URLs.** Clicking a card opens the profile without changing the URL (no shareable `/alpacee/:id` links yet). A clean fast-follow if wanted.
 
 ---
@@ -251,7 +259,7 @@ These render but await real data from the team:
 ## 15. Open items / next steps
 
 - **Awaiting founder review.** Michelle shared the live site with Catherine Mann (founder) for feedback. Build against her actual notes rather than pre-emptively reworking.
-- **Directory <-> Figma fidelity** is the current priority per Michelle ("get it as close to the Figma as possible, on brand"). Remaining gaps: sub-category filter dropdowns; the nav deviation.
+- **Directory <-> Figma fidelity** is the current priority per Michelle ("get it as close to the Figma as possible, on brand"). The directory list page now follows the Studio Haven design (frame `1395:8563`); next is the profile page (frame `1158:7075` on the same page), the final sub-bucket list, and the Get Involved photos.
 - **Subdomain.** `alpacees.projectalpaca.org` was the original plan for the directory (needs a DNS CNAME). Now that this is a full site with a homepage, revisit whether that subdomain is still the plan.
 - **Repo is public** with real student names - confirm with the team that's intentional.
 - **Photo workflow is now a code commit** (not a sheet paste) - make sure the team knows.

@@ -106,6 +106,51 @@ function inferFocus(p) {
   return "Other";
 }
 const CATEGORIES = ["Software Engineering", "Data", "Design", "Business", "Marketing"];
+
+// Category colors from the Studio Haven palette. The same color fills a selected filter pill
+// and tints that category's skill tags (at 60%, as in the Figma "Skill tag" component:
+// Purple = Design, Night Sky = Project management, Mellow Yellow = Technical).
+export const CAT_COLORS = {
+  "Software Engineering": "#564538", // Mellow Yellow (Figma "Technical" tag)
+  "Data":                 "#2B6140", // Grass
+  "Design":               "#5B2D53", // Purple (Figma "Design" tag)
+  "Business":             "#1E474D", // Night Sky (Figma "Project management" tag)
+  "Marketing":            "#1F1F1F", // Dirt
+};
+const catColor = (c) => CAT_COLORS[c] || "#1F1F1F";
+
+// Sub-buckets shown inside each category's dropdown. The final list is still TBD by the team:
+// edit labels/patterns here and the dropdowns update. A person matches a sub-bucket if they're
+// in that category and the pattern matches their major, role or skills. Empty ones are hidden.
+const SUBCATEGORIES = {
+  "Software Engineering": [
+    ["Computer Science", /computer science/],
+    ["Information Systems & IT", /information (systems|technology)|\bit\b|network/],
+    ["Cybersecurity", /cyber|security/],
+    ["Hardware & Electrical", /electrical|hardware/],
+  ],
+  "Data": [
+    ["Data Science", /data scien/],
+    ["Analytics", /analy/],
+    ["Machine Learning & AI", /machine learning|\bml\b|pytorch|tensorflow|\bllm/],
+  ],
+  "Design": [
+    ["UI Design", /\bui\b|interface/],
+    ["UX Research", /\bux\b|user experience|research/],
+    ["Graphic & Visual", /graphic|visual|imag|\bart\b/],
+    ["Digital Media", /media|multimedia|communication design/],
+  ],
+  "Business": [
+    ["Finance & Economics", /financ|econom|account/],
+    ["Business Administration", /business|administration/],
+    ["Law & Real Estate", /\blaw\b|real estate/],
+  ],
+  "Marketing": [
+    ["Communications", /communicat/],
+    ["Social & Content", /social media|content|brand/],
+  ],
+};
+const personText = (p) => `${p.major || ""} ${p.role || ""} ${(p.skills || []).join(" ")}`.toLowerCase();
 function inferCategory(p) {
   const t = `${p.major || ""} ${p.role || ""} ${(p.skills || []).join(" ")}`.toLowerCase();
   if (/(ux|ui|graphic|design|animation|game|art|creative|multimedia|\bmedia\b)/.test(t)) return "Design";
@@ -131,7 +176,7 @@ const Arrow = () => (
 );
 // name -> initials, and a stable brand color per person (for photo-less cards)
 const initials = (name = "") => name.replace(/[(),.]/g, "").split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0]).join("").toUpperCase();
-const TILE = ["#3E52C6", "#157F7B", "#B26A00", "#B23A78", "#1F8F5F", "#5A4FCF", "#C2417E"];
+const TILE = ["#2B6140", "#1E474D", "#5B2D53", "#564538", "#1F1F1F"]; // Grass, Night Sky, Purple, Mellow Yellow, Dirt
 const tileColor = (name = "") => TILE[[...name].reduce((a, c) => a + c.charCodeAt(0), 0) % TILE.length];
 
 // headshot: real photo when present, otherwise an initials tile
@@ -161,30 +206,53 @@ function Card({ p, onOpen }) {
       <div className="pcard-scrim" />
       <div className="pcard-overlay">
         <h3 className="pcard-name">{p.name}</h3>
-        <p className="pcard-role">{p.role || `${COHORTS[p.c]?.label ?? ""} · Alpacee`}</p>
-        <div className="pcard-tags">{tags.map((s) => <span key={s} className="pcard-tag">{s}</span>)}</div>
+        <p className="pcard-role">{p.role ? `${p.role}${p.company ? ` at ${p.company}` : ""}` : `${COHORTS[p.c]?.label ?? ""} · Alpacee`}</p>
+        <div className="pcard-tags">{tags.map((s) => <span key={s} className="pcard-tag" style={{ background: catColor(p.category) + "99" }}>{s}</span>)}</div>
       </div>
     </article>
   );
 }
 
-function GetInvolved() {
-  const items = [
-    { t: "Support Us Financially", d: "Sponsor a cohort, host workspace trips, or hire talented graduates for junior roles.", k: "coral" },
-    { t: "Become Our Partner", d: "Build a tailored alliance to support early-career tech talent.", k: "navy" },
-    { t: "Become an Alpaca (Mentor)", d: "Guide an Alpacee 1-on-1 or instruct a class.", k: "green" },
-    { t: "Join as a Volunteer", d: "Lend your skills in administration, events, or technical support.", k: "wool" },
-  ];
+// Hand-drawn arrow used on the design's outlined buttons.
+const Squiggle = () => (
+  <svg className="squiggle" width="64" height="24" viewBox="0 0 88 32" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="M3 20c10 0 16-14 26-12 7 1.5 5 13-2 11-6-2 2-11 14-10 10 1 22 1 41 1" /><path d="M76 5l9 7-9 7" />
+  </svg>
+);
+
+// Get Involved, per the Figma directory frame. Photos load from /public/images/get-involved/;
+// if a file isn't there yet, the card simply shows without its photo.
+const GI_CARDS = [
+  { key: "support",   title: "Support Us", text: "Donate to fund student stipends, MetroCards, and expert instruction.", bg: "#1E474D", accent: "#FFF767", to: "/donate", cta: "Donate", big: true },
+  { key: "partner",   title: "Become Our Partner", text: "Sponsor a cohort, host workspace trips, or hire talented graduates for junior roles.", bg: "#5B2D53", accent: "#63FFA1", to: "/get-involved" },
+  { key: "mentor",    title: "Become an Alpaca (Mentor)", text: "Guide an Alpacee 1-on-1 or instruct a class.", bg: "#2B6140", accent: "#FF98ED", to: "/get-involved" },
+  { key: "cohort",    title: "Join a Cohort", text: "If you are a student ready to supercharge your tech capabilities, start your application here.", bg: "#1F1F1F", accent: "#FF9586", to: "/flagship" },
+  { key: "volunteer", title: "Join as a Volunteer", text: "Lend your skills in administration, event organization, or technical support during events.", bg: "#564538", accent: "#37E3FC", to: "/get-involved" },
+];
+function GiCard({ c }) {
+  const [hasImg, setHasImg] = useState(true);
   return (
-    <section className="gi">
-      <h2 className="section-h">Get Involved</h2>
-      <div className="gi-grid">
-        {items.map((i) => (
-          <div key={i.t} className={`gi-card gi-${i.k}`}>
-            <h3>{i.t}</h3><p>{i.d}</p><span className="gi-arrow"><Arrow /></span>
-          </div>
-        ))}
+    <Link to={c.to} className={`gi2-card ${c.big ? "gi2-big" : ""}`} style={{ background: c.bg }}>
+      {hasImg && <img className="gi2-img" src={`/images/get-involved/${c.key}.jpg`} alt="" onError={() => setHasImg(false)} />}
+      <div className="gi2-body">
+        <div>
+          <h3 style={{ color: c.accent }}>{c.title}</h3>
+          <p>{c.text}</p>
+        </div>
+        <span className="gi2-btn" style={{ color: c.big ? "#63FFA1" : "#E0FFEC" }}>{c.cta && <b>{c.cta}</b>}<Squiggle /></span>
       </div>
+    </Link>
+  );
+}
+function GetInvolved() {
+  const [support, partner, mentor, cohort, volunteer] = GI_CARDS;
+  return (
+    <section className="gi2">
+      <div className="gi2-row">
+        <GiCard c={support} />
+        <div className="gi2-col"><GiCard c={partner} /><GiCard c={mentor} /></div>
+      </div>
+      <div className="gi2-row"><GiCard c={cohort} /><GiCard c={volunteer} /></div>
     </section>
   );
 }
@@ -277,6 +345,152 @@ export function Footer() {
   );
 }
 
+// Directory header, per the Figma: a hire banner, then logo + "Alpacee Directory" label and
+// "Meet the Alpacees / See Projects". The marketing pages keep using <Nav />.
+function DirHeader({ onHome }) {
+  return (
+    <>
+      <div className="dh-banner">
+        Want to hire one of our Alpacees? Reach out to us and we'll make an introduction!{" "}
+        <a href="mailto:partnership@projectalpaca.org">Email us</a>
+      </div>
+      <header className="dh">
+        <Link className="dh-brand" to="/directory" onClick={onHome}>
+          <LogoImage className="dh-logo" />
+          <span>Alpacee Directory</span>
+        </Link>
+        <nav className="dh-links">
+          <Link to="/directory" className="on" onClick={onHome}>Meet the Alpacees</Link>
+          <Link to="/flagship">See Projects</Link>
+        </nav>
+      </header>
+    </>
+  );
+}
+
+const Chevron = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+);
+
+// A category filter pill. Outlined when nothing is picked; filled with the category color once
+// something is, and the label lists the picks ("Design: UI Design, UX Research").
+function FilterPill({ cat, people, sel, toggle, open, setOpen }) {
+  const ref = React.useRef(null);
+  const col = catColor(cat);
+  const inCat = people.filter((p) => p.category === cat);
+  const subs = (SUBCATEGORIES[cat] || [])
+    .map(([label, re]) => [label, inCat.filter((p) => re.test(personText(p))).length])
+    .filter(([, n]) => n > 0);
+  const allKey = `cat:${cat}`;
+  const picked = subs.map(([l]) => l).filter((l) => sel.has(`sub:${cat}:${l}`));
+  const active = sel.has(allKey) || picked.length > 0;
+  const label = picked.length && !sel.has(allKey) ? `${cat}: ${picked.join(", ")}` : cat;
+  useEffect(() => {
+    if (!open) return;
+    const off = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(null); };
+    const esc = (e) => { if (e.key === "Escape") setOpen(null); };
+    document.addEventListener("mousedown", off); document.addEventListener("keydown", esc);
+    return () => { document.removeEventListener("mousedown", off); document.removeEventListener("keydown", esc); };
+  }, [open]);
+  const Row = ({ k, text, n }) => {
+    const on = sel.has(k);
+    return (
+      <label className="fp-opt">
+        <input type="checkbox" checked={on} onChange={() => toggle(k)} />
+        <span className="fp-box" style={on ? { background: col, borderColor: col } : undefined} aria-hidden="true">
+          {on && <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#fff" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12l5 5 9-10" /></svg>}
+        </span>
+        <span className="fp-text">{text}</span><span className="fp-n">{n}</span>
+      </label>
+    );
+  };
+  return (
+    <div className="fp" ref={ref}>
+      <button className={`fp-pill ${active ? "on" : ""}`} aria-expanded={open} onClick={() => setOpen(open ? null : cat)}
+        style={active ? { background: col, borderColor: col } : undefined}>
+        <span>{label}</span><Chevron />
+      </button>
+      {open && (
+        <div className="fp-menu" role="group" aria-label={`${cat} filters`}>
+          <Row k={allKey} text={`All ${cat}`} n={inCat.length} />
+          {subs.map(([l, n]) => <Row key={l} k={`sub:${cat}:${l}`} text={l} n={n} />)}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Page list with gaps, like the design's "1 2 3 … 5 6".
+function pageList(cur, total) {
+  const keep = new Set([1, 2, total - 1, total, cur - 1, cur, cur + 1].filter((n) => n >= 1 && n <= total));
+  const out = []; let prev = 0;
+  [...keep].sort((a, b) => a - b).forEach((n) => {
+    if (n - prev === 2) out.push(n - 1);            // a gap of one page: just show that page
+    else if (n - prev > 2) out.push("gap-" + n);    // a real gap: "…"
+    out.push(n); prev = n;
+  });
+  return out;
+}
+const PgArrow = ({ left }) => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{left ? <path d="M19 12H5M11 6l-6 6 6 6" /> : <path d="M5 12h14M13 6l6 6-6 6" />}</svg>
+);
+
+function DirNewsletter() {
+  return (
+    <section className="dn">
+      <div className="dn-l">
+        <h2>Newsletter</h2>
+        <p>Subscribe to the Project Alpaca newsletter to stay up to date on our programs, community events, student stories, and ways to get involved.</p>
+      </div>
+      <form className="dn-r" onSubmit={(e) => e.preventDefault()}>
+        <div className="dn-row">
+          <input aria-label="First name" placeholder="First Name" />
+          <input aria-label="Last name" placeholder="Last Name" />
+        </div>
+        <input aria-label="Email" type="email" placeholder="Email" />
+        <button type="submit" className="dn-btn">Subscribe <Squiggle /></button>
+      </form>
+    </section>
+  );
+}
+
+function DirFooter() {
+  const cols = [
+    ["Project Alpaca", [["About", "/about"], ["Latest News", "#"], ["Annual Reports", "#"], ["Privacy Policy", "#"], ["Terms of Service", "#"], ["Cookie Settings", "#"]]],
+    ["Programs", [["Flagship Program", "/flagship"], ["Community Programs", "/community-programs"]]],
+    ["Get Involved", [["Meet our Alpacees", "/directory"], ["Mentor our Alpacees", "/get-involved"], ["Become our Partner", "/get-involved"], ["Volunteer with Us", "/get-involved"], ["Support Our Work", "/donate"], ["Mentor Guide", "#"], ["Sponsorship Guide", "#"]]],
+    ["Questions?", [["Contact Us", "/contact"], ["FAQs", "#"]]],
+  ];
+  return (
+    <footer className="df">
+      <div className="df-top">
+        <span className="df-logo"><img src="/project-alpaca-logo.png" alt="Project Alpaca" /></span>
+        <div className="df-cols">
+          {cols.map(([h, links]) => (
+            <div key={h} className="df-col">
+              <h4>{h}</h4>
+              {links.map(([l, to]) => (to.startsWith("/") ? <Link key={l} to={to}>{l}</Link> : <a key={l} href={to}>{l}</a>))}
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="df-bottom">
+        <div className="df-social">
+          {SOCIALS.map((s) => (
+            <a key={s.name} href={s.url} target="_blank" rel="noreferrer" aria-label={s.name}>
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d={s.path} /></svg>
+            </a>
+          ))}
+        </div>
+        <div className="df-legal">
+          <span>©Copyright Project Alpaca {new Date().getFullYear()}. All rights reserved.</span>
+          <span>Designed by Studio Haven</span>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
 function Profile({ p, all, onOpen, onBack }) {
   const similar = (all || []).filter((x) => x.category === p.category && x.id !== p.id).slice(0, 3);
   const tags = p.skills?.length ? p.skills : [p.focus];
@@ -357,15 +571,14 @@ function Profile({ p, all, onOpen, onBack }) {
           </div>
         </div>
       )}
-
-      <Footer />
     </div>
   );
 }
 
 export default function App() {
   const [q, setQ] = useState("");
-  const [cats, setCats] = useState([]);
+  const [sel, setSel] = useState(() => new Set()); // "cat:<Category>" or "sub:<Category>:<Sub-bucket>"
+  const [openPill, setOpenPill] = useState(null);
   const [page, setPage] = useState(1);
   const [selected, setSelected] = useState(null);
   const [people, setPeople] = useState(FALLBACK);
@@ -377,16 +590,19 @@ export default function App() {
       .catch((err) => console.warn("Using inline roster —", err.message));
   }, []);
 
-  const toggleCat = (c) => setCats((cur) => (cur.includes(c) ? cur.filter((x) => x !== c) : [...cur, c]));
+  const toggle = (k) => setSel((cur) => { const n = new Set(cur); n.has(k) ? n.delete(k) : n.add(k); return n; });
+  // Selections combine with OR: a person shows if they match any picked category or sub-bucket.
   const filtered = useMemo(() => {
     const term = q.trim().toLowerCase();
     return people.filter((p) => {
-      if (cats.length && !cats.includes(p.category)) return false;
       if (term && !p.name.toLowerCase().includes(term)) return false;
-      return true;
+      if (!sel.size || sel.has(`cat:${p.category}`)) return true;
+      const t = personText(p);
+      return (SUBCATEGORIES[p.category] || []).some(([l, re]) => sel.has(`sub:${p.category}:${l}`) && re.test(t));
     });
-  }, [q, cats, people]);
-  useEffect(() => { setPage(1); }, [q, cats]);
+  }, [q, sel, people]);
+  useEffect(() => { setPage(1); }, [q, sel]);
+  const goPage = (n) => { setPage(n); window.scrollTo(0, 0); };
 
   // Profiles are in-app state (not routes), so the browser never resets scroll on its own.
   // Jump to the top whenever a profile opens, a "similar" profile is picked, or we go back.
@@ -398,39 +614,43 @@ export default function App() {
   const person = people.find((p) => p.id === selected);
 
   return (
-    <div className="root">
-      <Nav />
+    <div className="root root-dir">
+      <DirHeader onHome={() => setSelected(null)} />
 
       {person ? (
         <Profile p={person} all={people} onOpen={setSelected} onBack={() => setSelected(null)} />
       ) : (
-        <div className="home">
-          <p className="intro"><b>Alpacee</b> (Al·puh·kee) Directory is a showcase of emerging NYC tech talent by Project Alpaca, a 501(c)(3) nonprofit training under-resourced college students and connecting them with mentors, recruiters, and career opportunities.</p>
-          <div className="filters">
-            <input className="fsearch" placeholder="Search by name" value={q} onChange={(e) => setQ(e.target.value)} />
-            {CATEGORIES.map((c) => (
-              <button key={c} className={`cat ${cats.includes(c) ? "cat-on" : ""}`} onClick={() => toggleCat(c)}>{c}</button>
-            ))}
-            {cats.length > 0 && <button className="clear" onClick={() => setCats([])}>Clear all</button>}
-          </div>
-          <div className="pgrid">
-            {pageItems.length ? pageItems.map((p) => <Card key={p.id} p={p} onOpen={setSelected} />)
-              : <div className="empty">No matches. Try a different name or category.</div>}
-          </div>
-          {totalPages > 1 && (
-            <div className="pager">
-              <button className="pager-btn" disabled={pageClamped === 1} onClick={() => setPage(pageClamped - 1)}>← Prev</button>
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => (
-                <button key={n} className={`pager-num ${n === pageClamped ? "on" : ""}`} onClick={() => setPage(n)}>{n}</button>
+        <>
+          <div className="home">
+            <p className="intro">Alpacee <i>(Al · pah · key)</i> Directory is a showcase of emerging NYC tech talents by <Link to="/">Project Alpaca</Link>, a 501(c)(3) nonprofit training under-resourced college students and connecting them with mentors, recruiters, and career opportunities.</p>
+            <div className="filters">
+              <input className="fsearch" aria-label="Search by name" placeholder="Search by name" value={q} onChange={(e) => setQ(e.target.value)} />
+              {CATEGORIES.map((c) => (
+                <FilterPill key={c} cat={c} people={people} sel={sel} toggle={toggle} open={openPill === c} setOpen={setOpenPill} />
               ))}
-              <button className="pager-btn" disabled={pageClamped === totalPages} onClick={() => setPage(pageClamped + 1)}>Next →</button>
+              {(sel.size > 0 || q.trim()) && <button className="clear" onClick={() => { setSel(new Set()); setQ(""); }}>Clear all</button>}
             </div>
-          )}
+            <div className="pgrid">
+              {pageItems.length ? pageItems.map((p) => <Card key={p.id} p={p} onOpen={setSelected} />)
+                : <div className="empty">No Alpacees match these filters. Try another skill, or clear the filters.</div>}
+            </div>
+            {totalPages > 1 && (
+              <nav className="pager2" aria-label="Pages">
+                <button className="pg2-step" style={{ visibility: pageClamped === 1 ? "hidden" : "visible" }} onClick={() => goPage(pageClamped - 1)}><PgArrow left /> Previous</button>
+                <div className="pg2-list">
+                  {pageList(pageClamped, totalPages).map((n) => typeof n === "string"
+                    ? <span key={n} className="pg2-gap">…</span>
+                    : <button key={n} className={`pg2-num ${n === pageClamped ? "on" : ""}`} aria-current={n === pageClamped ? "page" : undefined} onClick={() => goPage(n)}>{n}</button>)}
+                </div>
+                <button className="pg2-step" style={{ visibility: pageClamped === totalPages ? "hidden" : "visible" }} onClick={() => goPage(pageClamped + 1)}>Next <PgArrow /></button>
+              </nav>
+            )}
+          </div>
           <GetInvolved />
-          <Newsletter />
-          <Footer />
-        </div>
+          <DirNewsletter />
+        </>
       )}
+      <DirFooter />
     </div>
   );
 }
