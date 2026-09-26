@@ -583,3 +583,7 @@
 }
 @media (max-width:480px) { .dh-brand span { display:none; } }
 @media (prefers-reduced-motion:reduce) { .fp-pill svg { transition:none; } }
+
+/* Remove the browser's default 8px page margin so full-width sections (banner, Get Involved,
+   newsletter, footer) actually reach the edges. */
+html, body { margin:0; padding:0; }
