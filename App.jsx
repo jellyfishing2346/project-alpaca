@@ -1,5 +1,5 @@
-import React from "react";
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import React, { useEffect } from "react";
+import { BrowserRouter, Routes, Route, Link, useLocation } from "react-router-dom";
 import DirectoryApp, { Nav, Footer } from "./alpacees-directory-final.jsx";
 import Home from "./Home.jsx";
 import Contact from "./Contact.jsx";
@@ -25,9 +25,17 @@ function Page({ title, blurb }) {
   );
 }
 
+// React Router keeps the old scroll position between routes; reset it so each page starts at the top.
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
+  return null;
+}
+
 export default function App() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Routes>
         {/* Marketing Homepage is the front door; directory lives at /directory. */}
         <Route path="/" element={<Home />} />

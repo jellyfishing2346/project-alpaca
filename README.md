@@ -10,7 +10,7 @@ A public web directory that showcases Project Alpaca's students ("Alpacees") —
 
 - Shows every completed Alpacee as a photo card with their name, role, and skills.
 - Clicking a card opens a full profile (education, experience, about, contact + résumé links).
-- Visitors can **search by name**, **filter by category** (Software Engineering, Data, Design, Business, Marketing), and toggle **"Open to opportunities."**
+- Visitors can **search by name**, and **filter by category** (Software Engineering, Data, Design, Business, Marketing).
 - The roster is pulled **live from a Google Sheet** — update the sheet, and the site updates on the next load.
 
 ## How it's built

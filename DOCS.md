@@ -152,8 +152,8 @@ If a photo is missing OR fails to load, the `Face` component renders a **colored
 
 - **Search by name** - free-text filter.
 - **Category filters** - pills for Software Engineering / Data / Design / Business / Marketing. Category is inferred per person by `inferCategory()` from their role/skills.
-- **"Open to opportunities" toggle** - filters to people marked open. Backed by the optional `Open to Opportunities` sheet column: blank = treated as open; `No`/`Closed`/`False` = hidden when the toggle is on and the card's badge is removed.
-- **Clear all** - resets category + open filters.
+- **Clear all** - resets category filters.
+- (The "Open to opportunities" filter toggle was removed per team decision. The optional `Open to Opportunities` sheet column still controls the badge on cards/profiles: blank = shown; `No`/`Closed`/`False` = badge removed.)
 - **Pagination** - 12 per page with page controls (Prev / 1 2 3 ... / Next). Resets to page 1 when a filter or search changes.
 - **Completers-only** - anyone whose `Completion` cell says **`No`** is hidden entirely (both card and profile). Blank/anything else shows. This keeps non-completers off the public directory.
 - **Photo cards** - full-bleed headshot (or initials tile), an "Open to opportunities" badge, and the name/role/skill tags overlaid at the bottom.
@@ -162,7 +162,7 @@ If a photo is missing OR fails to load, the `Face` component renders a **colored
 
 ## 9. Profile pages
 
-Clicking a card opens that person's profile (currently via in-app state, not a separate URL - see section 13).
+Clicking a card opens that person's profile (currently via in-app state, not a separate URL - see section 13). The page scrolls to the top when a profile opens and when returning to the directory, so it reads as a new page; route changes (e.g. footer links) also reset scroll via `ScrollToTop` in `App.jsx`.
 
 Layout:
 - **Left rail:** the photo at its **natural proportions** (no forced square crop, so faces aren't cut off), then **Education** (school, grad year, major) and **Experience** (company, role).
@@ -187,7 +187,7 @@ If their photo shows as an initials tile, the filename doesn't match `slugify(Na
 Put `No` in their `Completion` cell. They disappear from the site on the next load. (Self-maintaining - remove the `No` and they reappear.)
 
 ### Mark someone not open to opportunities
-Put `No` in their `Open to Opportunities` cell. Their badge disappears and they're hidden when the "Open to opportunities" filter is on.
+Put `No` in their `Open to Opportunities` cell. Their badge disappears.
 
 ### Adjust a photo's crop on the card
 The gallery card crops photos toward the top by default (faces). To fine-tune one, put a CSS `object-position` value in their `Photo Position` cell (e.g. `center top`, `center 40%`, `right center`). The profile photo shows in full, so it's unaffected.
@@ -231,7 +231,7 @@ Nav + Footer are shared components (defined in `alpacees-directory-final.jsx`) u
 
 - **Marketing pages -> Framer.** They're built here but out of scope; the team's marketing CMS is Framer.
 - **Unified nav.** The whole site uses one marketing-style nav (Project Alpaca + Programs / Get Involved / About / Donate). The Figma's directory design had its own header ("Meet the Alpacees / See Projects" + a "hire an Alpacee" bar). If matching the Figma exactly is required, the directory nav would need reverting.
-- **Filters simplified vs. Figma.** The Figma shows nested sub-category dropdowns (e.g. "Design: UI Design, UX Research"). Those need a per-person sub-skill taxonomy the sheet doesn't have, so they weren't built. The current directory uses flat category pills + a search box + the open toggle instead.
+- **Filters simplified vs. Figma.** The Figma shows nested sub-category dropdowns (e.g. "Design: UI Design, UX Research"). Those need a per-person sub-skill taxonomy the sheet doesn't have, so they weren't built. The current directory uses flat category pills + a search box instead.
 - **Profiles are in-app state, not URLs.** Clicking a card opens the profile without changing the URL (no shareable `/alpacee/:id` links yet). A clean fast-follow if wanted.
 
 ---
@@ -245,6 +245,12 @@ These render but await real data from the team:
 - Payment processor for the Donate widget; confirm the emails (`hello@`, `partnership@`, `giving@`) are live inboxes.
 
 ---
+
+### Fonts
+- **GT America Compressed** (Medium 500, Black 900) is self-hosted from `public/fonts/` via `@font-face` at the bottom of `styles.css`, and preloaded in `index.html`. Used for headings, nav, and small labels only; the Compressed cut is too narrow for paragraphs. GT America is a commercial typeface, so confirm the web license covers this domain.
+- **Public Sans** (Google Fonts) is the body font, matching the Figma wireframes.
+- **Merriweather** (Google Fonts) is the serif accent: the directory intro and the profile recommendation quote.
+- All three are set as CSS variables (`--font-display`, `--font-body`, `--font-serif`) in the Typography block. If Standard-width GT America weights are licensed later, add their `@font-face` rules and point `--font-body` at them.
 
 ## 15. Open items / next steps
 

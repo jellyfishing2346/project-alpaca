@@ -368,7 +368,6 @@ function Profile({ p, all, onOpen, onBack }) {
 export default function App() {
   const [q, setQ] = useState("");
   const [cats, setCats] = useState([]);
-  const [openOnly, setOpenOnly] = useState(false);
   const [page, setPage] = useState(1);
   const [selected, setSelected] = useState(null);
   const [people, setPeople] = useState(FALLBACK);
@@ -385,12 +384,15 @@ export default function App() {
     const term = q.trim().toLowerCase();
     return people.filter((p) => {
       if (cats.length && !cats.includes(p.category)) return false;
-      if (openOnly && p.open === false) return false;
       if (term && !p.name.toLowerCase().includes(term)) return false;
       return true;
     });
-  }, [q, cats, openOnly, people]);
-  useEffect(() => { setPage(1); }, [q, cats, openOnly]);
+  }, [q, cats, people]);
+  useEffect(() => { setPage(1); }, [q, cats]);
+
+  // Profiles are in-app state (not routes), so the browser never resets scroll on its own.
+  // Jump to the top whenever a profile opens, a "similar" profile is picked, or we go back.
+  useEffect(() => { window.scrollTo(0, 0); }, [selected]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PER_PAGE));
   const pageClamped = Math.min(page, totalPages);
@@ -411,8 +413,7 @@ export default function App() {
             {CATEGORIES.map((c) => (
               <button key={c} className={`cat ${cats.includes(c) ? "cat-on" : ""}`} onClick={() => toggleCat(c)}>{c}</button>
             ))}
-            <button className={`cat open-filter ${openOnly ? "cat-on" : ""}`} onClick={() => setOpenOnly((v) => !v)}><span className="dot-green" /> Open to opportunities</button>
-            {(cats.length > 0 || openOnly) && <button className="clear" onClick={() => { setCats([]); setOpenOnly(false); }}>Clear all</button>}
+            {cats.length > 0 && <button className="clear" onClick={() => setCats([])}>Clear all</button>}
           </div>
           <div className="pgrid">
             {pageItems.length ? pageItems.map((p) => <Card key={p.id} p={p} onOpen={setSelected} />)
