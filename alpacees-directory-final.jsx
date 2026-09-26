@@ -158,7 +158,6 @@ function Card({ p, onOpen }) {
     <article className="pcard" onClick={() => onOpen(p.id)} tabIndex={0}
       onKeyDown={(e) => e.key === "Enter" && onOpen(p.id)}>
       <Face p={p} imgClass="pcard-photo" tileClass="pcard-initials" />
-      {p.open !== false && <span className="pcard-badge"><span className="dot-green" /> Open to opportunities</span>}
       <div className="pcard-scrim" />
       <div className="pcard-overlay">
         <h3 className="pcard-name">{p.name}</h3>
@@ -292,11 +291,12 @@ function Profile({ p, all, onOpen, onBack }) {
             <p className="np-line"><b>{p.school || "—"}</b>{p.grad ? ` · ${p.grad}` : ""}</p>
             {p.major && <p className="np-sub">{p.major}</p>}
           </div>
-          {(p.company || p.role) && (
+          {/* Only with a company: without one, the role alone just repeats the line under the name. */}
+          {p.company && (
             <div>
               <div className="np-label">Experience</div>
-              <p className="np-line"><b>{p.company || p.role}</b></p>
-              {p.company && p.role && <p className="np-sub">{p.role}</p>}
+              <p className="np-line"><b>{p.company}</b></p>
+              {p.role && <p className="np-sub">{p.role}</p>}
             </div>
           )}
         </aside>
@@ -305,7 +305,7 @@ function Profile({ p, all, onOpen, onBack }) {
           <div className="np-kicker">{COHORTS[p.c]?.label ?? "Alpacee"}{p.category ? ` · ${p.category}` : ""}</div>
           <div className="np-head">
             <div>
-              <h1 className="np-name">{p.name} <span className="np-open"><span className="dot-green" /> Open to opportunities</span></h1>
+              <h1 className="np-name">{p.name}</h1>
               <p className="np-role">{p.role ? `${p.role}${p.company ? ` at ${p.company}` : ""}` : "Alpacee at Project Alpaca"}</p>
               <div className="np-tags">{tags.map((s) => <span key={s} className="np-tag">{s}</span>)}</div>
             </div>
@@ -319,7 +319,7 @@ function Profile({ p, all, onOpen, onBack }) {
 
           <div className="np-section">
             <div className="np-label">About</div>
-            <p className="np-body">{p.bio || p.quote || "Bio coming soon."}</p>
+            <p className="np-body">{p.bio || "Bio coming soon."}</p>
           </div>
 
           <div className="np-section">
@@ -327,10 +327,10 @@ function Profile({ p, all, onOpen, onBack }) {
             <div className="np-project">Project write-up + gallery — pending content in the sheet.</div>
           </div>
 
-          {(p.quote || p.bio) && (
+          {p.quote && (
             <div className="np-section">
               <div className="np-label">Recommendations</div>
-              <blockquote className="np-quote">“{p.quote || p.bio}”</blockquote>
+              <blockquote className="np-quote">“{p.quote}”</blockquote>
               <div className="np-attr"><b>{p.name}</b><span>{COHORTS[p.c]?.label ?? ""} · Project Alpaca</span></div>
             </div>
           )}
@@ -350,9 +350,7 @@ function Profile({ p, all, onOpen, onBack }) {
           <div className="np-similar-grid">
             {similar.map((s) => (
               <button key={s.id} className="np-sim" onClick={() => onOpen(s.id)}>
-                {s.photo
-                  ? <img src={s.photo} alt={s.name} />
-                  : <div className="np-sim-initials" style={{ background: tileColor(s.name) }}>{initials(s.name)}</div>}
+                <Face p={s} imgClass="np-sim-photo" tileClass="np-sim-initials" />
                 <div><b>{s.name}</b><span>{s.role || "Alpacee at Project Alpaca"}</span></div>
               </button>
             ))}

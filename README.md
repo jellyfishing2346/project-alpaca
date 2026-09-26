@@ -33,7 +33,6 @@ Most content lives in the **Google Sheet**, not the code:
 
 - **Add / edit a student** → edit their row in the sheet.
 - **Hide a non-completer** → put `No` in their `Completion` cell.
-- **Mark someone not open to work** → put `No` in their `Open to Opportunities` cell.
 - **Add a photo** → drop the image in `public/photos/` named to match their sheet Name (lowercase, hyphens), add a line to `PHOTO_FILES` in `sheet.js`, and commit.
 
 ## More detail

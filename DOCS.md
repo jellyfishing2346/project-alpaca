@@ -110,7 +110,6 @@ The sheet must be shared **"Anyone with the link -> Viewer"** for the fetch to w
 | resume | `Resume Link` |
 | completion | `Completion` |
 | photoPos | `Photo Position` (optional) |
-| open | `Open to Opportunities` (optional) |
 
 ---
 
@@ -153,10 +152,10 @@ If a photo is missing OR fails to load, the `Face` component renders a **colored
 - **Search by name** - free-text filter.
 - **Category filters** - pills for Software Engineering / Data / Design / Business / Marketing. Category is inferred per person by `inferCategory()` from their role/skills.
 - **Clear all** - resets category filters.
-- (The "Open to opportunities" filter toggle was removed per team decision. The optional `Open to Opportunities` sheet column still controls the badge on cards/profiles: blank = shown; `No`/`Closed`/`False` = badge removed.)
+- (The "Open to opportunities" filter and badge were removed per team decision. The site no longer reads the `Open to Opportunities` sheet column.)
 - **Pagination** - 12 per page with page controls (Prev / 1 2 3 ... / Next). Resets to page 1 when a filter or search changes.
 - **Completers-only** - anyone whose `Completion` cell says **`No`** is hidden entirely (both card and profile). Blank/anything else shows. This keeps non-completers off the public directory.
-- **Photo cards** - full-bleed headshot (or initials tile), an "Open to opportunities" badge, and the name/role/skill tags overlaid at the bottom.
+- **Photo cards** - full-bleed headshot (or initials tile) with the name/role/skill tags overlaid at the bottom.
 
 ---
 
@@ -166,7 +165,7 @@ Clicking a card opens that person's profile (currently via in-app state, not a s
 
 Layout:
 - **Left rail:** the photo at its **natural proportions** (no forced square crop, so faces aren't cut off), then **Education** (school, grad year, major) and **Experience** (company, role).
-- **Right column:** cohort/category label, name + "Open to opportunities" badge, skill tags, a green **Contact** button and **Download resume** link, an **About** section (bio), a **Project Showcase** slot (placeholder pending data), **Recommendations** (uses their testimonial), and a hiring CTA.
+- **Right column:** cohort/category label, name, skill tags, a green **Contact** button and **Download resume** link, an **About** section (bio, or "Bio coming soon"), a **Project Showcase** slot (placeholder pending data), **Recommendations** (their testimonial; hidden if they have none), and a hiring CTA.
 - **Other Alpacees with similar skills** - three cards from the same category.
 
 Working links: **Contact** -> the person's `LinkedIn Profile`; **Download resume** -> their `Resume Link`.
@@ -185,9 +184,6 @@ If their photo shows as an initials tile, the filename doesn't match `slugify(Na
 
 ### Hide a non-completer
 Put `No` in their `Completion` cell. They disappear from the site on the next load. (Self-maintaining - remove the `No` and they reappear.)
-
-### Mark someone not open to opportunities
-Put `No` in their `Open to Opportunities` cell. Their badge disappears.
 
 ### Adjust a photo's crop on the card
 The gallery card crops photos toward the top by default (faces). To fine-tune one, put a CSS `object-position` value in their `Photo Position` cell (e.g. `center top`, `center 40%`, `right center`). The profile photo shows in full, so it's unaffected.
@@ -268,7 +264,6 @@ These render but await real data from the team:
 |---|---|
 | Add a photo | Drop `name-slug.ext` in `public/photos/`, add a line to `PHOTO_FILES`, commit |
 | Hide a non-completer | `No` in their `Completion` cell |
-| Mark not open to work | `No` in their `Open to Opportunities` cell |
 | Nudge a card's photo crop | CSS value in their `Photo Position` cell |
 | Change footer contact info | Edit the `Footer` component in `alpacees-directory-final.jsx` |
 | Fix a "wrong data" issue | It's almost always the sheet - check the exact column header and cell value |

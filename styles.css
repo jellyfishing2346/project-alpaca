@@ -113,8 +113,6 @@
         .pcard-photo { width:100%; height:100%; object-fit:cover; display:block; transition:transform .4s ease; }
         .pcard:hover .pcard-photo { transform:scale(1.04); }
         .pcard-scrim { position:absolute; inset:0; background:linear-gradient(to top, rgba(20,18,15,.92) 0%, rgba(20,18,15,.35) 38%, transparent 62%); }
-        .pcard-badge { position:absolute; top:12px; right:12px; background:#FFFBF3; color:#2A2A1E; font-size:9.5px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; padding:5px 9px; border-radius:999px; display:inline-flex; align-items:center; gap:6px; }
-        .dot-green { width:7px; height:7px; border-radius:50%; background:#6FB93B; }
         .pcard-overlay { position:absolute; left:0; right:0; bottom:0; padding:18px; color:#fff; }
         .pcard-name { font-size:21px; font-weight:800; letter-spacing:-.01em; margin:0 0 3px; }
         .pcard-role { font-size:12.5px; line-height:1.35; color:#EDE8DC; margin:0 0 10px; }
@@ -164,7 +162,6 @@
         .np-kicker { font-size:12px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:#8A8272; margin-bottom:8px; }
         .np-head { display:flex; justify-content:space-between; align-items:flex-start; gap:24px; margin-bottom:8px; }
         .np-name { font-size:34px; font-weight:800; letter-spacing:-.02em; margin:0 0 8px; display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
-        .np-open { display:inline-flex; align-items:center; gap:7px; font-size:11px; font-weight:700; letter-spacing:.03em; text-transform:uppercase; color:#3E6E1C; background:#EAF7CF; padding:4px 10px; border-radius:999px; }
         .np-role { font-size:16px; color:#3A352C; margin:0 0 14px; }
         .np-tags { display:flex; flex-wrap:wrap; gap:8px; }
         .np-tag { font-size:12px; font-weight:600; padding:5px 12px; border-radius:999px; background:#F0E9D8; border:1px solid #E2D8C2; color:#3A352C; }
@@ -446,4 +443,5 @@
 .np-resume:hover, .np-resume:focus-visible { background:#C6F24E; border-color:#C6F24E; color:#25340A; transform:none; }
 /* Space between "Other Alpacees" cards and the footer. */
 .np-similar { margin-bottom:64px; }
-
+/* "Other Alpacees" thumbnails: face-biased crop, higher than the cards (12% vs 22%) since the square crops tighter on full-body shots (sheet "Photo Position" still overrides). */
+.np-sim-photo { width:56px; height:56px; border-radius:10px; object-fit:cover; object-position:center 12%; flex:none; background:#E7E1D4; }

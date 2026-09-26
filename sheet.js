@@ -38,7 +38,6 @@ const COLUMN_MAP = {
   resume:    "Resume Link",
   completion: "Completion",
   photoPos: "Photo Position",
-  open: "Open to Opportunities",
 };
 // NOTE: "Email", "race", "immigrant", "first_gen_college" are deliberately absent above.
 
@@ -168,7 +167,6 @@ export async function loadAlpacees() {
       skills: splitList(get("skills")),
       photo: toDirectImage(get("photo")) || photoBySlug(slugify(name)),
       photoPos: get("photoPos"),
-      open: /^(no|false|closed|not)/i.test(get("open")) ? false : true,
     });
   }
   return out;
