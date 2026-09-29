@@ -587,3 +587,8 @@
 /* Remove the browser's default 8px page margin so full-width sections (banner, Get Involved,
    newsletter, footer) actually reach the edges. */
 html, body { margin:0; padding:0; }
+
+/* Hover action shot (sheet column "Action Shot Link"): fades in over the headshot. */
+.pcard-action { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center 30%; opacity:0; transition:opacity .35s ease; }
+.pcard:hover .pcard-action, .pcard:focus-visible .pcard-action { opacity:1; }
+@media (prefers-reduced-motion:reduce) { .pcard-action { transition:none; } }

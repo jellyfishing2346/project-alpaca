@@ -38,6 +38,8 @@ const COLUMN_MAP = {
   resume:    "Resume Link",
   completion: "Completion",
   photoPos: "Photo Position",
+  category: "Category",           // optional: overrides automatic sorting (Software Engineering / Data / Design / Business / Marketing)
+  action:   "Action Shot Link",   // optional: second photo shown when hovering a card (Drive link, same folder as headshots)
 };
 // NOTE: "Email", "race", "immigrant", "first_gen_college" are deliberately absent above.
 
@@ -167,6 +169,8 @@ export async function loadAlpacees() {
       skills: splitList(get("skills")),
       photo: toDirectImage(get("photo")) || photoBySlug(slugify(name)),
       photoPos: get("photoPos"),
+      category: get("category"),
+      action: toDirectImage(get("action")),
     });
   }
   return out;

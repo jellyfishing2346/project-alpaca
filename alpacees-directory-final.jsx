@@ -159,7 +159,15 @@ function inferCategory(p) {
   if (/(business|finance|econom|account|administration|\bmba\b|real estate|\blaw\b|entrepreneur)/.test(t)) return "Business";
   return "Software Engineering";
 }
-const withDerived = (p) => ({ ...p, focus: inferFocus(p), category: inferCategory(p) });
+// The sheet's optional "Category" column wins; blank or unrecognized values fall back to
+// automatic sorting. Matching is case-insensitive and accepts short forms like "SWE" or "Software".
+const CATEGORY_ALIASES = { swe: "Software Engineering", software: "Software Engineering", engineering: "Software Engineering" };
+const sheetCategory = (v) => {
+  const t = (v || "").trim().toLowerCase();
+  if (!t) return "";
+  return CATEGORIES.find((c) => c.toLowerCase() === t) || CATEGORY_ALIASES[t] || "";
+};
+const withDerived = (p) => ({ ...p, focus: inferFocus(p), category: sheetCategory(p.category) || inferCategory(p) });
 const FALLBACK = RAW.map(withDerived);
 const first = (name) => name.split(/\s+/)[0];
 
@@ -197,12 +205,20 @@ function Face({ p, imgClass, tileClass }) {
   return <img className={imgClass} src={p.photo} alt={p.name} onError={() => setBroken(true)} style={p.photoPos ? { objectPosition: p.photoPos } : undefined} />;
 }
 
+// Hover "action shot": a second photo that fades in over the headshot on hover.
+// Comes from the sheet's "Action Shot Link" column; hidden if it fails to load.
+function ActionShot({ src }) {
+  const [ok, setOk] = useState(true);
+  return ok ? <img className="pcard-action" src={src} alt="" loading="lazy" onError={() => setOk(false)} /> : null;
+}
+
 function Card({ p, onOpen }) {
   const tags = p.skills?.length ? p.skills.slice(0, 3) : [p.category];
   return (
     <article className="pcard" onClick={() => onOpen(p.id)} tabIndex={0}
       onKeyDown={(e) => e.key === "Enter" && onOpen(p.id)}>
       <Face p={p} imgClass="pcard-photo" tileClass="pcard-initials" />
+      {p.action && <ActionShot src={p.action} />}
       <div className="pcard-scrim" />
       <div className="pcard-overlay">
         <h3 className="pcard-name">{p.name}</h3>

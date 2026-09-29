@@ -110,6 +110,8 @@ The sheet must be shared **"Anyone with the link -> Viewer"** for the fetch to w
 | resume | `Resume Link` |
 | completion | `Completion` |
 | photoPos | `Photo Position` (optional) |
+| category | `Category` (optional) |
+| action | `Action Shot Link` (optional) |
 
 ---
 
@@ -193,6 +195,12 @@ If their photo shows as an initials tile, the filename doesn't match `slugify(Na
 ### Hide a non-completer
 Put `No` in their `Completion` cell. They disappear from the site on the next load. (Self-maintaining - remove the `No` and they reappear.)
 
+### Set someone's category by hand
+Add a `Category` column to the sheet (header exactly `Category`). Put one of: `Software Engineering`, `Data`, `Design`, `Business`, `Marketing` (case doesn't matter; `SWE` / `Software` also work). It overrides the automatic sorting for that person; leave it blank to keep automatic sorting. Use it for anyone who lands in the wrong filter (e.g. MJ was auto-sorted into Business).
+
+### Add a hover "action shot"
+Add an `Action Shot Link` column. Put a Google Drive share link (same folder as the headshots; the file must be shared "Anyone with the link") or a filename in `public/photos/`. On desktop, the action shot fades in over the headshot when someone hovers the card; name, role and tags stay on top. Blank = no hover change. Phones have no hover, so they always show the headshot.
+
 ### Adjust a photo's crop on the card
 The gallery card crops photos toward the top by default (faces). To fine-tune one, put a CSS `object-position` value in their `Photo Position` cell (e.g. `center top`, `center 40%`, `right center`). The profile photo shows in full, so it's unaffected.
 
@@ -273,6 +281,8 @@ These render but await real data from the team:
 | Add a photo | Drop `name-slug.ext` in `public/photos/`, add a line to `PHOTO_FILES`, commit |
 | Hide a non-completer | `No` in their `Completion` cell |
 | Nudge a card's photo crop | CSS value in their `Photo Position` cell |
+| Fix someone's filter category | Their `Category` cell |
+| Add a hover action shot | Drive link in their `Action Shot Link` cell |
 | Change footer contact info | Edit the `Footer` component in `alpacees-directory-final.jsx` |
 | Fix a "wrong data" issue | It's almost always the sheet - check the exact column header and cell value |
 | Deploy | `git push` to `main` (Cloudflare rebuilds) |
