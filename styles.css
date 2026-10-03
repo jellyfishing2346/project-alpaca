@@ -929,3 +929,7 @@ html, body { margin:0; padding:0; }
 .df-col:nth-child(2), .df-col:nth-child(3) { gap:16px; }
 .df-col:nth-child(2) h4, .df-col:nth-child(3) h4 { margin-bottom:8px; }
 
+/* Design framing: the Community Programs photo is cropped low (people + yellow sofa), not centered */
+.hm-prog-community .hm-prog-img { object-position:center 85%; }
+/* Space between testimonials and Get Involved matches the design (~47px) */
+.hm-community { padding-bottom:24px; }
