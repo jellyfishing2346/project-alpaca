@@ -507,84 +507,118 @@ function DirFooter() {
   );
 }
 
+const PARTNERSHIP = "partnership@projectalpaca.org";
+const introLink = (p) => `mailto:${PARTNERSHIP}?subject=${encodeURIComponent(`Introduction to ${p.name}`)}`;
+const iconPath = (name) => SOCIALS.find((s) => s.name === name)?.path;
+const GITHUB_PATH = "M12 .3a12 12 0 0 0-3.8 23.38c.6.1.82-.26.82-.58v-2.23c-3.34.73-4.04-1.42-4.04-1.42-.55-1.39-1.33-1.76-1.33-1.76-1.09-.74.08-.73.08-.73 1.2.09 1.84 1.24 1.84 1.24 1.07 1.83 2.8 1.3 3.49 1 .1-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.13-.3-.54-1.52.12-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.25 2.88.12 3.18.77.84 1.23 1.91 1.23 3.22 0 4.61-2.8 5.62-5.48 5.92.43.37.82 1.1.82 2.22v3.29c0 .32.21.69.82.57A12 12 0 0 0 12 .3";
+const href = (u) => (/^https?:\/\//i.test(u) ? u : `https://${u}`);
+// Social icons under the profile buttons, per the design. Only links present in the sheet show.
+function profileLinks(p) {
+  const out = [];
+  if (p.linkedin) out.push({ label: "LinkedIn", url: p.linkedin, path: iconPath("LinkedIn") });
+  if (p.github) out.push({ label: "GitHub", url: p.github, path: GITHUB_PATH });
+  if (p.portfolio) out.push({ label: "Website / portfolio", url: p.portfolio, globe: true });
+  if (p.social) {
+    const yt = /youtu/i.test(p.social);
+    out.push({ label: yt ? "YouTube" : "Instagram", url: p.social, path: iconPath(yt ? "YouTube" : "Instagram") });
+  }
+  return out;
+}
+const PfSection = ({ title, children }) => (
+  <section className="pf-sec"><h2 className="pf-sec-title">{title}</h2><div className="pf-sec-body">{children}</div></section>
+);
+
+// Profile page, per the Studio Haven design (Figma "Directory - Profile", 1158:7075).
 function Profile({ p, all, onOpen, onBack }) {
   const similar = (all || []).filter((x) => x.category === p.category && x.id !== p.id).slice(0, 3);
-  const tags = p.skills?.length ? p.skills : [p.focus];
+  const tags = p.skills?.length ? p.skills : [p.category];
+  const col = catColor(p.category);
+  const links = profileLinks(p);
   return (
-    <div className="np">
-      <button className="np-back" onClick={onBack}>← Back to directory</button>
-      <div className="np-grid">
-        <aside className="np-side">
-          <Face p={p} imgClass="np-photo" tileClass="np-photo-initials" />
-          <div>
-            <div className="np-label">Education</div>
-            <p className="np-line"><b>{p.school || "—"}</b>{p.grad ? ` · ${p.grad}` : ""}</p>
-            {p.major && <p className="np-sub">{p.major}</p>}
+    <div className="pf">
+      <button className="pf-back" onClick={onBack}>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M15 4l-8 8 8 8" /></svg>
+        Back to directory
+      </button>
+      <div className="pf-grid">
+        <aside className="pf-side">
+          <Face p={p} imgClass="pf-photo" tileClass="pf-photo-initials" />
+          <div className="pf-info">
+            <PfSection title="Education">
+              <p className="pf-line"><b>{p.school || "—"}</b>{p.grad && <i>{p.grad}</i>}</p>
+              {p.major && <p className="pf-text">{p.major}</p>}
+            </PfSection>
+            {/* Only with a company: without one, the role alone just repeats the line under the name. */}
+            {p.company && (
+              <PfSection title="Experience">
+                <p className="pf-line"><b>{p.company}</b></p>
+                {p.role && <p className="pf-text">{p.role}</p>}
+              </PfSection>
+            )}
           </div>
-          {/* Only with a company: without one, the role alone just repeats the line under the name. */}
-          {p.company && (
-            <div>
-              <div className="np-label">Experience</div>
-              <p className="np-line"><b>{p.company}</b></p>
-              {p.role && <p className="np-sub">{p.role}</p>}
-            </div>
-          )}
         </aside>
 
-        <main className="np-main">
-          <div className="np-kicker">{COHORTS[p.c]?.label ?? "Alpacee"}{p.category ? ` · ${p.category}` : ""}</div>
-          <div className="np-head">
-            <div>
-              <h1 className="np-name">{p.name}</h1>
-              <p className="np-role">{p.role ? `${p.role}${p.company ? ` at ${p.company}` : ""}` : "Alpacee at Project Alpaca"}</p>
-              <div className="np-tags">{tags.map((s) => <span key={s} className="np-tag">{s}</span>)}</div>
-            </div>
-            <div className="np-actions">
-              {p.linkedin
-                ? <a className="btn-green" href={p.linkedin} target="_blank" rel="noreferrer">Contact <Arrow /></a>
-                : <button className="btn-green" disabled>Contact <Arrow /></button>}
-              {p.resume && <a className="np-resume" href={p.resume} target="_blank" rel="noreferrer">Download résumé ⌄</a>}
+        <main className="pf-main">
+          <div className="pf-top">
+            <div className="pf-eyebrow">Flagship Program • {COHORTS[p.c]?.label ?? "Alpacee"}</div>
+            <div className="pf-head">
+              <div className="pf-id">
+                <h1 className="pf-name">{p.name}</h1>
+                <p className="pf-role">{p.role ? `${p.role}${p.company ? ` at ${p.company}` : ""}` : "Alpacee at Project Alpaca"}</p>
+                <div className="pf-tags">{tags.map((t) => <span key={t} className="pf-tag" style={{ background: col }}>{t}</span>)}</div>
+              </div>
+              <div className="pf-actions">
+                <a className="pf-btn pf-btn-lime" href={introLink(p)}>Contact <Squiggle /></a>
+                {p.resume && <a className="pf-btn pf-btn-line" href={p.resume} target="_blank" rel="noreferrer">Download Resume</a>}
+                {links.length > 0 && (
+                  <div className="pf-social">
+                    {links.map((l) => (
+                      <a key={l.label} href={href(l.url)} target="_blank" rel="noreferrer" aria-label={`${first(p.name)}'s ${l.label}`}>
+                        {l.globe
+                          ? <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9.5" /><path d="M2.5 12h19M12 2.5c2.6 2.8 3.9 6 3.9 9.5s-1.3 6.7-3.9 9.5c-2.6-2.8-3.9-6-3.9-9.5S9.4 5.3 12 2.5z" /></svg>
+                          : <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d={l.path} /></svg>}
+                      </a>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
-          <div className="np-section">
-            <div className="np-label">About</div>
-            <p className="np-body">{p.bio || "Bio coming soon."}</p>
-          </div>
+          <PfSection title="About">
+            <p className="pf-body">{p.bio || "Bio coming soon."}</p>
+          </PfSection>
 
-          <div className="np-section">
-            <div className="np-label">Project Showcase</div>
-            <div className="np-project">Project write-up + gallery — pending content in the sheet.</div>
-          </div>
+          <PfSection title="Project Showcase">
+            <div className="pf-project-empty">Project write-up and gallery coming soon.</div>
+          </PfSection>
 
           {p.quote && (
-            <div className="np-section">
-              <div className="np-label">Recommendations</div>
-              <blockquote className="np-quote">“{p.quote}”</blockquote>
-              <div className="np-attr"><b>{p.name}</b><span>{COHORTS[p.c]?.label ?? ""} · Project Alpaca</span></div>
-            </div>
+            <PfSection title="Recommendations">
+              <blockquote className="pf-quote">“{p.quote}”</blockquote>
+              <div className="pf-author"><span>{p.name}</span><span>{COHORTS[p.c]?.label ?? ""} · Project Alpaca</span></div>
+            </PfSection>
           )}
 
-          <div className="np-hire">
-            <div><b>Interested in hiring {first(p.name)}?</b><br />Project Alpaca will make an introduction for you.</div>
-            {p.linkedin
-              ? <a className="btn-green" href={p.linkedin} target="_blank" rel="noreferrer">Contact <Arrow /></a>
-              : <button className="btn-green" disabled>Contact <Arrow /></button>}
+          <div className="pf-hire">
+            <p>Interested in hiring {first(p.name)}?<br />Project Alpaca will make an introduction for you.</p>
+            <a className="pf-btn pf-btn-lime" href={introLink(p)}>Contact <Squiggle /></a>
           </div>
         </main>
       </div>
 
       {similar.length > 0 && (
-        <div className="np-similar">
-          <div className="np-label">Other Alpacees with similar skills</div>
-          <div className="np-similar-grid">
-            {similar.map((s) => (
-              <button key={s.id} className="np-sim" onClick={() => onOpen(s.id)}>
-                <Face p={s} imgClass="np-sim-photo" tileClass="np-sim-initials" />
-                <div><b>{s.name}</b><span>{s.role || "Alpacee at Project Alpaca"}</span></div>
-              </button>
-            ))}
-          </div>
+        <div className="pf-similar">
+          <PfSection title="Other Alpacees with similar skills">
+            <div className="pf-sim-grid">
+              {similar.map((s) => (
+                <button key={s.id} className="pf-sim" onClick={() => onOpen(s.id)}>
+                  <Face p={s} imgClass="pf-sim-photo" tileClass="pf-sim-initials" />
+                  <span className="pf-sim-info"><b>{s.name}</b><span>{s.role ? `${s.role}${s.company ? ` at ${s.company}` : ""}` : "Alpacee at Project Alpaca"}</span></span>
+                </button>
+              ))}
+            </div>
+          </PfSection>
         </div>
       )}
     </div>

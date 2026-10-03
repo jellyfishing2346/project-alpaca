@@ -174,11 +174,15 @@ If a photo is missing OR fails to load, the `Face` component renders a **colored
 Clicking a card opens that person's profile (currently via in-app state, not a separate URL - see section 13). The page scrolls to the top when a profile opens and when returning to the directory, so it reads as a new page; route changes (e.g. footer links) also reset scroll via `ScrollToTop` in `App.jsx`.
 
 Layout:
-- **Left rail:** the photo at its **natural proportions** (no forced square crop, so faces aren't cut off), then **Education** (school, grad year, major) and **Experience** (company, role).
-- **Right column:** cohort/category label, name, skill tags, a green **Contact** button and **Download resume** link, an **About** section (bio, or "Bio coming soon"), a **Project Showcase** slot (placeholder pending data), **Recommendations** (their testimonial; hidden if they have none), and a hiring CTA.
+- **Left rail:** a 600px-tall rounded photo (cropped toward the face; `Photo Position` still overrides), then **Education** (school, grad year, major) and **Experience** (company + role; only shown when there's a company).
+- **Right column:** "Flagship Program • Cohort N", name, "role at company", skill tags in the category color, then the **Contact** / **Download Resume** buttons and link icons, **About** (bio, or "Bio coming soon"), **Project Showcase**, **Recommendations** (their testimonial; hidden if they have none), and the "Interested in hiring…?" box.
 - **Other Alpacees with similar skills** - three cards from the same category.
 
-Working links: **Contact** -> the person's `LinkedIn Profile`; **Download resume** -> their `Resume Link`.
+The layout follows the Studio Haven design (Figma frame **Directory - Profile**, `1158:7075`).
+
+Working links: **Contact** (both buttons) -> an email to partnership@projectalpaca.org with the subject "Introduction to <name>", since Project Alpaca makes the introduction; **Download Resume** -> their `Resume Link` (turns green on hover without moving). Round icons under the buttons link to whichever of these the person has: `LinkedIn Profile`, `Github Link`, `Website / Portfolio`, `Instagram / YouTube Link (if professional)` (shows the YouTube or Instagram icon to match the link).
+
+**Project Showcase** shows "coming soon" for now. The sheet's **Project Showcase** tab has the real project data; wiring it in is next, after the sheet-sharing fix.
 
 ---
 
@@ -267,7 +271,7 @@ These render but await real data from the team:
 ## 15. Open items / next steps
 
 - **Awaiting founder review.** Michelle shared the live site with Catherine Mann (founder) for feedback. Build against her actual notes rather than pre-emptively reworking.
-- **Directory <-> Figma fidelity** is the current priority per Michelle ("get it as close to the Figma as possible, on brand"). The directory list page now follows the Studio Haven design (frame `1395:8563`); next is the profile page (frame `1158:7075` on the same page), the final sub-bucket list, and the Get Involved photos.
+- **Directory <-> Figma fidelity** is the current priority per Michelle ("get it as close to the Figma as possible, on brand"). The directory list page (frame `1395:8563`) and profile page (frame `1158:7075`) now follow the Studio Haven design. Remaining: Project Showcase data, the final sub-bucket list, the Get Involved photos, and the newsletter (MailerLite).
 - **Subdomain.** `alpacees.projectalpaca.org` was the original plan for the directory (needs a DNS CNAME). Now that this is a full site with a homepage, revisit whether that subdomain is still the plan.
 - **Repo is public** with real student names - confirm with the team that's intentional.
 - **Photo workflow is now a code commit** (not a sheet paste) - make sure the team knows.

@@ -592,3 +592,83 @@ html, body { margin:0; padding:0; }
 .pcard-action { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center 30%; opacity:0; transition:opacity .35s ease; }
 .pcard:hover .pcard-action, .pcard:focus-visible .pcard-action { opacity:1; }
 @media (prefers-reduced-motion:reduce) { .pcard-action { transition:none; } }
+
+/* ===== Profile, per the Studio Haven design (Figma "Directory - Profile" 1158:7075) ===== */
+.pf { max-width:1440px; margin:0 auto; padding:0 80px 64px; box-sizing:border-box; color:#1F1F1F; }
+.pf-back { display:inline-flex; align-items:center; gap:4px; margin:0 0 32px; padding:0; background:none; border:0; cursor:pointer; color:#1E474D; font-family:var(--font-display); font-weight:500; font-size:16px; line-height:1.67; letter-spacing:.1em; text-transform:uppercase; text-decoration:underline; text-underline-offset:3px; }
+.pf-grid { display:grid; grid-template-columns:411px minmax(0,1fr); gap:24px; align-items:start; }
+.pf-side { display:flex; flex-direction:column; gap:32px; }
+.pf-photo { width:100%; height:600px; object-fit:cover; object-position:center 22%; border-radius:16px; display:block; }
+.pf-photo-initials { width:100%; height:600px; border-radius:16px; display:flex; align-items:center; justify-content:center; color:#fff; font-family:var(--font-display); font-weight:900; font-size:120px; }
+.pf-info { display:flex; flex-direction:column; gap:40px; }
+.pf-sec { display:flex; flex-direction:column; gap:16px; }
+.pf-sec-body { display:flex; flex-direction:column; gap:16px; }
+.pf-info .pf-sec-body { gap:0; } /* school + major (company + role) sit together, as in the design */
+.pf-sec-title { margin:0; padding-bottom:8px; border-bottom:1px solid #1F1F1F; font-family:var(--font-display); font-weight:500; font-size:16px; line-height:1.67; letter-spacing:.1em; text-transform:uppercase; color:#1F1F1F; }
+.pf-line, .pf-text, .pf-body { margin:0; font-family:var(--font-serif); font-size:16px; line-height:1.67; color:#1F1F1F; }
+.pf-line { display:flex; flex-wrap:wrap; gap:0 8px; }
+.pf-line b { font-weight:700; }
+.pf-line i { font-style:italic; }
+.pf-body { white-space:pre-line; }
+
+.pf-main { display:flex; flex-direction:column; gap:64px; min-width:0; }
+.pf-top { display:flex; flex-direction:column; gap:12px; }
+.pf-eyebrow { font-family:var(--font-display); font-weight:500; font-size:16px; line-height:1.67; letter-spacing:.1em; text-transform:uppercase; }
+.pf-head { display:flex; justify-content:space-between; align-items:flex-start; gap:24px 48px; }
+.pf-id { display:flex; flex-direction:column; gap:16px; min-width:0; }
+.pf-name { margin:0; font-family:var(--font-display); font-weight:900; font-size:48px; line-height:.9; }
+.pf-role { margin:-8px 0 0; font-family:var(--font-serif); font-size:18px; line-height:1.67; }
+.pf-tags { display:flex; flex-wrap:wrap; gap:8px; }
+.pf-tag { padding:4px 12px; border-radius:48px; color:#fff; font-family:var(--font-serif); font-size:14px; line-height:1.67; }
+.pf-actions { width:209px; flex:none; display:flex; flex-direction:column; align-items:flex-end; gap:12px; }
+.pf-btn { box-sizing:border-box; width:100%; height:55px; display:flex; align-items:center; gap:8px; padding:12px 16px; text-decoration:none; color:#1F1F1F; font-family:var(--font-display); font-weight:900; font-size:24px; line-height:1; text-transform:uppercase; white-space:nowrap; transition:background-color .15s ease, border-color .15s ease; }
+.pf-btn-lime { background:#63FFA1; border:1px solid #63FFA1; }
+.pf-btn-lime:hover { background:#4FF094; border-color:#4FF094; }
+/* Download Resume: outlined; on hover it turns green and doesn't move (same size, border and padding). */
+.pf-btn-line { background:transparent; border:1px solid #1F1F1F; }
+.pf-btn-line:hover, .pf-btn-line:focus-visible { background:#63FFA1; border-color:#1F1F1F; transform:none; }
+.pf-hire .pf-btn { width:auto; }
+.pf-social { display:flex; gap:16px; }
+.pf-social a { width:38px; height:38px; box-sizing:border-box; border:1px solid #1F1F1F; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#1F1F1F; }
+.pf-social a:hover { background:#F6E5C8; }
+.pf-social svg { width:20px; height:20px; }
+
+.pf-project-empty { border:1px solid #1F1F1F; padding:48px 24px; text-align:center; font-family:var(--font-serif); font-size:16px; color:#564538; background:rgba(246,229,200,.35); }
+.pf-quote { margin:0; font-family:var(--font-serif); font-size:24px; line-height:1.67; }
+.pf-author { display:flex; flex-direction:column; font-family:var(--font-serif); }
+.pf-author span:first-child { font-size:18px; line-height:1.67; }
+.pf-author span:last-child { font-size:16px; line-height:1.67; }
+.pf-hire { display:flex; align-items:center; justify-content:space-between; gap:24px; padding:32px; border:1px solid #1F1F1F; border-radius:16px; background:#FAEFDE; }
+.pf-hire p { margin:0; font-family:var(--font-serif); font-size:16px; line-height:1.67; }
+
+.pf-similar { padding:40px 0 0; }
+.pf-sim-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:35px; }
+.pf-sim { display:flex; gap:8px; align-items:flex-start; padding:0; background:none; border:0; text-align:left; cursor:pointer; color:#1F1F1F; }
+.pf-sim-photo, .pf-sim-initials { width:85px; height:87px; flex:none; }
+.pf-sim-photo { object-fit:cover; object-position:center 12%; display:block; }
+.pf-sim-initials { display:flex; align-items:center; justify-content:center; color:#fff; font-family:var(--font-display); font-weight:900; font-size:28px; }
+.pf-sim-info { display:flex; flex-direction:column; gap:12px; min-width:0; }
+.pf-sim-info b { font-family:var(--font-display); font-weight:900; font-size:24px; line-height:.9; }
+.pf-sim-info span { font-family:var(--font-serif); font-size:18px; line-height:1.67; }
+.pf-sim:hover b { text-decoration:underline; text-underline-offset:3px; }
+.pf-back:focus-visible, .pf-btn:focus-visible, .pf-social a:focus-visible, .pf-sim:focus-visible { outline:2px solid #1F1F1F; outline-offset:2px; }
+
+@media (max-width:1100px) {
+  .pf-grid { grid-template-columns:1fr; }
+  .pf-side { display:grid; grid-template-columns:minmax(0,360px) 1fr; gap:24px; align-items:start; }
+  .pf-photo, .pf-photo-initials { height:460px; }
+  .pf-sim-grid { grid-template-columns:1fr 1fr; }
+}
+@media (max-width:760px) {
+  .pf { padding:0 24px 32px; }
+  .pf-side { grid-template-columns:1fr; }
+  .pf-photo, .pf-photo-initials { height:440px; }
+  .pf-head { flex-direction:column; }
+  .pf-actions { width:100%; align-items:stretch; }
+  .pf-social { justify-content:flex-start; }
+  .pf-name { font-size:40px; }
+  .pf-main { gap:48px; }
+  .pf-hire { flex-direction:column; align-items:flex-start; padding:24px; }
+  .pf-sim-grid { grid-template-columns:1fr; gap:20px; }
+}
+@media (prefers-reduced-motion:reduce) { .pf-btn { transition:none; } }
