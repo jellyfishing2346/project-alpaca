@@ -169,10 +169,23 @@ const sheetCategory = (v) => {
 };
 const withDerived = (p) => ({ ...p, focus: inferFocus(p), category: sheetCategory(p.category) || inferCategory(p) });
 const FALLBACK = RAW.map(withDerived);
+
+// The roster for other pages (e.g. homepage testimonials): starts with the inline fallback,
+// then swaps in the live Google Sheet once it loads.
+export function useAlpacees() {
+  const [people, setPeople] = useState(FALLBACK);
+  useEffect(() => {
+    loadAlpacees()
+      .then((rows) => { if (rows.length) setPeople(rows.map(withDerived)); })
+      .catch(() => {});
+  }, []);
+  return people;
+}
 const first = (name) => name.split(/\s+/)[0];
 
-const LogoImage = ({ className }) => (
-  <img className={className} src="/project-alpaca-logo.png" alt="Project Alpaca" />
+// Transparent vector logos from the Figma export: dark for light backgrounds, white for dark ones.
+const LogoImage = ({ className, white = false }) => (
+  <img className={className} src={white ? "/logo-white.svg" : "/logo-dark.svg"} alt="Project Alpaca" />
 );
 const ImgIcon = ({ s = 26 }) => (
   <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="#B7B7C0" strokeWidth="1.6">
@@ -230,7 +243,7 @@ function Card({ p, onOpen }) {
 }
 
 // Hand-drawn arrow used on the design's outlined buttons.
-const Squiggle = () => (
+export const Squiggle = () => (
   <svg className="squiggle" width="64" height="24" viewBox="0 0 88 32" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
     <path d="M3 20c10 0 16-14 26-12 7 1.5 5 13-2 11-6-2 2-11 14-10 10 1 22 1 41 1" /><path d="M76 5l9 7-9 7" />
   </svg>
@@ -261,7 +274,7 @@ function GiCard({ c }) {
     </Link>
   );
 }
-function GetInvolved() {
+export function GetInvolved() {
   const [support, partner, mentor, cohort, volunteer] = GI_CARDS;
   return (
     <section className="gi2">
@@ -279,26 +292,28 @@ export function Newsletter() {
   return <DirNewsletter />;
 }
 
-export function Nav() {
+// Marketing-page nav. `overlay` sits it on top of a hero photo (white text), as on the Figma homepage.
+// Link order follows the design: Programs, About, Get Involved, Donate.
+export function Nav({ overlay = false }) {
   return (
-    <nav className="nav">
-      <Link className="nav-l" to="/" style={{ textDecoration: "none" }}><LogoImage className="nav-logo" /><span className="nav-name">Project Alpaca</span></Link>
+    <nav className={`nav ${overlay ? "nav-overlay" : ""}`}>
+      <Link className="nav-l" to="/" style={{ textDecoration: "none" }}><LogoImage className="nav-logo" white={overlay} /><span className="nav-name">Project Alpaca</span></Link>
       <div className="nav-r">
         <div className="nav-item">
-          <button className="nav-trigger">Programs <Chevron /></button>
+          <button className="nav-trigger">Programs</button>
           <div className="nav-menu">
             <Link to="/flagship">Flagship Program</Link>
             <Link to="/community-programs">Community Programs</Link>
           </div>
         </div>
-        <Link to="/get-involved">Get Involved</Link>
         <div className="nav-item">
-          <button className="nav-trigger">About <Chevron /></button>
+          <button className="nav-trigger">About</button>
           <div className="nav-menu">
             <Link to="/about">About</Link>
             <Link to="/contact">Contact</Link>
           </div>
         </div>
+        <Link to="/get-involved">Get Involved</Link>
         <Link className="donate-btn" to="/donate">Donate <Squiggle /></Link>
       </div>
     </nav>
@@ -307,10 +322,12 @@ export function Nav() {
 
 const SOCIALS = [
   { name: "LinkedIn", url: "https://linkedin.com/company/projectalpaca", path: "M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14zM7.12 20.45H3.55V9h3.57v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.22.79 24 1.77 24h20.45c.98 0 1.78-.78 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z" },
-  { name: "Facebook", url: "https://www.facebook.com/projectalpacany", path: "M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.68.24 2.68.24v2.97h-1.51c-1.49 0-1.96.93-1.96 1.89v2.25h3.33l-.53 3.49h-2.8V24C19.61 23.1 24 18.1 24 12.07z" },
   { name: "Instagram", url: "https://www.instagram.com/projectalpacany/", path: "M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41-.56-.22-.96-.48-1.38-.9-.42-.42-.68-.82-.9-1.38-.16-.42-.36-1.06-.41-2.23-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.42 2.17 8.8 2.16 12 2.16zM12 0C8.74 0 8.33.01 7.05.07 5.78.13 4.9.33 4.14.63c-.79.31-1.46.72-2.12 1.38C1.36 2.67.95 3.34.63 4.14.33 4.9.13 5.78.07 7.05.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.06 1.27.26 2.15.56 2.91.31.79.72 1.46 1.38 2.12.66.66 1.33 1.07 2.12 1.38.76.3 1.64.5 2.91.56 1.28.06 1.69.07 4.95.07s3.67-.01 4.95-.07c1.27-.06 2.15-.26 2.91-.56.79-.31 1.46-.72 2.12-1.38.66-.66 1.07-1.33 1.38-2.12.3-.76.5-1.64.56-2.91.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.06-1.27-.26-2.15-.56-2.91-.31-.79-.72-1.46-1.38-2.12C21.33 1.36 20.66.95 19.86.63c-.76-.3-1.64-.5-2.91-.56C15.67.01 15.26 0 12 0zm0 5.84A6.16 6.16 0 1 0 18.16 12 6.16 6.16 0 0 0 12 5.84zM12 16a4 4 0 1 1 4-4 4 4 0 0 1-4 4zm6.4-10.85a1.44 1.44 0 1 0 1.44 1.44 1.44 1.44 0 0 0-1.44-1.44z" },
   { name: "YouTube", url: "https://www.youtube.com/@projectalpacany", path: "M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.5 3.55 12 3.55 12 3.55s-7.5 0-9.38.5A3.02 3.02 0 0 0 .5 6.19C0 8.08 0 12 0 12s0 3.92.5 5.81a3.02 3.02 0 0 0 2.12 2.14c1.88.5 9.38.5 9.38.5s7.5 0 9.38-.5a3.02 3.02 0 0 0 2.12-2.14C24 15.92 24 12 24 12s0-3.92-.5-5.81zM9.55 15.57V8.43L15.82 12l-6.27 3.57z" },
-];
+  // Medium is in the design's footer; add the team's Medium URL here to show it.
+  { name: "Medium", url: "", path: "M13.54 12a6.8 6.8 0 0 1-6.77 6.82A6.8 6.8 0 0 1 0 12a6.8 6.8 0 0 1 6.77-6.82A6.8 6.8 0 0 1 13.54 12zm7.42 0c0 3.54-1.51 6.42-3.38 6.42-1.87 0-3.39-2.88-3.39-6.42s1.52-6.42 3.39-6.42 3.38 2.88 3.38 6.42M24 12c0 3.17-.53 5.75-1.19 5.75-.66 0-1.19-2.58-1.19-5.75s.53-5.75 1.19-5.75C23.47 6.25 24 8.83 24 12z" },
+  { name: "Facebook", url: "https://www.facebook.com/projectalpacany", path: "M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.68.24 2.68.24v2.97h-1.51c-1.49 0-1.96.93-1.96 1.89v2.25h3.33l-.53 3.49h-2.8V24C19.61 23.1 24 18.1 24 12.07z" },
+].filter((s) => s.url); // order matches the design footer; entries without a URL are hidden
 
 // Shared with the marketing pages; renders the Studio Haven design so every page matches the directory.
 export function Footer() {
@@ -411,7 +428,7 @@ function DirNewsletter() {
   return (
     <section className="dn">
       <div className="dn-l">
-        <h2>Newsletter</h2>
+        <div className="dn-head"><h2>Newsletter</h2><img className="dn-letter" src="/images/home/illustrations/letter.png" alt="" onError={(e) => { e.currentTarget.style.display = "none"; }} /></div>
         <p>Subscribe to the Project Alpaca newsletter to stay up to date on our programs, community events, student stories, and ways to get involved.</p>
       </div>
       <form className="dn-r" onSubmit={(e) => e.preventDefault()}>
@@ -436,7 +453,7 @@ function DirFooter() {
   return (
     <footer className="df">
       <div className="df-top">
-        <span className="df-logo"><img src="/project-alpaca-logo.png" alt="Project Alpaca" /></span>
+        <LogoImage className="df-logo" white />
         <div className="df-cols">
           {cols.map(([h, links]) => (
             <div key={h} className="df-col">
@@ -447,12 +464,15 @@ function DirFooter() {
         </div>
       </div>
       <div className="df-bottom">
-        <div className="df-social">
-          {SOCIALS.map((s) => (
-            <a key={s.name} href={s.url} target="_blank" rel="noreferrer" aria-label={s.name}>
-              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d={s.path} /></svg>
-            </a>
-          ))}
+        <div className="df-row">
+          <div className="df-social">
+            {SOCIALS.map((s) => (
+              <a key={s.name} href={s.url} target="_blank" rel="noreferrer" aria-label={s.name}>
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d={s.path} /></svg>
+              </a>
+            ))}
+          </div>
+          <img className="df-badge" src="/images/candid-platinum-2023.png" alt="Candid Platinum Transparency 2023" />
         </div>
         <div className="df-legal">
           <span>©Copyright Project Alpaca {new Date().getFullYear()}. All rights reserved.</span>

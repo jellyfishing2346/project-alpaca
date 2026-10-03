@@ -459,7 +459,7 @@
 .dh-banner a { color:#2B6140; text-decoration:underline; }
 .dh { height:120px; box-sizing:border-box; display:flex; align-items:flex-end; justify-content:space-between; padding:16px 80px; max-width:1440px; margin:8px auto 0; }
 .dh-brand { display:flex; align-items:flex-end; gap:8px; text-decoration:none; color:#1F1F1F; }
-.dh-logo { width:88px; height:88px; object-fit:contain; mix-blend-mode:multiply; } /* drops the PNG's white background onto the cream page */
+.dh-logo { width:85px; height:87px; object-fit:contain; } /* transparent SVG logo */
 .dh-brand span { font-family:var(--font-display); font-weight:500; font-size:10px; line-height:1.67; letter-spacing:1px; text-transform:uppercase; }
 .dh-links { display:flex; gap:40px; }
 .dh-links a { font-family:var(--font-display); font-weight:900; font-size:18px; line-height:1; text-transform:uppercase; color:#1F1F1F; text-decoration:none; }
@@ -543,8 +543,7 @@
 .df-top { display:flex; gap:130px; }
 /* The logo PNG has a white background (and the "white" logo file is a solid white square), so the
    footer shows it on a small white tile. A transparent logo export from Figma would remove the need. */
-.df-logo { width:85px; height:85px; flex:none; background:#fff; border-radius:12px; padding:8px; box-sizing:border-box; }
-.df-logo img { width:100%; height:100%; object-fit:contain; display:block; }
+.df-logo { width:85px; height:87px; flex:none; object-fit:contain; } /* white transparent logo, as in the design */
 .df-cols { display:flex; gap:80px; flex-wrap:wrap; }
 .df-col { display:flex; flex-direction:column; gap:8px; min-width:179px; }
 .df-col h4 { margin:0 0 16px; font-family:var(--font-display); font-weight:500; font-size:40px; line-height:1; color:#fff; }
@@ -681,7 +680,7 @@ html, body { margin:0; padding:0; }
 
 /* Nav */
 .root:not(.root-dir) .nav { background:#FFFBF3; border-bottom:0; padding:16px 48px; max-width:1200px; margin:0 auto; box-sizing:border-box; } /* lines up with the page content */
-.root:not(.root-dir) .nav-logo { height:64px; width:64px; object-fit:contain; mix-blend-mode:multiply; }
+.root:not(.root-dir) .nav-logo { height:64px; width:64px; object-fit:contain; }
 .root:not(.root-dir) .nav-name { font-family:var(--font-display) !important; font-weight:500 !important; font-size:12px !important; letter-spacing:1px !important; text-transform:uppercase !important; color:#1F1F1F; }
 .root:not(.root-dir) .nav-r { gap:32px; align-items:center; }
 .root:not(.root-dir) .nav-r > a, .root:not(.root-dir) .nav-trigger { font-family:var(--font-display) !important; font-weight:900 !important; font-size:18px !important; letter-spacing:0 !important; text-transform:uppercase !important; color:#1F1F1F; display:inline-flex; align-items:center; gap:2px; background:none; border:0; cursor:pointer; text-decoration:none; }
@@ -749,3 +748,184 @@ html, body { margin:0; padding:0; }
 @media (prefers-reduced-motion:reduce) {
   .pf-btn, .dn-btn, .gi2-btn, .root:not(.root-dir) .btn-navy, .root:not(.root-dir) .btn-outline, .root:not(.root-dir) .nav-r > a.donate-btn { transition:none; }
 }
+
+/* ===== Homepage, per the Studio Haven design (Figma frame "Home" 669:3841) =====
+   Scoped to .root-home. Palette/type tokens as in the directory blocks above. */
+.root.root-home { background:#FFFBF3; }
+.root-home .hm-img-empty { background:linear-gradient(135deg, rgba(255,255,255,.08), rgba(255,255,255,.02)); }
+
+/* Hero: full-bleed photo, nav overlaid in white, 120px headline bottom-left */
+.hm-hero { position:relative; height:700px; overflow:hidden; background:#1E474D; }
+.hm-hero-img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center 40%; }
+.hm-hero-shade { position:absolute; inset:0; background:
+  linear-gradient(to bottom, rgba(0,0,0,.55) 0%, rgba(0,0,0,.06) 22%, rgba(0,0,0,0) 40%),
+  linear-gradient(to bottom, rgba(0,0,0,.1) 55%, rgba(0,0,0,.85) 100%); }
+.root.root-home .hm-hero-h { position:absolute; left:69px; right:69px; bottom:33px; margin:0; padding:8px; font-family:var(--font-display); font-weight:900; font-size:clamp(56px, 8.33vw, 120px); line-height:.9; letter-spacing:0; text-transform:uppercase; color:#FFFBF3; }
+.root.root-home .hm-hero-h span { color:#FF9586; }
+
+/* Nav over the hero */
+/* no z-index here on purpose: a z-index would isolate the logo's blend mode (black box instead of a white logo). DOM order already puts the nav above the photo. */
+.root:not(.root-dir) .nav.nav-overlay { position:absolute; top:0; left:0; right:0; max-width:none; margin:0; padding:8px 80px; background:transparent; }
+.root:not(.root-dir) .nav.nav-overlay .nav-logo { width:85px; height:87px; } /* white transparent logo */
+.root:not(.root-dir) .nav.nav-overlay .nav-name { display:none; }
+.root:not(.root-dir) .nav.nav-overlay .nav-r > a:not(.donate-btn), .root:not(.root-dir) .nav.nav-overlay .nav-trigger { color:#fff !important; font-size:24px !important; padding:40px 16px; }
+.root:not(.root-dir) .nav.nav-overlay .nav-r { gap:16px; }
+.root:not(.root-dir) .nav.nav-overlay .nav-r > a.donate-btn { font-size:24px !important; padding:12px 16px !important; }
+.root:not(.root-dir) .nav.nav-overlay .donate-btn .squiggle { width:64px; height:24px; }
+
+/* Partners */
+.hm-partners { background:#F5F5F5; padding:48px 80px; display:flex; flex-direction:column; gap:32px; }
+.root.root-home .hm-partners h2 { margin:0; font-family:var(--font-display); font-weight:500; font-size:32px; line-height:1; text-transform:uppercase; }
+.hm-logos { display:flex; align-items:center; justify-content:space-between; gap:32px; flex-wrap:wrap; }
+.hm-logo { height:72px; width:auto; max-width:260px; object-fit:contain; }
+.hm-logo-text { font-family:var(--font-display); font-weight:900; font-size:34px; color:#1F1F1F; opacity:.75; }
+
+/* Impact */
+.hm-impact-top { display:flex; border-top:1px solid #1F1F1F; background:#FAEFDE; }
+.root.root-home .hm-impact-h { flex:1; margin:0; padding:40px 16px 40px 80px; font-family:var(--font-display); font-weight:900; font-size:90px; line-height:.9; text-transform:uppercase; }
+.hm-impact-copy { flex:1; border-left:1px solid #1F1F1F; padding:40px 80px 40px 16px; display:flex; flex-direction:column; gap:16px; }
+.hm-impact-copy p { margin:0; max-width:624px; font-family:var(--font-serif); font-size:18px; line-height:1.67; }
+.hm-impact-copy .hm-lead { font-size:24px; }
+.hm-stats { display:flex; }
+.hm-stat { flex:1; display:flex; flex-direction:column; gap:16px; padding:40px 80px; border-top:1px solid #1F1F1F; border-right:1px solid #1F1F1F; }
+.hm-stat:last-child { border-right:0; }
+.hm-stat-n { font-family:var(--font-display); font-weight:900; font-size:64px; line-height:.9; text-transform:uppercase; white-space:nowrap; }
+.hm-stat-l { margin-top:16px; font-family:var(--font-serif); font-size:18px; line-height:1.67; }
+.hm-stat-art { height:220px; width:auto; max-width:100%; object-fit:contain; align-self:flex-start; }
+
+/* Programs */
+.hm-programs { display:grid; grid-template-columns:1fr 1fr; }
+.hm-prog { display:flex; flex-direction:column; gap:32px; padding:32px; text-decoration:none; color:#fff; }
+.hm-prog-flagship { padding-left:80px; }
+.hm-prog-img { width:100%; height:400px; object-fit:cover; display:block; }
+.hm-prog-body { flex:1; display:flex; flex-direction:column; justify-content:space-between; align-items:stretch; gap:16px; }
+.root.root-home .hm-prog h3 { margin:0 0 16px; font-family:var(--font-display); font-weight:900; font-size:48px; line-height:.9; text-transform:uppercase; }
+.hm-prog p { margin:0; font-family:var(--font-serif); font-size:18px; line-height:1.67; }
+.hm-arrow-btn { align-self:flex-end; display:inline-flex; align-items:center; justify-content:center; height:57px; box-sizing:border-box; padding:12px 16px; border:1px solid #E0FFEC; color:#63FFA1; transition:var(--btn-fade); }
+.hm-arrow-btn .squiggle { width:88px; height:31px; }
+.hm-prog:hover .hm-arrow-btn, .hm-prog:focus-visible .hm-arrow-btn { background:var(--lime); border-color:var(--lime); color:#1F1F1F; }
+
+/* Events */
+.hm-events { display:flex; gap:9px; padding:48px 65px 48px 80px; }
+.hm-events-intro { width:302px; flex:none; display:flex; flex-direction:column; gap:16px; }
+.root.root-home .hm-events h2 { margin:0; font-family:var(--font-display); font-weight:900; font-size:90px; line-height:.9; text-transform:uppercase; }
+.hm-events-intro p { margin:0; font-family:var(--font-serif); font-size:18px; line-height:1.67; }
+.hm-events-list { flex:1; min-width:0; }
+.hm-event { display:flex; gap:24px; align-items:stretch; padding:16px; border-top:1px solid #1F1F1F; }
+.hm-event:last-child { border-bottom:1px solid #1F1F1F; }
+.hm-event-img { width:427px; height:320px; flex:none; object-fit:cover; border-radius:16px; background:#F6E5C8; }
+.hm-event-body { flex:1; min-height:320px; display:flex; flex-direction:column; justify-content:space-between; align-items:flex-end; }
+.hm-event-body > div { align-self:stretch; display:flex; flex-direction:column; gap:16px; }
+.root.root-home .hm-event h3 { margin:0 0 8px; font-family:var(--font-display); font-weight:900; font-size:48px; line-height:.9; color:#000; }
+.hm-event-desc { margin:0; font-family:var(--font-serif); font-size:18px; line-height:1.67; }
+.hm-event-when { margin:0; font-family:var(--font-serif); font-size:16px; line-height:1.67; }
+.hm-rsvp { display:inline-flex; align-items:center; gap:8px; height:55px; box-sizing:border-box; padding:12px 16px; border:1px solid #1F1F1F; color:#1F1F1F; text-decoration:none; font-family:var(--font-display); font-weight:900; font-size:24px; text-transform:uppercase; transition:var(--btn-fade); }
+.hm-rsvp .squiggle { width:64px; height:24px; }
+.hm-rsvp:hover, .hm-rsvp:focus-visible { background:var(--lime); }
+.hm-events-empty { border-top:1px solid #1F1F1F; border-bottom:1px solid #1F1F1F; padding:48px 16px; }
+.hm-events-empty p { margin:0; max-width:520px; font-family:var(--font-serif); font-size:18px; line-height:1.67; }
+
+/* From our community: two rows scrolling in opposite directions */
+.hm-community { background:#fff; padding:19px 0 64px; overflow:hidden; }
+.hm-community-head { display:flex; align-items:center; gap:24px; padding:0 80px 40px; }
+.root.root-home .hm-community h2 { margin:0; width:439px; max-width:100%; font-family:var(--font-display); font-weight:900; font-size:90px; line-height:.9; text-transform:uppercase; }
+.hm-speech { width:220px; height:220px; object-fit:contain; }
+.hm-marquee { overflow:hidden; padding:23px 0; }
+.hm-track { display:flex; width:max-content; animation:hm-scroll linear infinite; }
+.hm-marquee.rev .hm-track { animation-direction:reverse; }
+.hm-marquee:hover .hm-track { animation-play-state:paused; }
+.hm-group { display:flex; gap:24px; padding-right:24px; }
+@keyframes hm-scroll { from { transform:translateX(0); } to { transform:translateX(-50%); } }
+.hm-testi { margin:0; display:flex; gap:32px; align-items:flex-start; padding:32px; border-radius:16px; width:655px; box-sizing:border-box; flex:none; }
+.hm-testi-who { width:140px; flex:none; display:flex; flex-direction:column; gap:12px; }
+.hm-testi-name { font-family:var(--font-display); font-weight:500; font-size:36px; line-height:1; }
+.hm-testi-rule { width:1px; align-self:stretch; background:#1F1F1F; flex:none; }
+.hm-testi-text { flex:1; display:flex; flex-direction:column; gap:12px; }
+.hm-eyebrow { font-family:var(--font-display); font-weight:500; font-size:12px; line-height:1.67; letter-spacing:.1em; text-transform:uppercase; }
+.hm-testi blockquote { margin:0; font-family:var(--font-serif); font-size:16px; line-height:1.67; display:-webkit-box; -webkit-line-clamp:7; line-clamp:7; -webkit-box-orient:vertical; overflow:hidden; }
+@media (prefers-reduced-motion:reduce) {
+  .hm-track { animation:none; }
+  .hm-marquee { overflow-x:auto; }
+  .hm-group[aria-hidden="true"] { display:none; }
+  .hm-arrow-btn, .hm-rsvp { transition:none; }
+}
+
+/* Get Involved follows directly, as in the design */
+.root-home .gi2 { margin-top:0; }
+
+@media (max-width:1100px) {
+  .hm-impact-top, .hm-stats { flex-direction:column; }
+  .hm-impact-copy { border-left:0; border-top:1px solid #1F1F1F; padding:32px 40px; }
+  .root.root-home .hm-impact-h { padding:32px 40px; }
+  .hm-stat { border-right:0; padding:32px 40px; }
+  .hm-programs { grid-template-columns:1fr; }
+  .hm-prog-flagship { padding-left:32px; }
+  .hm-events { flex-direction:column; padding:48px 40px; gap:32px; }
+  .hm-events-intro { width:auto; }
+}
+@media (max-width:760px) {
+  .hm-hero { height:560px; }
+  .root.root-home .hm-hero-h { left:16px; right:16px; bottom:16px; }
+  .root:not(.root-dir) .nav.nav-overlay { padding:8px 16px; }
+  .root:not(.root-dir) .nav.nav-overlay .nav-logo { width:56px; height:57px; }
+  .root:not(.root-dir) .nav.nav-overlay .nav-r > a:not(.donate-btn), .root:not(.root-dir) .nav.nav-overlay .nav-trigger { font-size:16px !important; padding:8px 0; }
+  .root:not(.root-dir) .nav.nav-overlay .nav-r > a.donate-btn { font-size:16px !important; padding:8px 12px !important; }
+  .hm-partners { padding:32px 24px; }
+  .hm-logos { justify-content:flex-start; gap:24px 32px; }
+  .hm-logo { height:44px; }
+  .root.root-home .hm-impact-h, .root.root-home .hm-events h2, .root.root-home .hm-community h2 { font-size:56px; }
+  .hm-stat-n { font-size:48px; white-space:normal; }
+  .hm-stat-art { height:140px; }
+  .hm-prog { padding:24px; } .hm-prog-flagship { padding-left:24px; }
+  .hm-prog-img { height:240px; }
+  .hm-events { padding:40px 24px; }
+  .hm-event { flex-direction:column; }
+  .hm-event-img { width:100%; height:220px; }
+  .hm-event-body { min-height:0; gap:16px; }
+  .hm-community-head { padding:0 24px 24px; }
+  .hm-speech { width:96px; height:96px; }
+  .hm-testi { width:320px; flex-direction:column; gap:16px; padding:24px; }
+  .hm-testi-who { width:auto; flex-direction:row; align-items:center; justify-content:space-between; }
+  .hm-testi-rule { width:100%; height:1px; }
+}
+/* Get Involved cards keep their 48px titles on marketing pages (the general h3 rule would shrink them) */
+.root:not(.root-dir) .gi2-body h3 { font-size:48px; line-height:.9; text-transform:none; }
+@media (max-width:760px) { .root:not(.root-dir) .gi2-body h3 { font-size:40px; } }
+
+/* Tablets: the hero nav's 24px links would push Donate off-screen */
+@media (max-width:1100px) and (min-width:761px) {
+  .root:not(.root-dir) .nav.nav-overlay { padding:8px 40px; }
+  .root:not(.root-dir) .nav.nav-overlay .nav-r { gap:8px; }
+  .root:not(.root-dir) .nav.nav-overlay .nav-r > a:not(.donate-btn), .root:not(.root-dir) .nav.nav-overlay .nav-trigger { font-size:18px !important; padding:24px 8px; }
+  .root:not(.root-dir) .nav.nav-overlay .nav-r > a.donate-btn { font-size:18px !important; padding:10px 12px !important; }
+  .root:not(.root-dir) .nav.nav-overlay .donate-btn .squiggle { width:44px; height:18px; }
+}
+
+/* Footer: social icons + Candid badge on one row; newsletter envelope; homepage art at natural size */
+.df-row { display:flex; align-items:center; justify-content:space-between; gap:24px; }
+.df-badge { width:56px; height:56px; object-fit:contain; flex:none; }
+.dn-head { display:flex; align-items:center; gap:16px; margin-bottom:16px; }
+.dn-head h2 { margin:0 !important; }
+.dn-letter { width:106px; height:auto; flex:none; }
+.hm-stat-art { height:auto; width:auto; max-height:220px; margin-top:24px; }
+.hm-logo { height:auto; width:auto; max-height:120px; max-width:280px; }
+.hm-speech { width:auto; height:auto; max-width:220px; }
+@media (max-width:760px) {
+  .dn-letter { width:72px; }
+  .hm-stat-art { max-height:140px; }
+  .hm-logo { max-height:56px; max-width:150px; }
+  .hm-speech { max-width:110px; }
+}
+
+/* ===== Design-comparison fixes (homepage vs Figma "Home") ===== */
+/* Testimonial alpaca icon (replaces the quote mark) */
+.hm-testi-icon { width:62px; height:95px; object-fit:contain; object-position:left top; }
+/* Get Involved runs edge to edge at every width, as in the design */
+.gi2 { max-width:none; }
+/* Homepage "Support Us Financially": DONATE is a filled lime button in the design */
+.root-home .gi2-big .gi2-btn { background:#63FFA1; border-color:#63FFA1; color:#1F1F1F !important; }
+.root-home .gi2-card.gi2-big:hover .gi2-btn, .root-home .gi2-card.gi2-big:focus-visible .gi2-btn { background:var(--light-green); border-color:var(--light-green); }
+/* Footer: Programs and Get Involved links are spaced 16px apart in the design, the others 8px */
+.df-col:nth-child(2), .df-col:nth-child(3) { gap:16px; }
+.df-col:nth-child(2) h4, .df-col:nth-child(3) h4 { margin-bottom:8px; }
+

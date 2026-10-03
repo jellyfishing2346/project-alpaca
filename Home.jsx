@@ -1,124 +1,218 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Nav, Footer, Newsletter } from "./alpacees-directory-final.jsx";
+import { Nav, Footer, Newsletter, GetInvolved, Squiggle, useAlpacees } from "./alpacees-directory-final.jsx";
 import "./styles.css";
 
-const Arrow = () => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
-);
-const ImgBox = ({ className }) => (
-  <div className={"hi-img " + (className || "")}>
-    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#B7B7C0" strokeWidth="1.4"><rect x="3" y="3" width="18" height="18" rx="3" /><circle cx="8.5" cy="8.5" r="1.6" /><path d="m21 15-5-5L5 21" /></svg>
-  </div>
-);
+// Homepage, per the Studio Haven design (Figma "Web design - Project Alpaca",
+// page "Visual Design - Desktop", frame "Home" 669:3841).
+//
+// Images live in public/images/home/ (see DOCS.md for the full list). Every image
+// tries .jpg/.png/.svg and falls back gracefully if the file isn't there yet.
 
-const PARTNERS = ["Company", "School", "Company", "School", "Company", "School"];
-const PROGRAMS = [
-  { t: "Flagship Program", d: "Our 9-month technology and professional development track equipping high-potential under-resourced college students with industry-level skills, mentorship, and portfolio pieces.", to: "/flagship" },
-  { t: "Community Programs", d: "Bite-sized workshops designed for quick, targeted skills development.", to: "/community-programs" },
+// ---- Content you may want to edit ------------------------------------------------
+
+const STATS = [
+  { n: "250+", label: "Students helped", color: "#5B2D53", bg: "#E0FFEC", art: "backpack" },
+  { n: "$1,000,000+", label: "Total salary increased", color: "#1E474D", bg: "#FFFDDF", art: "money" },
+  { n: "100%", label: "Students of color", color: "#564538", bg: "#E7FCFF", art: "rainbow" },
 ];
-const IMPACT = [["200+", "Alpacees Graduated"], ["50+", "Active Industry Mentors"], ["15", "Cohorts Completed"], ["95%", "Career Placement Rate"]];
+
+const PARTNERS = [
+  { key: "goldman-sachs", name: "Goldman Sachs" },
+  { key: "american-express", name: "American Express" },
+  { key: "google", name: "Google" },
+  { key: "justworks", name: "Justworks" },
+  { key: "meta", name: "Meta" },
+];
+
+// Events: add real ones here. `date` is YYYY-MM-DD; past events hide automatically.
+// `image` is a file in public/images/home/events/ (optional).
 const EVENTS = [
-  { d: "JUN 12", t: "2:00 PM", title: "Design Portfolio Critique", desc: "Industry professionals from local agencies join us to offer constructive feedback on student UX and graphic work." },
-  { d: "JUL 08", t: "11:00 AM", title: "Alumni Roundtable Discussion", desc: "Hear from previous Project Alpaca graduates on their transition into tech roles and higher education." },
-  { d: "AUG 15", t: "5:00 PM", title: "Summer Demo Day 2026", desc: "Cohort 5 students present their final capstone products and design prototypes to our donor and partner network." },
+  // { date: "2026-11-14", title: "Fall Demo Day", desc: "Cohort 6 presents their capstone projects.", where: "Manhattan", image: "demo-day" },
 ];
-const TESTIMONIALS = [
-  { name: "Alex Rivera", role: "Cohort 3 Alum, UX Designer", q: "Project Alpaca changed my career trajectory. Having access to standard design software and an actual mentor made all the difference in preparing for my college applications." },
-  { name: "Sarah Jenkins", role: "Mentor, Engineer, Google", q: "Mentoring here is incredibly fulfilling. You get to see real, direct outcomes of your industry advice and watch young talent transform creative ideas into working prototypes." },
-  { name: "Marcus Chen", role: "Creative Director, XYZ", q: "Hiring a graduate from Project Alpaca has consistently brought motivated, hungry, and highly-capable junior talent into our creative tech department." },
-];
-const INVOLVE = [
-  { t: "Support us financially", d: "Directly fund tech resources, laptops, and internship stipends for our upcoming youth cohorts.", cta: "Donate", to: "/donate" },
-  { t: "Become our partner", d: "Sponsor a cohort, host workspace trips, or hire talented graduates for junior roles.", cta: "Partner with us", to: "/get-involved" },
-  { t: "Join a cohort", d: "If you are a student ready to supercharge your tech capabilities, start your application here.", cta: "Get notified", to: "/flagship" },
-  { t: "Join as a volunteer", d: "Lend your skills in administration, event organization, or technical support during events.", cta: "Apply", to: "/get-involved" },
-  { t: "Become a mentor", d: "Guide an Alpacee 1-on-1 or instruct a class.", cta: "Apply", to: "/get-involved" },
-];
+
+// ---- Helpers ---------------------------------------------------------------------
+
+// An image that tries each extension in turn; renders `fallback` (or nothing) if none exist.
+function Img({ base, alt = "", className, fallback = null, exts = ["jpg", "png", "svg"] }) {
+  const [i, setI] = useState(0);
+  if (i >= exts.length) return fallback;
+  return <img className={className} src={`${base}.${exts[i]}`} alt={alt} onError={() => setI((x) => x + 1)} />;
+}
+
+
+const fmtDate = (iso) => new Date(`${iso}T12:00:00`).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+const TESTI_BG = ["#E7FCFF", "#FFFDDF", "#FFF4FD", "#E0FFEC", "#FAEFDE"];
+// Alpaca icon accent per card color, as in the design (public/images/home/icons/).
+const TESTI_ICON = ["sky", "yellow", "pink", "green", "sunrise"];
+
+// ---- Sections --------------------------------------------------------------------
+
+function Hero() {
+  return (
+    <section className="hm-hero">
+      <Img base="/images/home/hero" className="hm-hero-img" exts={["jpg", "png"]} />
+      <div className="hm-hero-shade" aria-hidden="true" />
+      <Nav overlay />
+      <h1 className="hm-hero-h">
+        Creating tech leaders<br />
+        <span>for New York City</span>
+      </h1>
+    </section>
+  );
+}
+
+function Partners() {
+  return (
+    <section className="hm-partners">
+      <h2>Powered by mentors from companies like</h2>
+      <div className="hm-logos">
+        {PARTNERS.map((p) => (
+          <Img key={p.key} base={`/images/home/logos/${p.key}`} alt={p.name} className="hm-logo" exts={["svg", "png"]}
+            fallback={<span className="hm-logo-text">{p.name}</span>} />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function Impact() {
+  return (
+    <section className="hm-impact">
+      <div className="hm-impact-top">
+        <h2 className="hm-impact-h">Unlocking potential</h2>
+        <div className="hm-impact-copy">
+          <p className="hm-lead">Project Alpaca is a grassroots nonprofit on a mission to bridge the opportunity gap for under-resourced college students in NYC.</p>
+          <p>Our growing network of mentees (Alpacees), industry mentors (Alpacas), and partners are actively redefining representation across tech, design, and business. Together, our graduated Alpacees are securing full-time roles at leading companies across NYC and beyond, achieving significant salary growth, and rewriting stories for their families and generations to come.</p>
+          <p>Through hands-on industry projects, 1:1 mentorship, and corporate partnerships, we equip emerging talent with the confidence, networks, and real-world skills to thrive. By transforming how young professionals transition from campus to career, we remove systemic barriers and build clear pathways to economic mobility.</p>
+          <p>Together, we are building a world where every student, regardless of background, has full agency, access, and opportunity to shape their future.</p>
+        </div>
+      </div>
+      <div className="hm-stats">
+        {STATS.map((s) => (
+          <div key={s.n} className="hm-stat" style={{ background: s.bg }}>
+            <div>
+              <div className="hm-stat-n" style={{ color: s.color }}>{s.n}</div>
+              <div className="hm-stat-l">{s.label}</div>
+            </div>
+            <Img base={`/images/home/illustrations/${s.art}`} className="hm-stat-art" exts={["svg", "png"]} />
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function Programs() {
+  const cards = [
+    { key: "flagship", to: "/flagship", title: "Flagship program", text: "Our multi-month technology & professional development track equipping Alpacees with industry-level skills, mentorship, and portfolio pieces.", bg: "#1E474D", accent: "#FFF767", ink: "#FFFDDF" },
+    { key: "community", to: "/community-programs", title: "Community Programs", text: "Bite-sized workshops designed for quick, targeted skills development.", bg: "#564538", accent: "#37E3FC", ink: "#E7FCFF" },
+  ];
+  return (
+    <section className="hm-programs">
+      {cards.map((c) => (
+        <Link key={c.key} to={c.to} className={`hm-prog hm-prog-${c.key}`} style={{ background: c.bg }}>
+          <Img base={`/images/home/${c.key}`} className="hm-prog-img" exts={["jpg", "png"]} fallback={<div className="hm-prog-img hm-img-empty" />} />
+          <div className="hm-prog-body">
+            <div>
+              <h3 style={{ color: c.accent }}>{c.title}</h3>
+              <p style={{ color: c.ink }}>{c.text}</p>
+            </div>
+            <span className="hm-arrow-btn" aria-hidden="true"><Squiggle /></span>
+          </div>
+        </Link>
+      ))}
+    </section>
+  );
+}
+
+function Events() {
+  const today = new Date().toISOString().slice(0, 10);
+  const upcoming = EVENTS.filter((e) => e.date >= today).sort((a, b) => a.date.localeCompare(b.date));
+  return (
+    <section className="hm-events">
+      <div className="hm-events-intro">
+        <h2>Events</h2>
+        <p>Our events are open to everyone. Whether you’re a student looking to grow, a professional eager to mentor, or a supporter passionate about closing the opportunity gap, we’d love for you to join our community.</p>
+      </div>
+      <div className="hm-events-list">
+        {upcoming.length ? upcoming.map((e) => (
+          <article key={e.date + e.title} className="hm-event">
+            <Img base={`/images/home/events/${e.image || ""}`} className="hm-event-img" exts={e.image ? ["jpg", "png"] : []}
+              fallback={<div className="hm-event-img hm-img-empty" />} />
+            <div className="hm-event-body">
+              <div>
+                <h3>{e.title}</h3>
+                <p className="hm-event-desc">{e.desc}</p>
+                <p className="hm-event-when">{fmtDate(e.date)}{e.where ? ` • ${e.where}` : ""}</p>
+              </div>
+              <a className="hm-rsvp" href={`mailto:hello@projectalpaca.org?subject=${encodeURIComponent(`RSVP: ${e.title}`)}`}>RSVP <Squiggle /></a>
+            </div>
+          </article>
+        )) : (
+          <div className="hm-events-empty">
+            <p>No upcoming events right now. Subscribe to the newsletter below to hear about the next one first.</p>
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
+// Testimonials come straight from the directory's Google Sheet ("Testimonial about Project
+// Alpaca" column), so new ones appear here automatically. Two rows scroll in opposite directions.
+function Community() {
+  const people = useAlpacees().filter((p) => p.quote && p.quote.trim().length > 20);
+  if (!people.length) return null;
+  const rows = [people.filter((_, i) => i % 2 === 0), people.filter((_, i) => i % 2 === 1)].filter((r) => r.length);
+  // Color comes from the card's position in its row, so the duplicated half matches exactly.
+  const Card = ({ p, i, ri }) => {
+    const k = (i * 2 + ri) % TESTI_BG.length;
+    return (
+      <figure className="hm-testi" style={{ background: TESTI_BG[k] }}>
+        <div className="hm-testi-who">
+          <span className="hm-testi-name">{p.name}</span>
+          <img className="hm-testi-icon" src={`/images/home/icons/alpaca-${TESTI_ICON[k]}.png`} alt="" />
+        </div>
+        <div className="hm-testi-rule" aria-hidden="true" />
+        <div className="hm-testi-text">
+          <div className="hm-eyebrow">Flagship Program • {`Cohort ${p.c}`}</div>
+          <blockquote>{p.quote}</blockquote>
+        </div>
+      </figure>
+    );
+  };
+  return (
+    <section className="hm-community">
+      <div className="hm-community-head">
+        <h2>From our community</h2>
+        <Img base="/images/home/illustrations/speech" className="hm-speech" exts={["svg", "png"]} />
+      </div>
+      {rows.map((row, ri) => (
+        <div key={ri} className={`hm-marquee ${ri % 2 ? "rev" : ""}`}>
+          <div className="hm-track" style={{ animationDuration: `${Math.max(40, row.length * 14)}s` }}>
+            {/* two identical groups so the loop is seamless; the copy is hidden from screen readers */}
+            <div className="hm-group">{row.map((p, i) => <Card key={p.id} p={p} i={i} ri={ri} />)}</div>
+            <div className="hm-group" aria-hidden="true">{row.map((p, i) => <Card key={`d${p.id}`} p={p} i={i} ri={ri} />)}</div>
+          </div>
+        </div>
+      ))}
+    </section>
+  );
+}
 
 export default function Home() {
   return (
-    <div className="root">
-      <Nav />
-      <div className="home">
-        <section className="hero">
-          <div className="hero-l">
-            <h1>Creating tech leaders locally for New York City</h1>
-            <p>Our structured programs empower under-resourced college students with confidence, leadership, and real-world projects.</p>
-            <div className="hero-cta">
-              <Link className="btn-navy" to="/directory">Meet the Alpacees <Arrow /></Link>
-              <Link className="btn-outline" to="/get-involved">Get involved</Link>
-            </div>
-          </div>
-          <ImgBox className="hero-img" />
-        </section>
-
-        <section className="hs">
-          <h2 className="hs-h">In partnerships with</h2>
-          <div className="partners">{PARTNERS.map((p, i) => <div key={i} className="partner"><ImgBox /><span>{p}</span></div>)}</div>
-        </section>
-
-        <section className="hs">
-          <h2 className="hs-h">Our Programs</h2>
-          <div className="prog-grid">
-            {PROGRAMS.map((p) => (
-              <div key={p.t} className="prog-card">
-                <ImgBox className="prog-img" />
-                <h3>{p.t}</h3><p>{p.d}</p>
-                <Link className="btn-outline" to={p.to}>Learn more <Arrow /></Link>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section className="hs">
-          <h2 className="hs-h">Our Impact</h2>
-          <div className="impact">{IMPACT.map(([n, l]) => <div key={l} className="stat"><b>{n}</b><span>{l}</span></div>)}</div>
-        </section>
-
-        <section className="hs">
-          <h2 className="hs-h">Upcoming Events</h2>
-          <div className="events">
-            {EVENTS.map((e) => (
-              <div key={e.title} className="event">
-                <div className="event-date"><b>{e.d}</b><span>{e.t}</span></div>
-                <div className="event-body"><h3>{e.title}</h3><p>{e.desc}</p></div>
-                <button className="btn-navy sm">RSVP</button>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section className="hs">
-          <h2 className="hs-h">What Our Community Says</h2>
-          <div className="tgrid">
-            {TESTIMONIALS.map((t) => (
-              <div key={t.name} className="tcardh">
-                <div className="stars">★★★★★</div>
-                <span className="tqm">&ldquo;</span>
-                <p>{t.q}</p>
-                <div className="tby"><b>{t.name}</b><span>{t.role}</span></div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section className="hs">
-          <h2 className="hs-h">Get Involved</h2>
-          <div className="inv-grid">
-            {INVOLVE.map((i) => (
-              <div key={i.t} className="inv-card">
-                <ImgBox className="inv-img" />
-                <h3>{i.t}</h3><p>{i.d}</p>
-                <Link className="inv-cta" to={i.to}>{i.cta} <Arrow /></Link>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <Newsletter />
-        <Footer />
-      </div>
+    <div className="root root-home">
+      <Hero />
+      <Partners />
+      <Impact />
+      <Programs />
+      <Events />
+      <Community />
+      <GetInvolved />
+      <Newsletter />
+      <Footer />
     </div>
   );
 }

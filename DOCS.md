@@ -50,7 +50,8 @@ project-alpaca/
 ├── Home.jsx, About.jsx, GetInvolved.jsx, CommunityPrograms.jsx,
 │   Flagship.jsx, Contact.jsx, Donate.jsx   # marketing pages (out of scope - Framer)
 ├── public/
-│   ├── project-alpaca-logo.png       # main logo (has a white background)
+│   ├── logo-dark.svg / logo-white.svg # transparent vector logos (from the Figma export)
+│   ├── project-alpaca-logo.png       # old PNG logo (white background), no longer used
 │   ├── project-alpaca-logo-white.png # broken: a solid white square, unused
 │   ├── fonts/                        # GT America Compressed Medium + Black (woff2/woff)
 │   ├── images/get-involved/          # Get Involved photos (to be added, see section 8)
@@ -196,6 +197,41 @@ For each person, `sheet.js`:
 
 ---
 
+## 8b. Homepage
+
+**Design source:** same Figma file, frame **Home** (`669:3841`). Built in `Home.jsx`, styled in the "Homepage" block of `styles.css` (scoped to `.root-home`).
+
+Sections: hero photo with the nav overlaid in white and "Creating tech leaders / for New York City"; partner logos; "Unlocking Potential" mission text and three stats; Flagship + Community Programs cards; Events; "From Our Community" testimonials (two rows scrolling in opposite directions; paused on hover; static and scrollable for visitors with "reduce motion" on); Get Involved, Newsletter and Footer (shared with the directory).
+
+**Content:**
+- **Testimonials come from the Google Sheet** (`Testimonial about Project Alpaca`, via `useAlpacees()`), so new ones appear automatically. Only quotes longer than ~20 characters show; long quotes are clipped to 7 lines on the card.
+- **Stats** (250+, $1,000,000+, 100%) and **partners** are in `STATS` / `PARTNERS` at the top of `Home.jsx`.
+- **Events** are in `EVENTS` at the top of `Home.jsx` (`date` as `YYYY-MM-DD`, `title`, `desc`, `where`, optional `image`). **Past events hide automatically**; with none upcoming, the section says so and points to the newsletter. RSVP emails hello@projectalpaca.org with "RSVP: <title>".
+
+**Matched against the design render** (`Home.jpg` in the Figma export), section by section. Known remaining differences: the hero photo (needs the right file), the events list (placeholder events in the design; real ones go in `EVENTS`), the Medium footer icon (needs a URL: `SOCIALS` in `alpacees-directory-final.jsx`), and the "Support Us Financially" description (the design repeats the partner text; the site keeps the donation text).
+
+Testimonial cards use the alpaca icon from the design (`images/home/icons/alpaca-<color>.png`, recolored per card).
+
+**Images** (`public/images/home/`; each tries .jpg/.png/.svg and degrades gracefully if missing):
+
+| File | Used for | If missing |
+|---|---|---|
+| `hero.jpg` | Hero photo | Dark teal background |
+| `logos/goldman-sachs`, `american-express`, `google`, `justworks`, `meta` (.svg or .png) | Partner row | Company name as text |
+| `illustrations/backpack`, `money`, `rainbow` (.svg or .png) | Stat blocks | Hidden |
+| `illustrations/speech` (.svg or .png) | Next to "From Our Community" | Hidden |
+| `flagship.jpg` (conference room, blue screen), `community.jpg` (red couch, yellow sofa; same photo as the Get Involved partner card) | Program cards | Subtle empty panel |
+| `events/<image>.jpg` | Event rows (per event's `image`) | Subtle empty panel |
+
+Export photos from Figma **as JPG** (Figma's default is PNG; a PNG renamed to .jpg won't compress). Logos and illustrations are best as SVG.
+
+Partner logos and illustrations were cut from the Figma page export (`Home.jpg`, 1x) with their backgrounds removed. SVG exports would be sharper on high-resolution screens; drop them in with the same names (.svg wins over .png).
+
+### Design export (for building the remaining pages)
+The team's Figma export ("Web design - Project Alpaca.zip") contains full-page renders (`Home.jpg`, `Directory - Home.jpg`, `Directory - Profile.jpg`, `Directory - Projects.jpg`) and PDFs of **About, Contact, Get Involved, Programs - Flagship, Programs - Community**. The PDFs embed the original full-resolution photos (extract with `pdfimages -j file.pdf out`). Keep that zip; it's the reference for the pages still to rebuild, and lets them be built without Figma lookups.
+
+**Footer:** includes the Candid "Platinum Transparency 2023" badge (`public/images/candid-platinum-2023.png`), as in the design.
+
 ## 9. Profile page
 
 **Design source:** same Figma file, frame **Directory - Profile** (`1158:7075`).
@@ -280,7 +316,7 @@ npm run preview        # preview the production build locally
 | Path | Renders |
 |---|---|
 | `/directory` | The Alpacee directory and profiles (also the catch-all `*`) |
-| `/` | Marketing homepage (out of scope - Framer) |
+| `/` | Homepage, built to the Figma "Home" frame (section 8b) |
 | `/about`, `/get-involved`, `/community-programs`, `/flagship`, `/contact`, `/donate` | Marketing pages (out of scope - Framer) |
 | `/projects` | Stub ("coming soon"); Michelle is designing the Projects page |
 
@@ -298,7 +334,7 @@ npm run preview        # preview the production build locally
 - **Recommendations** shows the person's own testimonial (the only quote data available).
 - **Not in the Figma, styled with its tokens:** pagination states, the search box, filter dropdown menus, empty-results message.
 - **Profiles are in-app state, not URLs** - no shareable `/alpacee/:id` links yet. A clean follow-up if wanted.
-- **Logo:** `project-alpaca-logo.png` has a white background; the header blends it into the cream (`mix-blend-mode`) and the footer puts it on a white tile. A transparent export from Figma would remove both workarounds.
+- **Logo:** transparent SVGs from the Figma export: `public/logo-dark.svg` (light backgrounds) and `public/logo-white.svg` (dark backgrounds: footer, homepage hero). `LogoImage` takes a `white` prop.
 
 ---
 
@@ -309,7 +345,7 @@ npm run preview        # preview the production build locally
 - **Sub-buckets** for each category.
 - **MailerLite** details to connect the newsletter form.
 - **Projects page** design (then point "See Projects" at it).
-- **Assets:** the five Get Involved photos and a transparent logo. Michelle is also granting fuller Figma access (the current view seat hits a lookup limit).
+- **Assets:** the homepage hero photo (the design's is the group on the couch in front of the mountain mural; export the **Banner Image** layer at 2x). Michelle is also granting fuller Figma access (the current view seat hits a lookup limit).
 - **Action shots** - photos to add (section 10).
 
 **Ready to build once unblocked:**
