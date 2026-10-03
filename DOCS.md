@@ -248,6 +248,20 @@ Sections: hero (nav, "Flagship Program", photo, intro, Apply button); sticky tab
 
 **Photos** are the full-resolution originals from the design export, in `public/images/flagship/` (hero, intensive, community, programming, mentorship, networking, capstone, curriculum, classes, projects, catherine-man, zsoreign-sanchez, marissa-fleming, alpacas, support). The Zsoreign and Marissa originals are only ~500px, slightly small for their 600px-tall cards.
 
+## 8d. Programs – Community page
+
+**Design source:** "Programs - Community" in the Figma export (PDF). Built in `CommunityPrograms.jsx` using the Flagship page's building blocks (`fl-*` classes) recolored via `.root-comm` (Mellow Yellow `#564538` + Sky `#37E3FC`, cream page, white tab strip), plus `cm-*` classes in the "Programs – Community" block of `styles.css`.
+
+**Checked against the design render:** every section starts at the design's exact position at 1440px (real fonts loaded); photo crops were matched to the design by search (the "Partner with Us" photo is pre-cropped to the design's 1.48x zoom).
+
+Sections: hero ("Community Programs", photo, intro, "Become Our Partners" → Get Involved); tabs that jump to each program; one section per program (text + photo) with a row of partner organizations (logo, name, description); "Partner with Us" band (Contact → /contact); Newsletter; Footer.
+
+**Content** lives in `PROGRAMS` at the top of `CommunityPrograms.jsx` (one entry per program: tab label, title, lead, paragraphs, photo, partners). Adding a program adds its tab automatically.
+- **"Resume Review" is placeholder content in the design:** it repeats the Equitable AI text, photo and partners word for word. Replace its `paras`, `image` and `partners` with the real Resume Review content.
+- Two small corrections from the design text: "strength" → "strengthen" in the intro, and the kudos names use the directory's spellings (Jericho **Faderon**, Kayla **Greene**).
+
+**Images:** `public/images/community/` (hero, equitable-ai, partner) and `public/images/community/partners/` (atlas, harlem-childrens-zone, fedcap; transparent PNGs extracted from the design export).
+
 ## 9. Profile page
 
 **Design source:** same Figma file, frame **Directory - Profile** (`1158:7075`).
@@ -334,7 +348,8 @@ npm run preview        # preview the production build locally
 | `/directory` | The Alpacee directory and profiles (also the catch-all `*`) |
 | `/` | Homepage, built to the Figma "Home" frame (section 8b) |
 | `/flagship` | Programs – Flagship, built to the design (section 8c) |
-| `/about`, `/get-involved`, `/community-programs`, `/contact`, `/donate` | Marketing pages, shared brand style; rebuilds to their designs in progress |
+| `/community-programs` | Programs – Community, built to the design (section 8d) |
+| `/about`, `/get-involved`, `/contact`, `/donate` | Marketing pages, shared brand style; rebuilds to their designs in progress |
 | `/projects` | Stub ("coming soon"); Michelle is designing the Projects page |
 
 `ScrollToTop` in `App.jsx` resets scroll on every route change.

@@ -1142,3 +1142,54 @@ a.fl-pcard img { transition:transform .3s ease; }
   .fl-hero { padding-top:0; }
   .root.root-flag .fl-hero h1 { padding-top:20px; }
 }
+
+/* ===== Programs – Community ("Programs - Community" export): Flagship template, recolored =====
+   Mellow Yellow (#564538) hero + band, Sky (#37E3FC) titles, cream page, white tab strip. */
+.root.root-flag.root-comm { background:#FFFBF3; }
+.root-comm .fl-hero, .root-comm .fl-intro, .root-comm .fl-support { background:#564538; }
+.root.root-flag.root-comm .fl-hero h1, .root.root-flag.root-comm .fl-support h2 { color:#37E3FC; }
+.root-comm .fl-intro p { color:#FFFBF3; }
+.root-comm .fl-tabs { background:#FFFFFF; }
+.root.root-flag.root-comm .fl-h1 { color:#564538; }
+
+.cm-prog { display:grid; grid-template-columns:minmax(0,1fr) 630px; gap:80px; align-items:start; }
+.cm-text p { margin:0 0 16px; max-width:510px; font-family:var(--font-serif); font-size:18px; line-height:1.67; color:#1F1F1F; }
+.cm-text .cm-lead { font-size:24px; margin-bottom:24px; }
+.cm-prog > img { width:100%; height:517px; object-fit:cover; display:block; }
+
+.cm-orgs { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:21px; padding-top:48px; }
+.cm-org-logo { height:92px; display:flex; align-items:flex-end; margin-bottom:8px; }
+.cm-org-logo img { max-height:92px; max-width:240px; width:auto; height:auto; }
+.root.root-flag.root-comm .cm-org h3 { margin:0 0 8px; font-family:var(--font-display); font-weight:900; font-size:48px; line-height:.9; color:#564538; text-transform:none; }
+.cm-org p { margin:0; max-width:400px; font-family:var(--font-serif); font-size:18px; line-height:1.67; color:#1F1F1F; }
+
+@media (max-width:1100px) { .cm-prog { grid-template-columns:1fr; gap:32px; } .cm-prog > img { height:420px; } }
+@media (max-width:760px) {
+  .cm-orgs { grid-template-columns:1fr; gap:32px; }
+  .cm-text .cm-lead { font-size:20px; }
+  .cm-prog > img { height:280px; }
+  .root.root-flag.root-comm .cm-org h3 { font-size:36px; }
+}
+/* Community: vertical rhythm matched to the design render */
+@media (min-width:1101px) {
+  .cm-prog.cm-first { padding-top:20px; }
+  .cm-prog:not(.cm-first) { padding-top:80px; }
+  .cm-rule { margin-top:42px; }
+  .root-comm .fl-main { padding-bottom:43px; }
+  .cm-text { max-width:510px; }          /* design text column: "Resume Review" wraps to two lines */
+}
+@media (min-width:1101px) {
+  .cm-text p { max-width:500px; }                         /* matches the design's line breaks */
+  .root.root-flag.root-comm .cm-prog:not(.cm-first) .cm-text .fl-h1 { margin-bottom:40px; }
+}
+/* Community: photo framing per the design */
+.root-comm .fl-hero-img { object-position:center 50%; }
+@media (min-width:1101px) { .root.root-flag.root-comm .cm-org h3 { white-space:nowrap; } }
+.cm-org-logo img.lg-atlas { height:91px; }
+.cm-org-logo img.lg-harlem-childrens-zone { height:72px; }
+.cm-org-logo img.lg-fedcap { height:35px; }
+@media (min-width:1101px) {
+  .cm-rule { margin-top:86px; }                 /* re-tuned after the org titles stopped wrapping */
+  .root-comm .fl-main { padding-bottom:87px; }
+}
+.cm-org-logo { align-items:center; }   /* logos are vertically centered in the design */

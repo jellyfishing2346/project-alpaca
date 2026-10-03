@@ -1,96 +1,116 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Nav, Footer, Newsletter } from "./alpacees-directory-final.jsx";
+import { Nav, Footer, Newsletter, Squiggle } from "./alpacees-directory-final.jsx";
 import "./styles.css";
 
-const Arrow = () => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
-);
-const ImgBox = ({ className }) => (
-  <div className={"hi-img " + (className || "")}><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#B7B7C0" strokeWidth="1.4"><rect x="3" y="3" width="18" height="18" rx="3" /><circle cx="8.5" cy="8.5" r="1.6" /><path d="m21 15-5-5L5 21" /></svg></div>
-);
+// Programs – Community, per the Studio Haven design ("Programs - Community" in the Figma export).
+// Same building blocks as the Flagship page (fl-* classes), recolored: Mellow Yellow + Sky.
+// Photos and partner logos: public/images/community/.
 
+// ---- Content you may want to edit ------------------------------------------------
+// Each program gets a tab, a section (text + photo) and a row of partner organizations.
+// NOTE: in the design, "Resume Review" repeats the Equitable AI text, photo and partners as
+// placeholder copy. Replace its `paras`, `image` and `partners` when the real content is ready.
+const KUDOS = "Kudos to our Alpacees for leading with curiosity, care, and community in mind: Aasim Joseph, Fernando Woolcott, Jericho Faderon, Kayla Greene, Sumaiya Fatema, Ruckshada Khan.";
+const PARTNERS_AI = [
+  { logo: "atlas", name: "ATLAS High School", d: "Welcome recent immigrant students into the world of AI" },
+  { logo: "harlem-childrens-zone", name: "Harlem Children’s Zone", d: "Bring younger learners into the fold with an age-tailored session" },
+  { logo: "fedcap", name: "Civic Hall x Fedcap", d: "Support adult learners in their journey toward safe, confident AI use" },
+];
 const PROGRAMS = [
   {
-    title: "Equitable AI Program",
-    desc: "An intensive program designed to guide Alpacees through evaluation models reviewing the structural potential, safety metrics, and ecological risks within the current AI landscape. Running as a hybrid model beginning March 16, 2026, the program delivers eight 2-hour weekday sessions covering hands-on engineering, model optimization, ethical LLM development, and the environmental infrastructure demands (power and water utility loads) of AI platforms.",
-    partners: ["Citizens Committee NYC", "Google"],
-    outcome: { stat: "$500", label: "Work stipend" },
-    ctaTitle: "Interested in joining our next Equitable AI cohort?",
-    ctaSub: "Next workshop runs December 2026. Register early to claim a seat.",
-    ctaBtn: "Apply for AI Lab",
+    id: "equitable-ai", tab: "Equitable AI", title: "Equitable AI", image: "equitable-ai",
+    lead: "As part of our Equitable AI Initiative, we trained a group of Alpacees to design and facilitate free, community-based workshops on the AI landscape and how to use it ethically.",
+    paras: ["Each session was built around the needs of its learners, because equitable access to AI starts with meeting people where they are.", KUDOS],
+    partners: PARTNERS_AI,
   },
   {
-    title: "Resume Workshop",
-    desc: "We hosted a resume workshop at Lehman College.",
-    partners: ["Company", "School"],
-    outcome: { stat: "100", label: "Students" },
-    ctaTitle: "Interested in joining our next resume workshop?",
-    ctaSub: "Next workshop runs December 2026. Register early to claim a seat.",
-    ctaBtn: "Apply",
+    id: "resume-review", tab: "Resume Review", title: "Resume Review", image: "equitable-ai",
+    lead: "",
+    paras: ["As part of our Equitable AI Initiative, we trained a group of Alpacees to design and facilitate free, community-based workshops on the AI landscape and how to use it ethically.", "Each session was built around the needs of its learners, because equitable access to AI starts with meeting people where they are.", KUDOS],
+    partners: PARTNERS_AI,
   },
 ];
 
-const Program = ({ p }) => (
-  <section className="hs">
-    <h2 className="hs-h">{p.title}</h2>
-    <p className="prog-desc">{p.desc}</p>
-    <div className="po-grid">
-      <div>
-        <h4 className="po-label">Partners</h4>
-        <div className="po-logos">{p.partners.map((x, i) => <div key={i} className="partner"><ImgBox /><span>{x}</span></div>)}</div>
+// ---- Page ------------------------------------------------------------------------
+
+const img = (k) => `/images/community/${k}.jpg`;
+
+function Tabs() {
+  const [active, setActive] = useState(PROGRAMS[0].id);
+  useEffect(() => {
+    const els = PROGRAMS.map((p) => document.getElementById(`cm-${p.id}`)).filter(Boolean);
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => { if (e.isIntersecting) setActive(e.target.id.replace("cm-", "")); });
+    }, { rootMargin: "-30% 0px -60% 0px" });
+    els.forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, []);
+  const go = (e, id) => { e.preventDefault(); document.getElementById(`cm-${id}`)?.scrollIntoView({ behavior: "smooth", block: "start" }); };
+  return (
+    <nav className="fl-tabs" aria-label="Programs on this page">
+      <div className="fl-tabs-in">
+        {PROGRAMS.map((p) => (
+          <a key={p.id} href={`#cm-${p.id}`} className={active === p.id ? "on" : ""} aria-current={active === p.id ? "true" : undefined} onClick={(e) => go(e, p.id)}>{p.tab}</a>
+        ))}
       </div>
-      <div>
-        <h4 className="po-label">Outcomes</h4>
-        <div className="outcome"><b>{p.outcome.stat}</b><span>{p.outcome.label}</span></div>
-      </div>
-    </div>
-    <div className="cta-bar">
-      <div><b>{p.ctaTitle}</b><p>{p.ctaSub}</p></div>
-      <button className="btn-navy">{p.ctaBtn}</button>
-    </div>
-    <p className="partner-line">We're looking for industry and nonprofit partners. Interested? <Link to="/contact">Contact us</Link></p>
-  </section>
-);
+    </nav>
+  );
+}
 
 export default function CommunityPrograms() {
   return (
-    <div className="root">
-      <Nav />
-      <div className="home">
-        <section className="hero">
-          <div className="hero-l">
-            <h1>Community Programs</h1>
-            <p>Throughout the year, Project Alpaca hosts community programs to strengthen New York City and its residents with skills.</p>
-            <Link className="btn-navy" to="/get-involved">Become our partner <Arrow /></Link>
-          </div>
-          <ImgBox className="hero-img" />
-        </section>
+    <div className="root root-flag root-comm">
+      <header className="fl-hero">
+        <Nav overlay />
+        <h1>Community Programs</h1>
+      </header>
+      <img className="fl-hero-img" src={img("hero")} alt="Alpacees and a workshop facilitator smiling in front of a Thank You slide" />
+      <section className="fl-intro">
+        <p>Throughout the year, Project Alpaca hosts community programs to strengthen New York City and its residents with skills.</p>
+        <Link className="fl-btn fl-btn-lime" to="/get-involved">Become Our Partners <Squiggle /></Link>
+      </section>
 
-        {PROGRAMS.map((p, i) => <Program key={i} p={p} />)}
+      <Tabs />
 
-        <section className="hs">
-          <h2 className="hs-h">More Programs Coming Soon</h2>
-          <div className="coming-soon">
-            <div>
-              <h3>Partner with Us</h3>
-              <p>We are currently drafting curriculum specifications for upcoming one-off modules, including: Decentralized Web Architectures, Technical Writing Labs, and IoT Edge Systems. Want to make our work possible?</p>
+      <main className="fl-main">
+        {PROGRAMS.map((p, i) => (
+          <React.Fragment key={p.id}>
+            {i > 0 && <hr className="fl-rule cm-rule" />}
+            <section id={`cm-${p.id}`} className={`fl-sec cm-prog ${i === 0 ? "cm-first" : ""}`}>
+              <div className="cm-text">
+                <h2 className="fl-h1">{p.title}</h2>
+                {p.lead && <p className="cm-lead">{p.lead}</p>}
+                {p.paras.map((t, j) => <p key={j}>{t}</p>)}
+              </div>
+              <img src={img(p.image)} alt="" loading={i === 0 ? "eager" : "lazy"} />
+            </section>
+            <div className="cm-orgs">
+              {p.partners.map((o) => (
+                <div key={o.name} className="cm-org">
+                  <div className="cm-org-logo"><img className={`lg-${o.logo}`} src={`/images/community/partners/${o.logo}.png`} alt={`${o.name} logo`} loading="lazy" /></div>
+                  <h3>{o.name}</h3>
+                  <p>{o.d}</p>
+                </div>
+              ))}
             </div>
-            <Link className="btn-outline" to="/contact">Contact</Link>
-          </div>
-        </section>
+          </React.Fragment>
+        ))}
+      </main>
 
-        <section className="hs">
-          <div className="support">
-            <h2>Support Our Work</h2>
-            <p>Project Alpaca is completely free for every single student, ensuring tuition or resource gaps never block a student's full potential. Your tax-deductible financial gifts provide direct, practical tools for a student's career journey.</p>
-            <Link className="btn-navy" to="/donate">Donate now <Arrow /></Link>
+      <section className="fl-support cm-band">
+        <img src={img("partner")} alt="A workshop session with a presenter at the screen" loading="lazy" />
+        <div className="fl-support-text">
+          <div>
+            <h2>Partner with Us</h2>
+            <p>We are currently drafting curriculum specifications for upcoming one-off modules. Want to hire us?</p>
           </div>
-        </section>
+          <Link className="fl-btn fl-btn-lime" to="/contact">Contact <Squiggle /></Link>
+        </div>
+      </section>
 
-        <Newsletter />
-        <Footer />
-      </div>
+      <Newsletter />
+      <Footer />
     </div>
   );
 }
