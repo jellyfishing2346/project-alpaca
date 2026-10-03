@@ -199,6 +199,15 @@ If their photo shows as an initials tile, the filename doesn't match `slugify(Na
 ### Hide a non-completer
 Put `No` in their `Completion` cell. They disappear from the site on the next load. (Self-maintaining - remove the `No` and they reappear.)
 
+### Why some text cells come through blank (and the public-sheet formula)
+The site reads the sheet through Google's data endpoint, which gives each column a single type based on most of its cells. In a mostly-numeric column like `Graduation Year`, text values ("Fall 2023", "Graduated") come through **blank**. Google's `QUERY` function behaves the same way. The fix is to convert everything to text in the public sheet that feeds the site. Put this in cell A1 of the public sheet (it copies only the public columns, so no emails or demographic data):
+
+```
+=ARRAYFORMULA(TO_TEXT(CHOOSECOLS(IMPORTRANGE("https://docs.google.com/spreadsheets/d/1ADZgC4L81O27dSX-7SXJ6PLeOucaJ-T0SLd8JTULUFA", "'Consolidated Cohort Students & Alpacees Directory V2'!A1:AB"), 1,2,5,6,8,9,10,11,12,13,14,15,16,17,18,19,20,26,27,28)))
+```
+
+On profiles, `gradLabel()` tidies the free-text year: "Fall 2023" stays, "2022 (From BMCC…)" shows as "2022", and "Graduated" (no year) is hidden.
+
 ### Set someone's category by hand
 Add a `Category` column to the sheet (header exactly `Category`). Put one of: `Software Engineering`, `Data`, `Design`, `Business`, `Marketing` (case doesn't matter; `SWE` / `Software` also work). It overrides the automatic sorting for that person; leave it blank to keep automatic sorting. Use it for anyone who lands in the wrong filter (e.g. MJ was auto-sorted into Business).
 

@@ -507,6 +507,17 @@ function DirFooter() {
   );
 }
 
+// Graduation year as shown on the profile. The sheet holds free text ("2023", "Fall 2023",
+// "2022 (From BMCC, moving onto senior college)", "Graduated"), so keep "Season YYYY" or
+// the first year, and drop anything without a year.
+function gradLabel(v) {
+  const t = String(v || "");
+  const season = t.match(/\b(spring|summer|fall|autumn|winter)\s+((?:19|20)\d{2})\b/i);
+  if (season) return `${season[1][0].toUpperCase()}${season[1].slice(1).toLowerCase()} ${season[2]}`;
+  const year = t.match(/\b(?:19|20)\d{2}\b/);
+  return year ? year[0] : "";
+}
+
 const PARTNERSHIP = "partnership@projectalpaca.org";
 const introLink = (p) => `mailto:${PARTNERSHIP}?subject=${encodeURIComponent(`Introduction to ${p.name}`)}`;
 const iconPath = (name) => SOCIALS.find((s) => s.name === name)?.path;
@@ -545,7 +556,7 @@ function Profile({ p, all, onOpen, onBack }) {
           <Face p={p} imgClass="pf-photo" tileClass="pf-photo-initials" />
           <div className="pf-info">
             <PfSection title="Education">
-              <p className="pf-line"><b>{p.school || "—"}</b>{p.grad && <i>{p.grad}</i>}</p>
+              <p className="pf-line"><b>{p.school || "—"}</b>{gradLabel(p.grad) && <i>{gradLabel(p.grad)}</i>}</p>
               {p.major && <p className="pf-text">{p.major}</p>}
             </PfSection>
             {/* Only with a company: without one, the role alone just repeats the line under the name. */}
