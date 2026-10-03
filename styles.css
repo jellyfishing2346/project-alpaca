@@ -941,3 +941,6 @@ html, body { margin:0; padding:0; }
 .hm-event-img { border-radius:0; }
 .hm-rsvp .squiggle { width:88px; height:31px; }
 @media (max-width:760px) { .hm-rsvp .squiggle { width:64px; height:24px; } }
+/* Space above "From Our Community" heading, per the design (~55px) */
+.hm-community { padding-top:44px; }
+@media (max-width:760px) { .hm-community { padding-top:28px; } }
