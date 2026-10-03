@@ -241,7 +241,7 @@ The team's Figma export ("Web design - Project Alpaca.zip") contains full-page r
 Sections: hero (nav, "Flagship Program", photo, intro, Apply button); sticky tabs (Overview / Programs / Instructing Team) that jump to their sections and highlight the one on screen; Intensive Career Prep + three facts; Holistic Approach carousel (swipe/scroll sideways); Curriculum accordion; Sample Classes; Projects; Meet the Alpacees (live from the directory data); Core Instructors; Alpacas (Mentors); partner logos; Support Our Work; Newsletter; Footer.
 
 **Content to fill in** (all at the top of `Flagship.jsx`):
-- `APPLY_URL`: where "Apply to Cohort 6" goes. Currently emails hello@ as a placeholder.
+- `APPLY_URL`: where "Apply to Cohort 6" goes: the cohort application Google Form (opens in a new tab). Make sure the form is open to anyone (not restricted to projectalpaca.org accounts). Update the link and button text for each new cohort.
 - `MODULES`: the design only writes out **Foundations**; **Relationship** and **Mastery** show "Module details coming soon." until their text is added.
 - `FEATURED`: the three students in "Meet the Alpacees" (the design's three). Their role and tags come from the directory sheet, so they show real data rather than the design's sample text.
 - "See Projects" points to this page until a Projects page exists.

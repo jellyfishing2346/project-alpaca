@@ -8,8 +8,8 @@ import "./styles.css";
 
 // ---- Content you may want to edit ------------------------------------------------
 
-// Where "Apply to Cohort 6" goes. TODO: replace with the real application link.
-const APPLY_URL = "mailto:hello@projectalpaca.org?subject=Applying%20to%20Cohort%206";
+// Where "Apply to Cohort 6" goes: the cohort application form (opens in a new tab).
+const APPLY_URL = "https://docs.google.com/forms/d/e/1FAIpQLSdLUwdafOrdd1MA7UHqkzb_OW1a7L3wbwqDQmitDuS2eVthmw/viewform";
 
 const FACTS = [
   { t: "Intimate size", d: "Intimate cohort of 12–20 Alpacees to guarantee customized support." },
@@ -139,7 +139,7 @@ export default function Flagship() {
       <img className="fl-hero-img" src={img("hero")} alt="A group of Alpacees standing together in front of a lettered wall" />
       <section className="fl-intro">
         <p>Our multi-month program equipping high-potential, under-resourced college students with industry-level skills, mentorship, and portfolio pieces.</p>
-        <a className="fl-btn fl-btn-lime" href={APPLY_URL}>Apply to Cohort 6 <Squiggle /></a>
+        <a className="fl-btn fl-btn-lime" href={APPLY_URL} target="_blank" rel="noreferrer">Apply to Cohort 6 <Squiggle /></a>
       </section>
 
       <Tabs />
