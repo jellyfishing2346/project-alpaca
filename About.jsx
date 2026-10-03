@@ -1,119 +1,170 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Nav, Footer, Newsletter } from "./alpacees-directory-final.jsx";
+import { Nav, Footer, Newsletter, Squiggle } from "./alpacees-directory-final.jsx";
 import "./styles.css";
 
-const Arrow = () => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
-);
-const ImgBox = ({ className }) => (
-  <div className={"hi-img " + (className || "")}><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#B7B7C0" strokeWidth="1.4"><rect x="3" y="3" width="18" height="18" rx="3" /><circle cx="8.5" cy="8.5" r="1.6" /><path d="m21 15-5-5L5 21" /></svg></div>
-);
+// About, per the Studio Haven design ("About" in the Figma export).
+// Reuses the program-page building blocks (fl-* buttons, person cards, Support band) with ab-* layout.
 
+// ---- Content -----------------------------------------------------------------------
+// History timeline. The design writes out 2019 only (six dots, one entry). The later entries
+// below come from the site's earlier About page and have NOT been confirmed by the team:
+// confirm or replace them (each entry: year, title, text, optional photo).
 const HISTORY = [
-  { year: "2019", title: "Pilot Cohort — Cohort 1", d: "Project Alpaca launches its first cohort, piloting a hands-on model to prepare under-resourced NYC students for tech careers." },
-  { year: "2020", title: "Pandemic Pause", d: "The program adapts to a remote-first world, keeping students connected and supported through a challenging year." },
-  { year: "2021", title: "Official Nonprofit", d: "Project Alpaca becomes an official 501(c)(3), formalizing its mission and growing its mentor network." },
-  { year: "2025", title: "Community Programs", d: "Beyond the flagship cohort, Project Alpaca introduces community workshops open to a wider group of students." },
+  { year: "2019", title: "Pilot Cohort", photo: "/images/about/pilot-cohort.jpg",
+    d: "Conceived by three friends, sparked by Executive Director Catherine Man's work with low-income students of color in the Bronx who were working long hours to support families while attending community college. Launched a pilot cohort of 7 students, establishing the framework." },
+  { year: "2020", title: "Pandemic Pause", photo: "/images/about/pilot-cohort.jpg", unconfirmed: true,
+    d: "The program adapts to a remote-first world, keeping students connected and supported through a challenging year." },
+  { year: "2021", title: "Official Nonprofit", photo: "/images/about/pilot-cohort.jpg", unconfirmed: true,
+    d: "Project Alpaca becomes an official 501(c)(3), formalizing its mission and growing its mentor network." },
+  { year: "2025", title: "Community Programs", photo: "/images/about/pilot-cohort.jpg", unconfirmed: true,
+    d: "Beyond the flagship cohort, Project Alpaca introduces community workshops open to a wider group of students." },
 ];
 
-// NOTE: placeholder people from the Figma — replace with the real board + headshots.
+// Board. The design's role lines read "Role at PA" and job lines "Job at Company" (placeholders);
+// those are left out until real values are added here.
 const BOARD = [
-  { name: "Catherine Man", role: "Co-Founder, Executive Director & CEO" },
-  { name: "Claire Igot", role: "Co-Founder, Board Chair" },
-  { name: "Donna Meredith", role: "Board Member, Junior Board Lead" },
-  { name: "Fred Butterworth", role: "Board Member" },
-  { name: "Mac Eucane", role: "Board Member" },
-  { name: "Jenea Scherma", role: "Board Member" },
-  { name: "Courtney Leggett", role: "Board Member" },
+  { name: "Catherine Man", eyebrow: "Co-Founder • Executive Director", job: "", photo: "/images/flagship/catherine-man.jpg" },
+  { name: "Claire Igot", eyebrow: "Co-Founder • Board Chair", job: "", photo: "/images/people/claire-igot.jpg" },
+  { name: "Donna Meredith", eyebrow: "", job: "", photo: "/images/people/donna-meredith.jpg" },
+  { name: "Fred Butterweck", eyebrow: "", job: "", photo: "/images/people/fred-butterweck.jpg" },
+  { name: "Mac Exume", eyebrow: "", job: "", photo: "/images/people/mac-exume.jpg" },
+  { name: "Jenna Scherma", eyebrow: "", job: "", photo: "/images/people/jenna-scherma.jpg" },
+  { name: "Courtney Leggett", eyebrow: "", job: "", photo: "/images/people/courtney-leggett.jpg" },
 ];
-const JUNIOR = [
-  { name: "Board Member", role: "Junior Board" },
-  { name: "Board Member", role: "Junior Board" },
-  { name: "Board Member", role: "Junior Board" },
-];
-const PRESS = [
-  { source: "Press outlet", date: "Jul 2026" },
-  { source: "Press outlet", date: "May 2026" },
-  { source: "Press outlet", date: "Mar 2026" },
-  { source: "Press outlet", date: "Jan 2026" },
+// NOTE: the design repeats the Board here as placeholder; replace with the graduated Alpacees.
+const JUNIOR_BOARD = BOARD;
+
+const NEWS = [
+  { meta: "2025 • Grant", text: "Project Alpaca received Community Leaders Grant from Citizens Committee for New York City.",
+    image: "/images/about/news-citizens-committee.png", url: "https://www.citizensnyc.org" }, // TODO: link the announcement itself
 ];
 
-const Person = ({ p }) => (
-  <div className="person">
-    <ImgBox className="person-photo" />
-    <h3>{p.name}</h3>
-    <p className="person-role">{p.role}</p>
-  </div>
-);
+// ---- Pieces --------------------------------------------------------------------------
+function Timeline() {
+  const [i, setI] = useState(0);
+  const h = HISTORY[i];
+  return (
+    <div className="ab-tl">
+      <div className="ab-tl-dots" role="tablist" aria-label="Project Alpaca history">
+        {HISTORY.map((e, k) => (
+          <button key={e.year + e.title} role="tab" aria-selected={k === i} aria-label={`${e.year}: ${e.title}`}
+            className={`ab-dot ${k === i ? "on" : ""}`} onClick={() => setI(k)} />
+        ))}
+      </div>
+      <div className="ab-tl-item" role="tabpanel">
+        <img src={h.photo} alt="" />
+        <div>
+          <div className="ab-year">{h.year}</div>
+          <h3>{h.title}</h3>
+          <p>{h.d}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
 
+function People({ list }) {
+  return (
+    <div className="fl-grid3 ab-people">
+      {list.map((m) => (
+        <div key={m.name} className="fl-pcard fl-pcard-static gi-person">
+          <img src={m.photo} alt="" loading="lazy" />
+          <div className="fl-pcard-shade" aria-hidden="true" />
+          <div className="fl-pcard-text">
+            {m.eyebrow && <span className="gi-eyebrow">{m.eyebrow}</span>}
+            <h3>{m.name}</h3>
+            {m.job && <p>{m.job}</p>}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ---- Page --------------------------------------------------------------------------
 export default function About() {
   return (
-    <div className="root">
-      <Nav />
-      <div className="home">
-        <section className="hero">
-          <div className="hero-l">
-            <h1>Building New York City's leaders for tomorrow</h1>
-            <p>Project Alpaca is a community-driven nonprofit rooted in New York City, giving under-resourced college students the real-world skills, professional mentorship, and networks they need to break into tech and build an equitable future.</p>
-          </div>
-          <ImgBox className="hero-img" />
-        </section>
+    <div className="root root-flag root-about">
+      <div className="ab-wool">
+        <header className="ab-hero">
+          <Nav overlay dark />
+          <div className="ab-eyebrow">About</div>
+          <h1>Empower public college students</h1>
+          <Link className="fl-btn fl-btn-lime" to="/donate">Donate <Squiggle /></Link>
+        </header>
 
-        <section className="hs">
-          <h2 className="hs-h">Supported by</h2>
-          <div className="partners">{["Citizens NYC", "Company", "School", "Company"].map((p, i) => <div key={i} className="partner"><ImgBox /><span>{p}</span></div>)}</div>
-        </section>
-
-        <section className="hs">
-          <h2 className="hs-h">Our History</h2>
-          <div className="hist">
-            {HISTORY.map((h) => (
-              <div key={h.year} className="hist-card">
-                <ImgBox className="hist-img" />
-                <div className="hist-year">{h.year}</div>
-                <h3>{h.title}</h3>
-                <p>{h.d}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section className="hs">
-          <h2 className="hs-h">Board of Directors</h2>
-          <div className="people">{BOARD.map((p, i) => <Person key={i} p={p} />)}</div>
-        </section>
-
-        <section className="hs">
-          <h2 className="hs-h">Junior Board</h2>
-          <div className="people">{JUNIOR.map((p, i) => <Person key={i} p={p} />)}</div>
-        </section>
-
-        <section className="hs">
-          <h2 className="hs-h">Press</h2>
-          <div className="press">
-            {PRESS.map((p, i) => (
-              <div key={i} className="press-card">
-                <ImgBox className="press-img" />
-                <span className="press-meta">{p.source} · {p.date}</span>
-                <h3>Press title</h3>
-                <a className="inv-cta" href="#">Read <Arrow /></a>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section className="hs">
-          <div className="support">
-            <h2>Support Our Work</h2>
-            <p>Project Alpaca is completely free for every single student, ensuring tuition or resource gaps never block a student's full potential. Your tax-deductible financial gifts provide direct, practical tools for a student's career journey.</p>
-            <Link className="btn-navy" to="/donate">Donate now <Arrow /></Link>
-          </div>
-        </section>
-
-        <Newsletter />
-        <Footer />
+        <div className="fl-main">
+          <hr className="ab-rule" />
+          <section className="ab-row">
+            <img src="/images/about/mission.jpg" alt="Alpacees presenting a project, one holding a laptop and another an alpaca plush" />
+            <div>
+              <h2 className="ab-h3">Our Mission</h2>
+              <p className="ab-lead">Project Alpaca was born out of a simple, urgent realization: talent is everywhere, but opportunity and access are not.</p>
+              <p>Navigating the transition from college to a career is daunting, especially for under-resourced New York City public college students and first-generation talent entering an industry that often relies on hidden networks and unwritten rules. We started Project Alpaca to rewrite that script. We wanted to create a safe, rigorous, and collaborative environment to provide the social, emotional, and technical preparation needed to break into tech, realize their personal power, and lead within their communities.</p>
+            </div>
+          </section>
+          <hr className="ab-rule" />
+          <section className="ab-row ab-row-rev">
+            <div>
+              <h2 className="ab-h3">Why "Project Alpaca"?</h2>
+              <p className="ab-lead">Alpacas are known for their resilience, warmth, and strong herd mentality.</p>
+              <p>In our community, no one navigates the path alone. We replace the cutthroat, competitive culture of tech with an environment built on collaboration, mutual support, and collective growth.</p>
+            </div>
+            <img src="/images/about/why-alpaca.jpg" alt="A rainbow alpaca plush on a stack of books" />
+          </section>
+        </div>
       </div>
+
+      <section className="ab-cream ab-history">
+        <div className="fl-main">
+          <h2 className="ab-h1">Our History</h2>
+          <Timeline />
+        </div>
+      </section>
+
+      <section className="ab-wool ab-team">
+        <div className="fl-main">
+          <h2 className="ab-h1">Meet the team</h2>
+          <h3 className="ab-h2">Board of Directors</h3>
+          <People list={BOARD} />
+          <hr className="ab-rule ab-rule-team" />
+          <h3 className="ab-h2">Junior Board</h3>
+          <p className="ab-lead ab-junior-sub">Our Junior Board is made up of graduated Alpacees</p>
+          <People list={JUNIOR_BOARD} />
+        </div>
+      </section>
+
+      <section className="ab-cream ab-news">
+        <div className="fl-main ab-news-in">
+          <h2 className="ab-h1">News</h2>
+          <div className="ab-news-list">
+            {NEWS.map((n) => (
+              <article key={n.text} className="ab-news-item">
+                <img src={n.image} alt="" loading="lazy" />
+                <div>
+                  <div><div className="ab-news-meta">{n.meta}</div><p>{n.text}</p></div>
+                  <a className="fl-btn fl-btn-line" href={n.url} target="_blank" rel="noreferrer">Read <Squiggle /></a>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="fl-support">
+        <img src="/images/flagship/support.jpg" alt="Alpacees and staff holding a framed Project Alpaca illustration" loading="lazy" />
+        <div className="fl-support-text">
+          <div>
+            <h2>Support Our Work</h2>
+            <p>Project Alpaca is completely free for every single student, ensuring resource gaps never block a student's full potential. Your tax-deductible financial gifts provide direct, practical tools for a student's career journey.</p>
+          </div>
+          <Link className="fl-btn fl-btn-lime" to="/donate">Donate <Squiggle /></Link>
+        </div>
+      </section>
+
+      <Newsletter />
+      <Footer />
     </div>
   );
 }

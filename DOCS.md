@@ -278,6 +278,22 @@ Sections: hero ("Be a Force for Good", group photo, intro); tabs (Alpacas / Volu
 
 **Images:** reuses the Flagship photos (`images/flagship/`: alpacas, curriculum, community, support, catherine-man) and adds `images/people/claire-igot.jpg` (cropped to the design's framing) and `images/people/donna-meredith.jpg`.
 
+## 8f. About page
+
+**Design source:** "About" in the Figma export (PDF; the longer of the two About frames). Built in `About.jsx` (`ab-*` classes in the "About" block of `styles.css`), reusing the program-page buttons, person cards and Support band. The nav uses `<Nav overlay dark />`: the floating layout with dark text and the dark logo.
+
+**Checked against the design render:** every section starts within 1–6px of the design at 1440px (real fonts loaded); photo crops matched to the design by search.
+
+Sections: hero ("About" / "Empower public college students" / Donate); Our Mission; Why "Project Alpaca"?; Our History (clickable timeline); Meet the Team: Board of Directors + Junior Board; News; Support Our Work; Newsletter; Footer.
+
+**Content to confirm / replace** (top of `About.jsx`):
+- `HISTORY`: the design writes out **2019 – Pilot Cohort** only (its timeline has six dots). The 2020/2021/2025 entries come from the site's earlier About page and are marked `unconfirmed`; confirm, correct or remove them, and add the remaining milestones. Each can have its own photo (all use the pilot photo for now).
+- `BOARD`: role lines for five members and all job lines are placeholders in the design ("Role at PA", "Job at Company"), so they're left out until real values are added.
+- `JUNIOR_BOARD`: the design repeats the Board here as placeholder; replace with the graduated Alpacees who serve on it.
+- `NEWS`: "Read" links to the Citizens Committee for NYC homepage; link the actual announcement when available.
+
+**Images:** `public/images/about/` (mission, why-alpaca (cropped to the design), pilot-cohort, news-citizens-committee) and `public/images/people/` (fred-butterweck, mac-exume, jenna-scherma, courtney-leggett, plus claire-igot / donna-meredith from Get Involved).
+
 ## 9. Profile page
 
 **Design source:** same Figma file, frame **Directory - Profile** (`1158:7075`).
@@ -366,7 +382,8 @@ npm run preview        # preview the production build locally
 | `/flagship` | Programs – Flagship, built to the design (section 8c) |
 | `/community-programs` | Programs – Community, built to the design (section 8d) |
 | `/get-involved` | Get Involved, built to the design (section 8e) |
-| `/about`, `/contact`, `/donate` | Marketing pages, shared brand style; rebuilds to their designs in progress |
+| `/about` | About, built to the design (section 8f) |
+| `/contact`, `/donate` | Marketing pages, shared brand style; Contact rebuild next |
 | `/projects` | Stub ("coming soon"); Michelle is designing the Projects page |
 
 `ScrollToTop` in `App.jsx` resets scroll on every route change.

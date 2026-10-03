@@ -294,10 +294,11 @@ export function Newsletter() {
 
 // Marketing-page nav. `overlay` sits it on top of a hero photo (white text), as on the Figma homepage.
 // Link order follows the design: Programs, About, Get Involved, Donate.
-export function Nav({ overlay = false }) {
+// `dark` keeps the floating layout but with dark text + dark logo (pages without a photo/color hero, e.g. About).
+export function Nav({ overlay = false, dark = false }) {
   return (
-    <nav className={`nav ${overlay ? "nav-overlay" : ""}`}>
-      <Link className="nav-l" to="/" style={{ textDecoration: "none" }}><LogoImage className="nav-logo" white={overlay} /><span className="nav-name">Project Alpaca</span></Link>
+    <nav className={`nav ${overlay ? "nav-overlay" : ""} ${dark ? "nav-dark" : ""}`}>
+      <Link className="nav-l" to="/" style={{ textDecoration: "none" }}><LogoImage className="nav-logo" white={overlay && !dark} /><span className="nav-name">Project Alpaca</span></Link>
       <div className="nav-r">
         <div className="nav-item">
           <button className="nav-trigger">Programs</button>
