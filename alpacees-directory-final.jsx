@@ -236,26 +236,27 @@ const Squiggle = () => (
   </svg>
 );
 
-// Get Involved, per the Figma directory frame. Photos load from /public/images/get-involved/;
-// if a file isn't there yet, the card simply shows without its photo.
+// Get Involved, per the Figma directory frame. Photos load from /public/images/get-involved/
+// as <key>.jpg, or <key>.png if there's no .jpg; if neither exists, the card shows without a photo.
 const GI_CARDS = [
-  { key: "support",   title: "Support Us", text: "Donate to fund student stipends, MetroCards, and expert instruction.", bg: "#1E474D", accent: "#FFF767", to: "/donate", cta: "Donate", big: true },
+  { key: "support",   title: "Support Us Financially", text: "Donate to fund student stipends, MetroCards, and expert instruction.", bg: "#1E474D", accent: "#FFF767", to: "/donate", cta: "Donate", big: true },
   { key: "partner",   title: "Become Our Partner", text: "Sponsor a cohort, host workspace trips, or hire talented graduates for junior roles.", bg: "#5B2D53", accent: "#63FFA1", to: "/get-involved" },
   { key: "mentor",    title: "Become an Alpaca (Mentor)", text: "Guide an Alpacee 1-on-1 or instruct a class.", bg: "#2B6140", accent: "#FF98ED", to: "/get-involved" },
   { key: "cohort",    title: "Join a Cohort", text: "If you are a student ready to supercharge your tech capabilities, start your application here.", bg: "#1F1F1F", accent: "#FF9586", to: "/flagship" },
   { key: "volunteer", title: "Join as a Volunteer", text: "Lend your skills in administration, event organization, or technical support during events.", bg: "#564538", accent: "#37E3FC", to: "/get-involved" },
 ];
 function GiCard({ c }) {
-  const [hasImg, setHasImg] = useState(true);
+  const exts = ["jpg", "png"];
+  const [ext, setExt] = useState(0); // which extension we're trying; past the end = no photo
   return (
     <Link to={c.to} className={`gi2-card ${c.big ? "gi2-big" : ""}`} style={{ background: c.bg }}>
-      {hasImg && <img className="gi2-img" src={`/images/get-involved/${c.key}.jpg`} alt="" onError={() => setHasImg(false)} />}
+      {ext < exts.length && <img className="gi2-img" src={`/images/get-involved/${c.key}.${exts[ext]}`} alt="" onError={() => setExt((i) => i + 1)} />}
       <div className="gi2-body">
         <div>
           <h3 style={{ color: c.accent }}>{c.title}</h3>
           <p>{c.text}</p>
         </div>
-        <span className="gi2-btn" style={{ color: c.big ? "#63FFA1" : "#E0FFEC" }}>{c.cta && <b>{c.cta}</b>}<Squiggle /></span>
+        <span className="gi2-btn" style={{ color: "#63FFA1" }}>{c.cta && <b>{c.cta}</b>}<Squiggle /></span>
       </div>
     </Link>
   );

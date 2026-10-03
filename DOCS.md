@@ -189,7 +189,7 @@ For each person, `sheet.js`:
 - **Cards** - 600px tall, full-bleed photo (or an initials tile in a brand color), name in GT America, "role at company" (or "Cohort N · Alpacee"), and up to a few category-colored skill tags (or the category name if no skills). Optional hover action shot (section 10).
 - **Pagination** - 12 per page: "Previous · 1 2 3 … 6 · Next" in GT America caps. "…" only appears when it hides two or more pages. Changing page scrolls to the top; changing a filter resets to page 1.
 - **Completers only** - anyone whose `Completion` cell is `No` is hidden entirely.
-- **Get Involved** - five cards in brand colors (Support Us, Become Our Partner, Become an Alpaca, Join a Cohort, Join as a Volunteer). Photos load from `public/images/get-involved/` as `support.jpg`, `partner.jpg`, `mentor.jpg`, `cohort.jpg`, `volunteer.jpg` (export them from the Figma frame). Until a file exists, its card shows without a photo.
+- **Get Involved** - five cards in brand colors (Support Us Financially, Become Our Partner, Become an Alpaca (Mentor), Join a Cohort, Join as a Volunteer). Photos load from `public/images/get-involved/` named `support`, `partner`, `mentor`, `cohort`, `volunteer`, as `.jpg` or `.png` (export them from the Figma frame). Until a file exists, its card shows without a photo.
 - **Newsletter** (`DirNewsletter`) - per the Figma. **Not connected to an email service yet** (the team uses MailerLite; account details pending).
 - **Footer** (`DirFooter`) - per the Figma, including "Designed by Studio Haven". The marketing pages keep the older shared `Footer`.
 - **Removed per Michelle:** the "Open to opportunities" filter and badge. The site no longer reads that column.
