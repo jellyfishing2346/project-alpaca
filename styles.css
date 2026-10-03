@@ -933,3 +933,7 @@ html, body { margin:0; padding:0; }
 .hm-prog-community .hm-prog-img { object-position:center 85%; }
 /* Space between testimonials and Get Involved matches the design (~47px) */
 .hm-community { padding-bottom:24px; }
+/* Arrow icons at the design's size (88x31) on Get Involved and Subscribe buttons */
+.gi2-btn .squiggle, .dn-btn .squiggle { width:88px; height:31px; }
+.gi2-btn { height:55px; padding:12px 16px; }
+@media (max-width:760px) { .gi2-btn .squiggle, .dn-btn .squiggle { width:64px; height:24px; } }
