@@ -22,7 +22,7 @@ export default function Donate() {
       <Nav />
       <div className="home">
         <section className="hs" style={{ borderTop: 0 }}>
-          <h1 style={{ fontSize: 40, fontWeight: 800, letterSpacing: "-.02em", margin: "24px 0 20px" }}>Donate</h1>
+          <h1 style={{ margin: "24px 0 20px" }}>Donate</h1>
           <div className="overview" style={{ alignItems: "start" }}>
             <div>
               <p className="prog-desc">Every dollar donated directly funds professional training, equipment, and mentorship for under-resourced students in New York City. Help us build the next generation of tech leaders.</p>

@@ -15,6 +15,8 @@ The **Alpacee Directory** is a public web app that showcases Project Alpaca's st
 - **Hosting:** Cloudflare Pages (auto-deploys on every push to `main`)
 
 > **Scope:** The repo also contains marketing pages (Home, About, Get Involved, Community Programs, Flagship, Contact, Donate). The marketing site is being built in **Framer** so the team can edit it without code; those pages here are not the deliverable. **The directory is the focus.** Its header and footer follow the same Studio Haven design the Framer site will use, so the two will match.
+>
+> **Consistent look in the meantime:** the marketing pages here share the directory's style (Studio Haven palette, GT America headings, Merriweather text, lime/outlined buttons, the directory's newsletter and footer). Their content and layouts are unchanged; it's a styling layer in the "Marketing pages: shared Studio Haven look" block of `styles.css`, scoped to `.root:not(.root-dir)`, so the directory isn't affected. They don't match their individual Figma page designs; that work is planned in Framer.
 
 ---
 
@@ -243,7 +245,7 @@ Add a row with at least a `Name` and fill in the public columns you have. Add th
 Edit `SUBCATEGORIES` in `alpacees-directory-final.jsx`: each entry is `["Label", /keyword pattern/]` under its category. Commit and push.
 
 ### Change footer or header links
-Edit `DirFooter` / `DirHeader` in `alpacees-directory-final.jsx`. (The marketing pages use `Footer` / `Nav` in the same file.)
+Edit `DirFooter` / `DirHeader` in `alpacees-directory-final.jsx`. The marketing pages use `Nav` from the same file; their `Footer` and `Newsletter` simply render `DirFooter` and `DirNewsletter`, so footer edits apply everywhere.
 
 ---
 

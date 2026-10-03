@@ -25,7 +25,7 @@ export default function Contact() {
       <Nav />
       <div className="home">
         <section className="hs" style={{ borderTop: 0 }}>
-          <h1 style={{ fontSize: 40, fontWeight: 800, letterSpacing: "-.02em", margin: "24px 0 12px" }}>Contact</h1>
+          <h1 style={{ margin: "24px 0 12px" }}>Contact</h1>
           <p className="intro" style={{ margin: 0 }}>Have questions about our programs, partnership opportunities, or how to get involved? We'd love to hear from you.</p>
 
           <div className="cgrid">

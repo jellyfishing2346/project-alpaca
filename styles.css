@@ -672,3 +672,57 @@ html, body { margin:0; padding:0; }
   .pf-sim-grid { grid-template-columns:1fr; gap:20px; }
 }
 @media (prefers-reduced-motion:reduce) { .pf-btn { transition:none; } }
+
+/* ===== Marketing pages: shared Studio Haven look =====
+   Same palette and type as the directory so the whole site reads consistently while these
+   pages exist here (they're being rebuilt in Framer). Scoped to .root:not(.root-dir), so the
+   directory itself is unaffected. Footer + newsletter are the directory's (DirFooter/DirNewsletter). */
+.root:not(.root-dir) { background:#FFFBF3; color:#1F1F1F; font-family:var(--font-serif); overflow-x:clip; }
+
+/* Nav */
+.root:not(.root-dir) .nav { background:#FFFBF3; border-bottom:0; padding:16px 48px; max-width:1200px; margin:0 auto; box-sizing:border-box; } /* lines up with the page content */
+.root:not(.root-dir) .nav-logo { height:64px; width:64px; object-fit:contain; mix-blend-mode:multiply; }
+.root:not(.root-dir) .nav-name { font-family:var(--font-display) !important; font-weight:500 !important; font-size:12px !important; letter-spacing:1px !important; text-transform:uppercase !important; color:#1F1F1F; }
+.root:not(.root-dir) .nav-r { gap:32px; align-items:center; }
+.root:not(.root-dir) .nav-r > a, .root:not(.root-dir) .nav-trigger { font-family:var(--font-display) !important; font-weight:900 !important; font-size:18px !important; letter-spacing:0 !important; text-transform:uppercase !important; color:#1F1F1F; display:inline-flex; align-items:center; gap:2px; background:none; border:0; cursor:pointer; text-decoration:none; }
+.root:not(.root-dir) .nav-r > a:hover, .root:not(.root-dir) .nav-trigger:hover { color:#1F1F1F; text-decoration:underline; text-underline-offset:3px; }
+/* !important needed: an older .donate-btn rule forces a black pill with !important */
+.root:not(.root-dir) .nav-r > a.donate-btn { background:#63FFA1 !important; color:#1F1F1F !important; border-radius:0; padding:10px 14px !important; font-size:20px !important; gap:8px; text-decoration:none; }
+.root:not(.root-dir) .nav-r > a.donate-btn:hover { background:#4FF094 !important; color:#1F1F1F !important; text-decoration:none; opacity:1; }
+.root:not(.root-dir) .donate-btn .squiggle { width:48px; height:18px; }
+.root:not(.root-dir) .nav-menu a { background:#FFFBF3; border-color:#1F1F1F; color:#1F1F1F; font-family:var(--font-serif); font-weight:400; font-size:15px; }
+.root:not(.root-dir) .nav-menu a:hover { background:#F6E5C8; }
+
+/* Headings: GT America; page and section titles uppercase, as in the Figma */
+.root:not(.root-dir) h1 { font-family:var(--font-display); font-weight:900; font-size:clamp(44px, 5vw, 72px); line-height:.92; letter-spacing:0; text-transform:uppercase; color:#1F1F1F; }
+.root:not(.root-dir) h2 { font-family:var(--font-display); font-weight:900; font-size:40px; line-height:.95; letter-spacing:0; text-transform:uppercase; color:#1F1F1F; }
+.root:not(.root-dir) h3 { font-family:var(--font-display); font-weight:900; font-size:26px; line-height:1; letter-spacing:0; }
+.root:not(.root-dir) .dn h2 { font-size:90px; line-height:.9; } /* newsletter keeps its own size */
+@media (max-width:760px) { .root:not(.root-dir) .dn h2 { font-size:64px; } .root:not(.root-dir) h2 { font-size:32px; } }
+
+/* Buttons: lime primary + outlined secondary, square, GT America caps (like the profile page) */
+.root:not(.root-dir) .btn-navy { background:#63FFA1; color:#1F1F1F; border:1px solid #63FFA1; border-radius:0; font-family:var(--font-display); font-weight:900; font-size:20px; line-height:1; text-transform:uppercase; letter-spacing:0; padding:12px 16px; }
+.root:not(.root-dir) .btn-navy:hover { background:#4FF094; border-color:#4FF094; }
+.root:not(.root-dir) .btn-navy.sm { font-size:16px; padding:9px 12px; }
+.root:not(.root-dir) .btn-outline { background:transparent; color:#1F1F1F; border:1px solid #1F1F1F; border-radius:0; font-family:var(--font-display); font-weight:900; font-size:20px; line-height:1; text-transform:uppercase; letter-spacing:0; padding:12px 16px; }
+.root:not(.root-dir) .btn-outline:hover { background:#F6E5C8; }
+
+/* Accents: the old orange becomes brand green; small labels use GT America caps */
+.root:not(.root-dir) .inv-cta, .root:not(.root-dir) .cchan a, .root:not(.root-dir) .partner-line a { color:#2B6140; text-decoration:underline; text-underline-offset:3px; }
+.root:not(.root-dir) .stars, .root:not(.root-dir) .flow-n { color:#2B6140; }
+.root:not(.root-dir) .flow-n { font-family:var(--font-display); font-weight:900; font-size:32px; letter-spacing:0; }
+.root:not(.root-dir) .hist-year, .root:not(.root-dir) .module-m, .root:not(.root-dir) .corp-label, .root:not(.root-dir) .po-label { font-family:var(--font-display); font-weight:500; font-size:14px; letter-spacing:.1em; text-transform:uppercase; color:#2B6140; }
+.root:not(.root-dir) .po-label { color:#1F1F1F; }
+
+/* Newsletter + footer run edge to edge even though they sit inside the page container */
+.root:not(.root-dir) .home .dn, .root:not(.root-dir) .home .df { margin-left:calc(50% - 50vw); margin-right:calc(50% - 50vw); }
+.root:not(.root-dir) .home .df { margin-bottom:0; }
+@media (max-width:760px) {
+  /* Phones: logo on its own row, links wrap onto the next row so Donate stays visible */
+  .root:not(.root-dir) .nav { padding:12px 24px; flex-wrap:wrap; row-gap:8px; }
+  .root:not(.root-dir) .nav-logo { height:48px; width:48px; }
+  .root:not(.root-dir) .nav-r { flex-wrap:wrap; gap:10px 18px; width:100%; justify-content:flex-start; }
+  .root:not(.root-dir) .nav-r > a, .root:not(.root-dir) .nav-trigger { font-size:16px !important; white-space:nowrap; }
+  .root:not(.root-dir) .nav-r > a.donate-btn { font-size:16px !important; padding:8px 12px !important; }
+  .root:not(.root-dir) .donate-btn .squiggle { width:36px; height:14px; }
+}

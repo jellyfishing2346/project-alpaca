@@ -16,9 +16,9 @@ function Page({ title, blurb }) {
     <div className="root">
       <Nav />
       <div className="home">
-        <h1 style={{ marginTop: 32, fontSize: 40, fontWeight: 800, letterSpacing: "-.02em" }}>{title}</h1>
+        <h1 style={{ marginTop: 32 }}>{title}</h1>
         <p className="intro">{blurb || "This page is coming soon."}</p>
-        <p><Link to="/" style={{ color: "#E8663D", fontWeight: 700, textDecoration: "none" }}>← Back to the directory</Link></p>
+        <p><Link className="inv-cta" to="/directory">← Back to the directory</Link></p>
       </div>
       <Footer />
     </div>

@@ -273,19 +273,9 @@ function GetInvolved() {
   );
 }
 
+// Shared with the marketing pages; renders the Studio Haven design so every page matches the directory.
 export function Newsletter() {
-  return (
-    <section className="news">
-      <div className="news-l"><h2>Newsletter</h2>
-        <p>Subscribe to the Project Alpaca newsletter to stay up to date on our programs, community events, student stories, and ways to get involved.</p>
-      </div>
-      <div className="news-r">
-        <div className="news-row"><input placeholder="First Name" /><input placeholder="Last Name" /></div>
-        <input placeholder="Email" />
-        <button className="btn-green">Subscribe <Arrow /></button>
-      </div>
-    </section>
-  );
+  return <DirNewsletter />;
 }
 
 export function Nav() {
@@ -294,7 +284,7 @@ export function Nav() {
       <Link className="nav-l" to="/" style={{ textDecoration: "none" }}><LogoImage className="nav-logo" /><span className="nav-name">Project Alpaca</span></Link>
       <div className="nav-r">
         <div className="nav-item">
-          <button className="nav-trigger">Programs ▾</button>
+          <button className="nav-trigger">Programs <Chevron /></button>
           <div className="nav-menu">
             <Link to="/flagship">Flagship Program</Link>
             <Link to="/community-programs">Community Programs</Link>
@@ -302,13 +292,13 @@ export function Nav() {
         </div>
         <Link to="/get-involved">Get Involved</Link>
         <div className="nav-item">
-          <button className="nav-trigger">About ▾</button>
+          <button className="nav-trigger">About <Chevron /></button>
           <div className="nav-menu">
             <Link to="/about">About</Link>
             <Link to="/contact">Contact</Link>
           </div>
         </div>
-        <Link className="donate-btn" to="/donate">Donate</Link>
+        <Link className="donate-btn" to="/donate">Donate <Squiggle /></Link>
       </div>
     </nav>
   );
@@ -321,44 +311,9 @@ const SOCIALS = [
   { name: "YouTube", url: "https://www.youtube.com/@projectalpacany", path: "M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.5 3.55 12 3.55 12 3.55s-7.5 0-9.38.5A3.02 3.02 0 0 0 .5 6.19C0 8.08 0 12 0 12s0 3.92.5 5.81a3.02 3.02 0 0 0 2.12 2.14c1.88.5 9.38.5 9.38.5s7.5 0 9.38-.5a3.02 3.02 0 0 0 2.12-2.14C24 15.92 24 12 24 12s0-3.92-.5-5.81zM9.55 15.57V8.43L15.82 12l-6.27 3.57z" },
 ];
 
+// Shared with the marketing pages; renders the Studio Haven design so every page matches the directory.
 export function Footer() {
-  const cols = [
-    ["Explore", [["Flagship Program", "/flagship"], ["Community Programs", "/community-programs"], ["Meet our Alpacees", "/directory"], ["Mentor our Alpacees", "/get-involved"], ["Become our Partner", "/get-involved"], ["Volunteer with Us", "/get-involved"]]],
-    ["Resources", [["Annual Reports", "#"], ["Student Work", "/directory"], ["Mentor Guide", "#"], ["Sponsorship Guide", "#"], ["Latest News", "#"], ["FAQs", "#"]]],
-    ["Legal", [["Privacy Policy", "#"], ["Terms of Service", "#"], ["Cookie Settings", "#"], ["Nondiscrimination", "#"], ["IRS 501(c)(3) Status", "#"], ["Donor Rights", "#"]]],
-  ];
-  return (
-    <footer className="footer">
-      <div className="footer-top">
-        <div className="footer-brand">
-          <img className="footer-logo" src="/project-alpaca-logo.png" alt="Project Alpaca" />
-          <div className="footer-contact">
-            <b>Project Alpaca</b>
-            <p>Email: hello@projectalpaca.org<br />Address: 100 W 33rd St, New York, NY 10001<br />Cohort meets: Fridays 5:30–7:30 PM</p>
-            <p>Partnerships: partnership@projectalpaca.org<br />Inquiries: hello@projectalpaca.org</p>
-          </div>
-        </div>
-        <div className="footer-cols">
-          {cols.map(([h, links]) => (
-            <div key={h} className="footer-col">
-              <h4>{h}</h4>
-              {links.map(([l, to]) => (to.startsWith("/") ? <Link key={l} to={to}>{l}</Link> : <a key={l} href={to}>{l}</a>))}
-            </div>
-          ))}
-        </div>
-      </div>
-      <div className="footer-bottom">
-        <span>© {new Date().getFullYear()} Project Alpaca. All rights reserved.</span>
-        <span className="footer-social">
-          {SOCIALS.map((s) => (
-            <a key={s.name} href={s.url} target="_blank" rel="noreferrer" aria-label={s.name}>
-              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d={s.path} /></svg>
-            </a>
-          ))}
-        </span>
-      </div>
-    </footer>
-  );
+  return <DirFooter />;
 }
 
 // Directory header, per the Figma: a hire banner, then logo + "Alpacee Directory" label and
