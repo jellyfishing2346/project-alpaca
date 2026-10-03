@@ -294,6 +294,17 @@ Sections: hero ("About" / "Empower public college students" / Donate); Our Missi
 
 **Images:** `public/images/about/` (mission, why-alpaca (cropped to the design), pilot-cohort, news-citizens-committee) and `public/images/people/` (fred-butterweck, mac-exume, jenna-scherma, courtney-leggett, plus claire-igot / donna-meredith from Get Involved).
 
+## 8g. Contact page
+
+**Design source:** "Contact" in the Figma export (PDF). Built in `Contact.jsx` (`ct-*` classes in the "Contact" block of `styles.css`); dark floating nav, cream page, Support band, Newsletter, Footer.
+
+**Checked against the design render:** every form field, the Send button and the Press Kit card sit at the design's exact positions (0–2px at 1440px, real fonts loaded).
+
+**How the form works:** there's no server, so **Send opens the visitor's email app** with a pre-filled message: subject "<Contact reason> – <name>", the message, then their details. "Partnership opportunity" goes to partnership@projectalpaca.org; every other reason to hello@. First name, Email (must be a valid address) and Message are required; the browser blocks sending until they're filled. A confirmation line appears after Send. To receive submissions directly instead (no email app needed), connect a form service such as Formspree and point the form at it.
+- Contact reasons are in `REASONS` at the top of `Contact.jsx` (label + which inbox it goes to).
+- **Difference from the design:** the design shows a dropdown arrow on every field (a component leftover); the site shows it only on "Contact reason", the one real dropdown.
+- **Press Kit "Download"** emails hello@ asking for the kit until a press kit file exists (`PRESS_KIT_URL`).
+
 ## 9. Profile page
 
 **Design source:** same Figma file, frame **Directory - Profile** (`1158:7075`).
@@ -383,7 +394,8 @@ npm run preview        # preview the production build locally
 | `/community-programs` | Programs – Community, built to the design (section 8d) |
 | `/get-involved` | Get Involved, built to the design (section 8e) |
 | `/about` | About, built to the design (section 8f) |
-| `/contact`, `/donate` | Marketing pages, shared brand style; Contact rebuild next |
+| `/contact` | Contact, built to the design (section 8g) |
+| `/donate` | Shared brand style (no design in the export) |
 | `/projects` | Stub ("coming soon"); Michelle is designing the Projects page |
 
 `ScrollToTop` in `App.jsx` resets scroll on every route change.
