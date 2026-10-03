@@ -25,10 +25,13 @@ const PARTNERS = [
   { key: "meta", name: "Meta" },
 ];
 
-// Events: add real ones here. `date` is YYYY-MM-DD; past events hide automatically.
+// Events: `date` is YYYY-MM-DD; past events hide automatically unless `keep: true`.
 // `image` is a file in public/images/home/events/ (optional).
+// The two Summer Picnic entries are the design's placeholder content (kept visible to match
+// the Figma); replace them with real events and drop `keep`.
 const EVENTS = [
-  // { date: "2026-11-14", title: "Fall Demo Day", desc: "Cohort 6 presents their capstone projects.", where: "Manhattan", image: "demo-day" },
+  { date: "2026-07-20", title: "Summer Picnic", desc: "Our fun gathering that brings together our entire community for food.", where: "Central Park", image: "summer-picnic", keep: true },
+  { date: "2026-07-20", title: "Summer Picnic", desc: "Our fun gathering that brings together our entire community for food.", where: "Central Park", image: "summer-picnic", keep: true },
 ];
 
 // ---- Helpers ---------------------------------------------------------------------
@@ -128,7 +131,7 @@ function Programs() {
 
 function Events() {
   const today = new Date().toISOString().slice(0, 10);
-  const upcoming = EVENTS.filter((e) => e.date >= today).sort((a, b) => a.date.localeCompare(b.date));
+  const upcoming = EVENTS.filter((e) => e.keep || e.date >= today).sort((a, b) => a.date.localeCompare(b.date));
   return (
     <section className="hm-events">
       <div className="hm-events-intro">
@@ -136,8 +139,8 @@ function Events() {
         <p>Our events are open to everyone. Whether you’re a student looking to grow, a professional eager to mentor, or a supporter passionate about closing the opportunity gap, we’d love for you to join our community.</p>
       </div>
       <div className="hm-events-list">
-        {upcoming.length ? upcoming.map((e) => (
-          <article key={e.date + e.title} className="hm-event">
+        {upcoming.length ? upcoming.map((e, i) => (
+          <article key={i} className="hm-event">
             <Img base={`/images/home/events/${e.image || ""}`} className="hm-event-img" exts={e.image ? ["jpg", "png"] : []}
               fallback={<div className="hm-event-img hm-img-empty" />} />
             <div className="hm-event-body">

@@ -206,9 +206,9 @@ Sections: hero photo with the nav overlaid in white and "Creating tech leaders /
 **Content:**
 - **Testimonials come from the Google Sheet** (`Testimonial about Project Alpaca`, via `useAlpacees()`), so new ones appear automatically. Only quotes longer than ~20 characters show; long quotes are clipped to 7 lines on the card.
 - **Stats** (250+, $1,000,000+, 100%) and **partners** are in `STATS` / `PARTNERS` at the top of `Home.jsx`.
-- **Events** are in `EVENTS` at the top of `Home.jsx` (`date` as `YYYY-MM-DD`, `title`, `desc`, `where`, optional `image`). **Past events hide automatically**; with none upcoming, the section says so and points to the newsletter. RSVP emails hello@projectalpaca.org with "RSVP: <title>".
+- **Events** are in `EVENTS` at the top of `Home.jsx` (`date` as `YYYY-MM-DD`, `title`, `desc`, `where`, optional `image`, optional `keep`). **Past events hide automatically** unless `keep: true`; with none showing, the section says so and points to the newsletter. RSVP emails hello@projectalpaca.org with "RSVP: <title>". **Currently shows the design's two placeholder "Summer Picnic" entries** (`keep: true`, photo `images/home/events/summer-picnic.jpg`); replace with real events.
 
-**Matched against the design render** (`Home.jpg` in the Figma export), section by section. Known remaining differences: the hero photo (needs the right file), the events list (placeholder events in the design; real ones go in `EVENTS`), the Medium footer icon (needs a URL: `SOCIALS` in `alpacees-directory-final.jsx`), and the "Support Us Financially" description (the design repeats the partner text; the site keeps the donation text).
+**Matched against the design render** (`Home.jpg` in the Figma export), section by section. Known remaining differences: the Medium footer icon (needs a URL: `SOCIALS` in `alpacees-directory-final.jsx`), and the "Support Us Financially" description (the design repeats the partner text; the site keeps the donation text).
 
 Testimonial cards use the alpaca icon from the design (`images/home/icons/alpaca-<color>.png`, recolored per card).
 

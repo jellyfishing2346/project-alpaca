@@ -937,3 +937,7 @@ html, body { margin:0; padding:0; }
 .gi2-btn .squiggle, .dn-btn .squiggle { width:88px; height:31px; }
 .gi2-btn { height:55px; padding:12px 16px; }
 @media (max-width:760px) { .gi2-btn .squiggle, .dn-btn .squiggle { width:64px; height:24px; } }
+/* Events, per the design: square-cornered photos, 88px RSVP arrow */
+.hm-event-img { border-radius:0; }
+.hm-rsvp .squiggle { width:88px; height:31px; }
+@media (max-width:760px) { .hm-rsvp .squiggle { width:64px; height:24px; } }
