@@ -294,6 +294,7 @@ npm run preview        # preview the production build locally
 - **Added:** search by name.
 - **Colors:** the Figma only defines tag colors for Design, Project management and Technical; the other categories use palette colors Michelle approved.
 - **Contact** emails partnership@ (Michelle's call) instead of opening LinkedIn.
+- **Button hovers** (Michelle: "green when you hover", no movement): outlined buttons fill with **Lime** `#63FFA1`; Lime buttons soften to **Light Green** `#A1FFC7`; only colors change, with a 0.2s fade. Both greens are Figma color tokens; the Figma defines Light Green as Lime blended with white but not the exact ratio, so 40% white (same as Medium Wool) is assumed. Set in the "Button hovers" block at the end of `styles.css` (`--lime`, `--light-green`).
 - **Recommendations** shows the person's own testimonial (the only quote data available).
 - **Not in the Figma, styled with its tokens:** pagination states, the search box, filter dropdown menus, empty-results message.
 - **Profiles are in-app state, not URLs** - no shareable `/alpacee/:id` links yet. A clean follow-up if wanted.

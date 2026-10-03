@@ -726,3 +726,26 @@ html, body { margin:0; padding:0; }
   .root:not(.root-dir) .nav-r > a.donate-btn { font-size:16px !important; padding:8px 12px !important; }
   .root:not(.root-dir) .donate-btn .squiggle { width:36px; height:14px; }
 }
+
+/* ===== Button hovers: the design's greens, with a smooth fade =====
+   Lime #63FFA1 and Light Green (Lime softened with white; assumed 40% white like Medium Wool
+   -> #A1FFC7) are Figma color tokens. Per Michelle: buttons turn green on hover and don't move.
+   Outlined buttons fill with Lime; Lime buttons soften to Light Green. Only colors change. */
+:root { --lime:#63FFA1; --light-green:#A1FFC7; --btn-fade:background-color .2s ease, border-color .2s ease, color .2s ease; }
+.pf-btn, .dn-btn, .gi2-btn, .root:not(.root-dir) .btn-navy, .root:not(.root-dir) .btn-outline, .root:not(.root-dir) .nav-r > a.donate-btn { transition:var(--btn-fade); }
+
+/* Lime buttons -> Light Green */
+.pf-btn-lime:hover, .pf-btn-lime:focus-visible,
+.root:not(.root-dir) .btn-navy:hover, .root:not(.root-dir) .btn-navy:focus-visible { background:var(--light-green); border-color:var(--light-green); }
+.root:not(.root-dir) .nav-r > a.donate-btn:hover, .root:not(.root-dir) .nav-r > a.donate-btn:focus-visible { background:var(--light-green) !important; }
+
+/* Outlined buttons -> Lime fill */
+.pf-btn-line:hover, .pf-btn-line:focus-visible { background:var(--lime); border-color:#1F1F1F; }
+.dn-btn:hover, .dn-btn:focus-visible { background:var(--lime); }
+.root:not(.root-dir) .btn-outline:hover, .root:not(.root-dir) .btn-outline:focus-visible { background:var(--lime); border-color:#1F1F1F; }
+/* Get Involved arrows sit on dark cards: fill Lime and switch the text/arrow to Dirt for contrast */
+.gi2-card:hover .gi2-btn, .gi2-card:focus-visible .gi2-btn { background:var(--lime); border-color:var(--lime); color:#1F1F1F !important; }
+
+@media (prefers-reduced-motion:reduce) {
+  .pf-btn, .dn-btn, .gi2-btn, .root:not(.root-dir) .btn-navy, .root:not(.root-dir) .btn-outline, .root:not(.root-dir) .nav-r > a.donate-btn { transition:none; }
+}
