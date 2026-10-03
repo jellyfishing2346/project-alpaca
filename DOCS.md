@@ -395,7 +395,7 @@ npm run preview        # preview the production build locally
 | `/get-involved` | Get Involved, built to the design (section 8e) |
 | `/about` | About, built to the design (section 8f) |
 | `/contact` | Contact, built to the design (section 8g) |
-| `/donate` | Shared brand style (no design in the export) |
+| `/donate` | Shared brand style (no design in the export); includes the "What does your donation go towards?" breakdown |
 | `/projects` | Stub ("coming soon"); Michelle is designing the Projects page |
 
 `ScrollToTop` in `App.jsx` resets scroll on every route change.
@@ -452,3 +452,7 @@ npm run preview        # preview the production build locally
 | Change directory header/footer links | `DirHeader` / `DirFooter` in `alpacees-directory-final.jsx` |
 | A text value shows blank | Google's type guessing (section 4); fixed by the public-sheet formula |
 | Fix a "wrong data" issue | Almost always the sheet: check the exact header and cell value |
+
+### Donate page: donation breakdown
+The "What does your donation go towards?" graphic on `/donate` is built in code (`DonationBreakdown` in `Donate.jsx`), not an image, so it stays sharp and is readable by screen readers. To update it, edit the four entries in `BREAKDOWN` (percentage, label, color); the donut and legend redraw automatically. Percentages should add up to 100. The Donate page itself has no design in the export yet, and the donation form isn't connected to a payment platform (pending the team's choice).
+

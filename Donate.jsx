@@ -10,6 +10,62 @@ const ImgBox = ({ className }) => (
   <div className={"hi-img " + (className || "")}><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#B7B7C0" strokeWidth="1.4"><rect x="3" y="3" width="18" height="18" rx="3" /><circle cx="8.5" cy="8.5" r="1.6" /><path d="m21 15-5-5L5 21" /></svg></div>
 );
 
+// "What does your donation go towards?" — the donation breakdown graphic, built in code so it stays
+// sharp, screen-reader friendly, and easy to update: edit the percentages in BREAKDOWN (they should sum to 100).
+const BREAKDOWN = [
+  { pct: 84.5, label: "Programming", color: "#F1E850" },
+  { pct: 9, label: "Operations", color: "#CE76C2" },
+  { pct: 4.5, label: "Marketing/Website Hosting", color: "#57BEDC" },
+  { pct: 2, label: "Fundraising", color: "#3B2038" },
+];
+
+const Swirl = ({ color }) => (
+  <svg className="db-swirl" viewBox="0 0 20 20" aria-hidden="true">
+    <path d="M10 10.5c0-.8.7-1.3 1.4-1.1.9.3 1.2 1.4.8 2.2-.6 1.2-2.2 1.5-3.3.8-1.5-.9-1.7-3-.8-4.3 1.2-1.7 3.7-2 5.3-.9 2 1.4 2.3 4.3.9 6.2-1.6 2.3-5 2.6-7.1 1-2.6-1.9-2.9-5.7-1-8.1" fill="none" stroke={color} strokeWidth="1.6" strokeLinecap="round" />
+  </svg>
+);
+
+function Donut() {
+  // Slices go clockwise; the small ones start just above "3 o'clock", as in the graphic.
+  const order = [BREAKDOWN[1], BREAKDOWN[2], BREAKDOWN[3], BREAKDOWN[0]];
+  const r = 70, c = 2 * Math.PI * r;
+  let offset = 0;
+  return (
+    <svg className="db-donut" viewBox="0 0 200 200" role="img"
+      aria-label={BREAKDOWN.map((b) => `${b.pct}% ${b.label}`).join(", ")}>
+      <g transform="rotate(-36 100 100)">
+        {order.map((b) => {
+          const len = (b.pct / 100) * c;
+          const el = <circle key={b.label} cx="100" cy="100" r={r} fill="none" stroke={b.color} strokeWidth="48"
+            strokeDasharray={`${len} ${c - len}`} strokeDashoffset={-offset} />;
+          offset += len;
+          return el;
+        })}
+      </g>
+    </svg>
+  );
+}
+
+function DonationBreakdown() {
+  return (
+    <figure className="db">
+      <figcaption className="db-title">
+        <svg className="db-loop" viewBox="0 0 400 120" preserveAspectRatio="none" aria-hidden="true">
+          <ellipse cx="200" cy="60" rx="194" ry="44" transform="rotate(-3 200 60)" fill="none" stroke="#F2E4CA" strokeWidth="1.2" />
+          <ellipse cx="203" cy="62" rx="188" ry="48" transform="rotate(2 200 60)" fill="none" stroke="#F2E4CA" strokeWidth="1" />
+        </svg>
+        <span>What does your donation go towards?</span>
+      </figcaption>
+      <Donut />
+      <ul className="db-legend">
+        {BREAKDOWN.map((b) => (
+          <li key={b.label}><Swirl color={b.color === "#3B2038" ? "#7A4A72" : b.color} /><b>{b.pct}%</b> {b.label}</li>
+        ))}
+      </ul>
+    </figure>
+  );
+}
+
 const AMOUNTS = [25, 50, 100, 250];
 
 export default function Donate() {
@@ -42,7 +98,7 @@ export default function Donate() {
                 <p className="wnote">Secure checkout to be connected — payment processor pending.</p>
               </div>
             </div>
-            <ImgBox className="overview-img" style={{ aspectRatio: "3/4" }} />
+            <DonationBreakdown />
           </div>
         </section>
 
