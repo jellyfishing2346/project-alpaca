@@ -262,6 +262,22 @@ Sections: hero ("Community Programs", photo, intro, "Become Our Partners" → Ge
 
 **Images:** `public/images/community/` (hero, equitable-ai, partner) and `public/images/community/partners/` (atlas, harlem-childrens-zone, fedcap; transparent PNGs extracted from the design export).
 
+## 8e. Get Involved page
+
+**Design source:** "Get Involved" in the Figma export (PDF). Built in `GetInvolved.jsx` with the program-page building blocks (`fl-*`) recolored via `.root-gi` (Purple `#5B2D53` hero, Lime title, cream page), plus `gi-*` classes in the "Get Involved" block of `styles.css`.
+
+**Checked against the design render:** every section starts within 1–3px of the design at 1440px (real fonts loaded); compared side by side section by section.
+
+Sections: hero ("Be a Force for Good", group photo, intro); tabs (Alpacas / Volunteers / Partners); Alpacas (Mentors) + "Two Ways to Get Involved" (1-on-1 Mentor with its expectations list; Class Facilitator / Workshop Instructor) + "Meet our Mentors"; Volunteers + "Meet our Volunteers" + six volunteer roles; Corporate & Nonprofit Partners + "Ways to Create Impacts" (four cards); Support Our Work; Newsletter; Footer.
+
+**Placeholders to replace** (all at the top of `GetInvolved.jsx`):
+- `LINKS`: "Apply to be a Mentor" and "Become a Volunteer" email hello@ until there are forms; "Download Partnership Deck" emails partnership@ until the deck PDF is linked.
+- `MENTORS` / `VOLUNTEERS`: the design shows the same three people (Catherine Man, Claire Igot, Donna Meredith) in both, with "Job at Company" job lines. The site leaves out the "Job at Company" text; add real `job` values and real mentors/volunteers.
+- Photos repeat in the design (the laptop photo appears four times, the lounge photo on all four impact cards). Swap in real photos as they're chosen.
+- The design's tab says "Vounteers"; the site spells it "Volunteers".
+
+**Images:** reuses the Flagship photos (`images/flagship/`: alpacas, curriculum, community, support, catherine-man) and adds `images/people/claire-igot.jpg` (cropped to the design's framing) and `images/people/donna-meredith.jpg`.
+
 ## 9. Profile page
 
 **Design source:** same Figma file, frame **Directory - Profile** (`1158:7075`).
@@ -349,7 +365,8 @@ npm run preview        # preview the production build locally
 | `/` | Homepage, built to the Figma "Home" frame (section 8b) |
 | `/flagship` | Programs – Flagship, built to the design (section 8c) |
 | `/community-programs` | Programs – Community, built to the design (section 8d) |
-| `/about`, `/get-involved`, `/contact`, `/donate` | Marketing pages, shared brand style; rebuilds to their designs in progress |
+| `/get-involved` | Get Involved, built to the design (section 8e) |
+| `/about`, `/contact`, `/donate` | Marketing pages, shared brand style; rebuilds to their designs in progress |
 | `/projects` | Stub ("coming soon"); Michelle is designing the Projects page |
 
 `ScrollToTop` in `App.jsx` resets scroll on every route change.
