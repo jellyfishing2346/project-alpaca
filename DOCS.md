@@ -232,6 +232,22 @@ The team's Figma export ("Web design - Project Alpaca.zip") contains full-page r
 
 **Footer:** includes the Candid "Platinum Transparency 2023" badge (`public/images/candid-platinum-2023.png`), as in the design.
 
+## 8c. Programs – Flagship page
+
+**Design source:** "Programs - Flagship" in the Figma export (PDF). Built in `Flagship.jsx`, styled in the "Programs – Flagship" block of `styles.css` (scoped to `.root-flag`). White page with a Night Sky hero and "Support Our Work" band.
+
+**Checked against the design render:** every section starts within ~4px of the design at 1440px wide (measured with the real Merriweather and Public Sans fonts), and each section was compared side by side.
+
+Sections: hero (nav, "Flagship Program", photo, intro, Apply button); sticky tabs (Overview / Programs / Instructing Team) that jump to their sections and highlight the one on screen; Intensive Career Prep + three facts; Holistic Approach carousel (swipe/scroll sideways); Curriculum accordion; Sample Classes; Projects; Meet the Alpacees (live from the directory data); Core Instructors; Alpacas (Mentors); partner logos; Support Our Work; Newsletter; Footer.
+
+**Content to fill in** (all at the top of `Flagship.jsx`):
+- `APPLY_URL`: where "Apply to Cohort 6" goes. Currently emails hello@ as a placeholder.
+- `MODULES`: the design only writes out **Foundations**; **Relationship** and **Mastery** show "Module details coming soon." until their text is added.
+- `FEATURED`: the three students in "Meet the Alpacees" (the design's three). Their role and tags come from the directory sheet, so they show real data rather than the design's sample text.
+- "See Projects" points to this page until a Projects page exists.
+
+**Photos** are the full-resolution originals from the design export, in `public/images/flagship/` (hero, intensive, community, programming, mentorship, networking, capstone, curriculum, classes, projects, catherine-man, zsoreign-sanchez, marissa-fleming, alpacas, support). The Zsoreign and Marissa originals are only ~500px, slightly small for their 600px-tall cards.
+
 ## 9. Profile page
 
 **Design source:** same Figma file, frame **Directory - Profile** (`1158:7075`).
@@ -317,7 +333,8 @@ npm run preview        # preview the production build locally
 |---|---|
 | `/directory` | The Alpacee directory and profiles (also the catch-all `*`) |
 | `/` | Homepage, built to the Figma "Home" frame (section 8b) |
-| `/about`, `/get-involved`, `/community-programs`, `/flagship`, `/contact`, `/donate` | Marketing pages (out of scope - Framer) |
+| `/flagship` | Programs – Flagship, built to the design (section 8c) |
+| `/about`, `/get-involved`, `/community-programs`, `/contact`, `/donate` | Marketing pages, shared brand style; rebuilds to their designs in progress |
 | `/projects` | Stub ("coming soon"); Michelle is designing the Projects page |
 
 `ScrollToTop` in `App.jsx` resets scroll on every route change.

@@ -944,3 +944,201 @@ html, body { margin:0; padding:0; }
 /* Space above "From Our Community" heading, per the design (~55px) */
 .hm-community { padding-top:44px; }
 @media (max-width:760px) { .hm-community { padding-top:28px; } }
+
+/* ===== Programs – Flagship, per the Studio Haven design ("Programs - Flagship" export) =====
+   White page; Night Sky (#1E474D) hero + support band; headings in Night Sky. Scoped to .root-flag. */
+.root.root-flag { background:#FFFFFF; }
+.root-flag .fl-main { max-width:1440px; margin:0 auto; padding:0 80px; box-sizing:border-box; }
+
+/* Hero: nav + yellow title on Night Sky, then full-width photo, then intro band */
+.fl-hero { position:relative; background:#1E474D; padding:120px 80px 0; }
+.root.root-flag .fl-hero h1 { margin:0; font-family:var(--font-display); font-weight:900; font-size:clamp(64px, 8.33vw, 120px); line-height:.9; text-transform:uppercase; color:#FFF767; }
+.fl-hero-img { display:block; width:100%; height:393px; object-fit:cover; object-position:center 62%; }
+.fl-intro { background:#1E474D; padding:40px 80px 48px; display:flex; flex-direction:column; align-items:flex-start; gap:32px; }
+.fl-intro p { margin:0; max-width:720px; font-family:var(--font-serif); font-size:24px; line-height:1.67; color:#FFFDDF; }
+
+/* Buttons */
+.fl-btn { display:inline-flex; align-items:center; gap:12px; height:55px; box-sizing:border-box; padding:12px 16px; text-decoration:none; font-family:var(--font-display); font-weight:900; font-size:24px; line-height:1; text-transform:uppercase; color:#1F1F1F; white-space:nowrap; transition:var(--btn-fade); }
+.fl-btn .squiggle { width:88px; height:31px; }
+.fl-btn-lime { background:var(--lime); border:1px solid var(--lime); }
+.fl-btn-lime:hover, .fl-btn-lime:focus-visible { background:var(--light-green); border-color:var(--light-green); }
+.fl-btn-line { background:transparent; border:1px solid #1F1F1F; }
+.fl-btn-line:hover, .fl-btn-line:focus-visible { background:var(--lime); }
+
+/* Tabs */
+.fl-tabs { position:sticky; top:0; z-index:4; background:#FFFBF3; }
+.fl-tabs-in { display:flex; gap:56px; padding-top:16px; margin:0 80px; border-bottom:1px solid #1F1F1F; }
+@media (min-width:1600px) { .fl-tabs-in { margin:0 auto; max-width:1280px; } }
+.fl-tabs a { padding-bottom:6px; border-bottom:3px solid transparent; font-family:var(--font-display); font-weight:500; font-size:24px; line-height:1; text-transform:uppercase; color:#1F1F1F; text-decoration:none; }
+.fl-tabs a.on { border-bottom-color:#1F1F1F; }
+.fl-tabs a:hover { border-bottom-color:rgba(31,31,31,.35); }
+.fl-tabs a.on:hover { border-bottom-color:#1F1F1F; }
+
+/* Section headings */
+.root.root-flag .fl-h1 { margin:0 0 32px; font-family:var(--font-display); font-weight:900; font-size:90px; line-height:.9; text-transform:uppercase; color:#1E474D; }
+.root.root-flag .fl-h2 { margin:0 0 32px; font-family:var(--font-display); font-weight:900; font-size:64px; line-height:.9; text-transform:uppercase; color:#1E474D; }
+.fl-sec { padding-top:64px; scroll-margin-top:70px; }
+.fl-rule { border:0; border-top:1px solid #1F1F1F; margin:64px 0 0; }
+
+/* Intensive Career Prep */
+.fl-prep { display:grid; grid-template-columns:minmax(0,1fr) 630px; gap:80px; align-items:start; padding-top:32px; }
+.root.root-flag .fl-prep .fl-h1 { margin-bottom:40px; }
+.fl-lead { margin:0; max-width:520px; font-family:var(--font-serif); font-size:24px; line-height:1.67; color:#1F1F1F; }
+.fl-prep img { width:100%; height:517px; object-fit:cover; display:block; }
+.fl-facts { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:21px; padding-top:60px; }
+.fl-fact { border-top:1px solid #1F1F1F; padding-top:8px; }
+.root.root-flag .fl-fact h3 { margin:0 0 8px; font-family:var(--font-display); font-weight:900; font-size:48px; line-height:.9; color:#1E474D; }
+.fl-fact p { margin:0; font-family:var(--font-serif); font-size:18px; line-height:1.67; }
+
+/* Holistic Approach carousel: cards scroll sideways; first card aligns with the page margin */
+.fl-carousel { overflow-x:auto; scroll-snap-type:x mandatory; scroll-padding-left:80px; padding:0 80px 8px; scrollbar-width:thin; }
+.fl-carousel:focus-visible { outline:2px solid #1F1F1F; outline-offset:-2px; }
+.fl-track { display:flex; gap:48px; width:max-content; }
+.fl-hcard { display:grid; grid-template-columns:640px 640px; height:388px; scroll-snap-align:start; }
+.fl-hcard img { width:100%; height:100%; object-fit:cover; display:block; }
+.fl-hcard-text { background:#FFFDDF; padding:40px 48px; display:flex; flex-direction:column; justify-content:space-between; }
+.root.root-flag .fl-hcard h3 { margin:0; font-family:var(--font-display); font-weight:900; font-size:48px; line-height:.9; color:#1E474D; }
+.fl-hcard p { margin:0; max-width:520px; font-family:var(--font-serif); font-size:18px; line-height:1.67; }
+
+/* Curriculum */
+.fl-sub { margin:0 0 32px; max-width:640px; font-family:var(--font-serif); font-size:18px; line-height:1.67; }
+.fl-cur { display:grid; grid-template-columns:436px minmax(0,1fr); align-items:stretch; min-height:520px; }
+.fl-acc { display:flex; flex-direction:column; }
+.fl-acc-item { border:1px solid #1F1F1F; border-bottom:0; }
+.fl-acc-item:last-child { border-bottom:1px solid #1F1F1F; }
+.fl-acc-item.open { background:#FFF767; flex:1; }
+.fl-acc-head { width:100%; display:flex; align-items:center; gap:16px; padding:28px 24px; background:none; border:0; cursor:pointer; text-align:left; font-family:var(--font-display); font-weight:900; font-size:48px; line-height:.9; color:#1E474D; }
+.fl-acc-n { width:40px; height:40px; flex:none; border-radius:50%; background:#1E474D; color:#fff; display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-weight:500; font-size:22px; }
+.fl-acc-body { margin:0; padding:0 24px 28px; font-family:var(--font-serif); font-size:18px; line-height:1.67; }
+.fl-acc-head:focus-visible { outline:2px solid #1F1F1F; outline-offset:-4px; }
+.fl-cur-img { width:100%; height:100%; min-height:520px; object-fit:cover; display:block; }
+
+/* Sample classes */
+.fl-classes { display:grid; grid-template-columns:627px minmax(0,1fr); gap:24px; align-items:start; }
+.fl-classes > img { width:100%; height:610px; object-fit:cover; display:block; }
+.fl-class { border-top:1px solid #1F1F1F; padding:24px 24px; }
+.fl-class:last-child { border-bottom:1px solid #1F1F1F; }
+.root.root-flag .fl-class h3 { margin:0 0 16px; font-family:var(--font-display); font-weight:900; font-size:48px; line-height:.9; color:#1F1F1F; }
+.fl-class p { margin:0; font-family:var(--font-body); font-size:16px; line-height:1.4; color:#1F1F1F; }
+.fl-class p + p { margin-top:8px; }
+
+/* Text + image splits (Projects, Alpacas) */
+.fl-split { display:grid; grid-template-columns:410px minmax(0,1fr); gap:26px; align-items:start; }
+.fl-split-text p { margin:0 0 40px; font-family:var(--font-serif); font-size:18px; line-height:1.67; }
+.fl-split img { width:100%; height:474px; object-fit:cover; display:block; }
+.fl-split img.fl-framed { border:1px solid #1F1F1F; box-sizing:border-box; object-fit:cover; }
+
+/* Meet the Alpacees + instructors */
+.fl-head-row { display:flex; align-items:flex-start; justify-content:space-between; gap:24px; }
+.fl-grid3 { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:21px; }
+.fl-pcard { position:relative; height:600px; border-radius:16px; overflow:hidden; display:block; color:#fff; text-decoration:none; background:#1E474D; }
+.fl-pcard img, .fl-pcard-empty { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center 22%; }
+.fl-pcard-shade { position:absolute; inset:0; background:linear-gradient(to bottom, rgba(0,0,0,.07) 43.6%, rgba(0,0,0,.7) 100%); }
+.fl-pcard-text { position:absolute; left:0; right:0; bottom:0; padding:16px; display:flex; flex-direction:column; gap:8px; }
+.root.root-flag .fl-pcard h3 { margin:0; font-family:var(--font-display); font-weight:900; font-size:40px; line-height:1; color:#fff; text-transform:none; }
+.fl-pcard p { margin:0; font-family:var(--font-serif); font-size:16px; line-height:1.67; color:#fff; }
+.fl-tags { display:flex; flex-wrap:wrap; gap:8px; }
+.fl-tags span { padding:4px 12px; border-radius:48px; font-family:var(--font-serif); font-size:14px; line-height:1.67; color:#fff; box-shadow:0 0 1px rgba(255,255,255,.95); }
+a.fl-pcard:hover img { transform:scale(1.03); }
+a.fl-pcard img { transition:transform .3s ease; }
+
+/* Partners */
+.fl-partners { padding:48px 0 32px; }
+.root.root-flag .fl-partners h2 { margin:0 0 32px; font-family:var(--font-display); font-weight:500; font-size:32px; line-height:1; text-transform:uppercase; color:#1F1F1F; }
+.fl-logos { display:flex; align-items:center; justify-content:space-between; gap:32px; flex-wrap:wrap; }
+.fl-logos img { height:auto; width:auto; max-height:120px; max-width:280px; }
+
+/* Support Our Work band */
+.fl-support { background:#1E474D; display:grid; grid-template-columns:623px minmax(0,1fr); gap:24px; padding:32px max(80px, calc((100% - 1280px) / 2)); }
+.fl-support > img { width:100%; height:412px; object-fit:cover; display:block; }
+.fl-support-text { display:flex; flex-direction:column; justify-content:space-between; align-items:flex-start; }
+.fl-support-text .fl-btn { align-self:flex-end; }
+.root.root-flag .fl-support h2 { margin:0 0 16px; font-family:var(--font-display); font-weight:900; font-size:48px; line-height:.9; text-transform:none; color:#FFF767; }
+.fl-support p { margin:0; font-family:var(--font-serif); font-size:16px; line-height:1.67; color:#fff; }
+
+/* Nav sits on the Night Sky hero (white links) */
+.root-flag .nav.nav-overlay { background:transparent; }
+
+@media (max-width:1100px) {
+  .root-flag .fl-main { padding:0 40px; }
+  .fl-hero, .fl-intro { padding-left:40px; padding-right:40px; }
+  .fl-tabs-in { margin:0 40px; gap:32px; }
+  .fl-prep, .fl-classes, .fl-split, .fl-cur, .fl-support { grid-template-columns:1fr; }
+  .fl-prep img { height:420px; }
+  .fl-cur-img { min-height:360px; }
+  .fl-carousel { padding:0 40px 8px; scroll-padding-left:40px; }
+  .fl-hcard { grid-template-columns:min(520px,70vw) min(520px,70vw); }
+  .fl-support { padding:32px 40px; }
+}
+@media (max-width:760px) {
+  .root-flag .fl-main { padding:0 24px; }
+  .fl-hero { padding:96px 24px 0; }
+  .fl-intro { padding:32px 24px 40px; }
+  .fl-intro p, .fl-lead { font-size:20px; }
+  .fl-hero-img { height:260px; }
+  .fl-tabs-in { margin:0 24px; gap:20px; overflow-x:auto; }
+  .fl-tabs a { font-size:18px; white-space:nowrap; }
+  .root.root-flag .fl-h1 { font-size:56px; }
+  .root.root-flag .fl-h2 { font-size:44px; }
+  .fl-facts, .fl-grid3 { grid-template-columns:1fr; }
+  .fl-carousel { padding:0 24px 8px; scroll-padding-left:24px; }
+  .fl-hcard { grid-template-columns:1fr; grid-template-rows:200px auto; width:82vw; height:auto; }
+  .fl-hcard-text { padding:24px; gap:16px; }
+  .root.root-flag .fl-hcard h3, .root.root-flag .fl-class h3, .root.root-flag .fl-fact h3 { font-size:36px; }
+  .fl-acc-head { font-size:36px; padding:20px 16px; }
+  .fl-classes > img, .fl-split img { height:300px; }
+  .fl-pcard { height:480px; }
+  .fl-head-row { flex-direction:column; margin-bottom:24px; }
+  .fl-head-row .fl-h2 { margin-bottom:0; }
+  .fl-support { padding:24px; }
+  .fl-support > img { height:260px; }
+  .fl-support-text { gap:24px; }
+  .fl-btn { font-size:20px; } .fl-btn .squiggle { width:64px; height:24px; }
+}
+@media (prefers-reduced-motion:reduce) { a.fl-pcard img { transition:none; } }
+/* --- fixes from the design comparison --- */
+.fl-tabs a { font-size:32px; }                                   /* design: GT Compressed Medium 32 (H6) */
+@media (max-width:760px) { .fl-tabs a { font-size:20px; } }
+.fl-hero-img { object-position:center 32%; }                      /* show the wall above their heads, as designed */
+.root.root-flag .fl-hero h1 { padding-bottom:6px; }
+.fl-hcard { grid-template-rows:388px; }                           /* photo follows the card height instead of its own */
+.fl-hcard img { height:388px; }
+@media (min-width:1101px) { .fl-cur { height:520px; min-height:0; } .fl-cur-img { min-height:0; height:520px; } }
+@media (max-width:760px) { .fl-hcard { grid-template-rows:200px auto; } .fl-hcard img { height:200px; } }
+/* Vertical rhythm matched to the design render, section by section (desktop) */
+@media (min-width:1101px) {
+  .fl-hero { padding-top:129px; }
+  .fl-intro { padding-bottom:58px; }
+  .fl-tabs-in { padding-top:26px; }
+  .fl-prep { padding-top:22px; }
+  #fl-programs { padding-top:96px; }
+  .fl-r1 { margin-top:79px; }
+  .fl-s-cur { padding-top:84px; }
+  .fl-s-cur .fl-sub { margin-bottom:53px; }
+  .fl-s-classes { padding-top:97px; }
+  .fl-s-projects { padding-top:115px; }
+  .fl-s-meet { padding-top:103px; }
+  .fl-r2 { margin-top:87px; }
+  .fl-s-team { padding-top:96px; }
+  .fl-s-alpacas { padding-top:87px; }
+  .fl-r3 { margin-top:88px; }
+}
+.fl-logos { min-height:120px; }
+
+/* Newsletter: design input line-height (1.67) and no gap above it on marketing pages */
+.dn-r input { line-height:1.67; }
+.root-flag .dn, .root-home .dn { margin-top:0; }
+@media (min-width:1101px) { .fl-partners { padding-bottom:47px; } }
+/* Fine-tuning from the visual comparison */
+.fl-tabs a.on { font-weight:900; }                 /* active tab is GT America Black in the design */
+.fl-lead { max-width:495px; }
+.fl-s-cur .fl-sub { max-width:615px; }
+.fl-acc-head { padding:32px 24px; }
+.fl-split-text p { max-width:380px; }
+@media (max-width:760px) { .fl-acc-head { padding:20px 16px; } }
+/* Phones: the nav wraps to two rows, so it takes its own space instead of floating over the title */
+@media (max-width:760px) {
+  .root.root-flag:not(.root-dir) .nav.nav-overlay { position:relative; padding:12px 0 0; }
+  .fl-hero { padding-top:0; }
+  .root.root-flag .fl-hero h1 { padding-top:20px; }
+}
