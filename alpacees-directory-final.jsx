@@ -650,6 +650,10 @@ export default function App() {
   const pageClamped = Math.min(page, totalPages);
   const pageItems = filtered.slice((pageClamped - 1) * PER_PAGE, pageClamped * PER_PAGE);
   const person = people.find((p) => p.id === selected);
+  // Tab title: the directory, or the open profile's name.
+  useEffect(() => {
+    document.title = person ? `Project Alpaca - ${person.name}` : "Project Alpaca - Alpacee Directory";
+  }, [person]);
 
   return (
     <div className="root root-dir">

@@ -25,6 +25,28 @@ function Page({ title, blurb }) {
   );
 }
 
+// Browser tab titles: "Project Alpaca - <Page>". The directory sets its own (profiles show the person's name).
+const TITLES = {
+  "/": "Project Alpaca",
+  "/home": "Project Alpaca",
+  "/flagship": "Project Alpaca - Flagship Program",
+  "/community-programs": "Project Alpaca - Community Programs",
+  "/get-involved": "Project Alpaca - Get Involved",
+  "/about": "Project Alpaca - About",
+  "/contact": "Project Alpaca - Contact",
+  "/donate": "Project Alpaca - Donate",
+  "/projects": "Project Alpaca - Projects",
+};
+function TabTitle() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    const path = pathname.replace(/\/+$/, "") || "/";
+    if (path === "/directory") return; // handled inside the directory
+    document.title = TITLES[path] || "Project Alpaca";
+  }, [pathname]);
+  return null;
+}
+
 // React Router keeps the old scroll position between routes; reset it so each page starts at the top.
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -36,6 +58,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <ScrollToTop />
+      <TabTitle />
       <Routes>
         {/* Marketing Homepage is the front door; directory lives at /directory. */}
         <Route path="/" element={<Home />} />

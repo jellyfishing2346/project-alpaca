@@ -408,7 +408,7 @@ npm run preview        # preview the production build locally
 - **Added:** search by name.
 - **Colors:** the Figma only defines tag colors for Design, Project management and Technical; the other categories use palette colors Michelle approved.
 - **Contact** emails partnership@ (Michelle's call) instead of opening LinkedIn.
-- **Button hovers** (Michelle: "green when you hover", no movement): outlined buttons fill with **Lime** `#63FFA1`; Lime buttons soften to **Light Green** `#A1FFC7`; only colors change, with a 0.2s fade. Both greens are Figma color tokens; the Figma defines Light Green as Lime blended with white but not the exact ratio, so 40% white (same as Medium Wool) is assumed. Set in the "Button hovers" block at the end of `styles.css` (`--lime`, `--light-green`).
+- **Button hovers:** outlined buttons fill with **Lime** `#63FFA1`; Lime (green) buttons turn **soft lilac** `#E9D5F0` (a light tint of brand Purple, chosen by the team); only colors change, with a 0.2s fade. Set via `--lime-hover` (and `--lime`) in the "Button hovers" block of `styles.css`.
 - **Recommendations** shows the person's own testimonial (the only quote data available).
 - **Not in the Figma, styled with its tokens:** pagination states, the search box, filter dropdown menus, empty-results message.
 - **Profiles are in-app state, not URLs** - no shareable `/alpacee/:id` links yet. A clean follow-up if wanted.
@@ -455,4 +455,10 @@ npm run preview        # preview the production build locally
 
 ### Donate page: donation breakdown
 The "What does your donation go towards?" graphic on `/donate` is built in code (`DonationBreakdown` in `Donate.jsx`), not an image, so it stays sharp and is readable by screen readers. To update it, edit the four entries in `BREAKDOWN` (percentage, label, color); the donut and legend redraw automatically. Percentages should add up to 100. The Donate page itself has no design in the export yet, and the donation form isn't connected to a payment platform (pending the team's choice).
+
+### Browser tab icon (favicon)
+Set in `index.html`. Files in `public/`: `favicon.svg` (modern browsers), `favicon-32.png` and `favicon-192.png` (Safari and others that don't use SVG icons), `apple-touch-icon.png` (iPhone home screen). They show the alpaca from the logo (its three shapes, without the circular lettering, which is unreadable at tab size) on a rounded wool tile so it's visible on both light and dark browser tabs.
+
+### Browser tab titles
+Each page sets its tab title as "Project Alpaca - <Page>": `TITLES` in `App.jsx` (Flagship Program, Community Programs, Get Involved, About, Contact, Donate, Projects; the homepage is just "Project Alpaca"). The directory sets its own: "Project Alpaca - Alpacee Directory", or "Project Alpaca - <Name>" while a profile is open. Add new pages to `TITLES`.
 

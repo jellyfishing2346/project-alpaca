@@ -730,13 +730,13 @@ html, body { margin:0; padding:0; }
    Lime #63FFA1 and Light Green (Lime softened with white; assumed 40% white like Medium Wool
    -> #A1FFC7) are Figma color tokens. Per Michelle: buttons turn green on hover and don't move.
    Outlined buttons fill with Lime; Lime buttons soften to Light Green. Only colors change. */
-:root { --lime:#63FFA1; --light-green:#A1FFC7; --btn-fade:background-color .2s ease, border-color .2s ease, color .2s ease; }
+:root { --lime:#63FFA1; --light-green:#A1FFC7; --lime-hover:#E9D5F0; --btn-fade:background-color .2s ease, border-color .2s ease, color .2s ease; } /* --lime-hover: soft lilac, a light tint of brand Purple */
 .pf-btn, .dn-btn, .gi2-btn, .root:not(.root-dir) .btn-navy, .root:not(.root-dir) .btn-outline, .root:not(.root-dir) .nav-r > a.donate-btn { transition:var(--btn-fade); }
 
 /* Lime buttons -> Light Green */
 .pf-btn-lime:hover, .pf-btn-lime:focus-visible,
-.root:not(.root-dir) .btn-navy:hover, .root:not(.root-dir) .btn-navy:focus-visible { background:var(--light-green); border-color:var(--light-green); }
-.root:not(.root-dir) .nav-r > a.donate-btn:hover, .root:not(.root-dir) .nav-r > a.donate-btn:focus-visible { background:var(--light-green) !important; }
+.root:not(.root-dir) .btn-navy:hover, .root:not(.root-dir) .btn-navy:focus-visible { background:var(--lime-hover); border-color:var(--lime-hover); }
+.root:not(.root-dir) .nav-r > a.donate-btn:hover, .root:not(.root-dir) .nav-r > a.donate-btn:focus-visible { background:var(--lime-hover) !important; }
 
 /* Outlined buttons -> Lime fill */
 .pf-btn-line:hover, .pf-btn-line:focus-visible { background:var(--lime); border-color:#1F1F1F; }
@@ -924,7 +924,7 @@ html, body { margin:0; padding:0; }
 .gi2 { max-width:none; }
 /* Homepage "Support Us Financially": DONATE is a filled lime button in the design */
 .root-home .gi2-big .gi2-btn { background:#63FFA1; border-color:#63FFA1; color:#1F1F1F !important; }
-.root-home .gi2-card.gi2-big:hover .gi2-btn, .root-home .gi2-card.gi2-big:focus-visible .gi2-btn { background:var(--light-green); border-color:var(--light-green); }
+.root-home .gi2-card.gi2-big:hover .gi2-btn, .root-home .gi2-card.gi2-big:focus-visible .gi2-btn { background:var(--lime-hover); border-color:var(--lime-hover); }
 /* Footer: Programs and Get Involved links are spaced 16px apart in the design, the others 8px */
 .df-col:nth-child(2), .df-col:nth-child(3) { gap:16px; }
 .df-col:nth-child(2) h4, .df-col:nth-child(3) h4 { margin-bottom:8px; }
@@ -961,7 +961,7 @@ html, body { margin:0; padding:0; }
 .fl-btn { display:inline-flex; align-items:center; gap:12px; height:55px; box-sizing:border-box; padding:12px 16px; text-decoration:none; font-family:var(--font-display); font-weight:900; font-size:24px; line-height:1; text-transform:uppercase; color:#1F1F1F; white-space:nowrap; transition:var(--btn-fade); }
 .fl-btn .squiggle { width:88px; height:31px; }
 .fl-btn-lime { background:var(--lime); border:1px solid var(--lime); }
-.fl-btn-lime:hover, .fl-btn-lime:focus-visible { background:var(--light-green); border-color:var(--light-green); }
+.fl-btn-lime:hover, .fl-btn-lime:focus-visible { background:var(--lime-hover); border-color:var(--lime-hover); }
 .fl-btn-line { background:transparent; border:1px solid #1F1F1F; }
 .fl-btn-line:hover, .fl-btn-line:focus-visible { background:var(--lime); }
 
