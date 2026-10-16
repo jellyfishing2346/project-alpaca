@@ -21,6 +21,10 @@ export default defineType({
       name: "rsvpUrl", title: "RSVP link (optional)", type: "url",
       description: "A sign-up form or event page. Leave empty and the RSVP button will email hello@projectalpaca.org.",
     }),
+    defineField({
+      name: "keepVisible", title: "Keep showing after the date", type: "boolean", initialValue: false,
+      description: "Normally leave this off: events disappear automatically once their date has passed. Turn it on only for sample or evergreen events.",
+    }),
   ],
   orderings: [{ title: "Date, newest first", name: "dateDesc", by: [{ field: "date", direction: "desc" }] }],
   preview: {
