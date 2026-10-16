@@ -89,6 +89,9 @@ npm run dev       # http://localhost:5173
 | `npm run dev` | `studio/` | The editing Studio locally at http://localhost:3333 |
 | `npm run deploy` | `studio/` | Publishes Studio changes to projectalpaca.sanity.studio |
 
+> [!TIP]
+> **Run `git pull` before you start working.** A nightly GitHub Action commits content snapshots to `main`, so your local copy may be a commit or two behind. If a push is ever rejected with "fetch first", just `git pull` and push again.
+
 ## ✏️ Editing content
 
 | To change… | Go to |

@@ -401,6 +401,7 @@ npm run preview        # preview the production build locally
 - Files added to `public/` while `npm run dev` is running aren't picked up until you **restart the dev server**.
 - **macOS dev-server fix (`vite.config.js`):** page files sit in the project root and macOS ignores capitalization, so loading `/about` directly used to make Vite serve `About.jsx`'s source. A small plugin now sends every browser page request to `index.html`. Production is unaffected. Changes to `vite.config.js` need a dev-server restart.
 - The **website** and the **Studio** are separate projects with separate commands: run website commands from the repo root, Studio commands from `studio/`.
+- **Run `git pull` before starting work:** a nightly GitHub Action commits content snapshots to `main` (see "Nightly content snapshot"), so your local copy may be behind.
 - If `npm run dev` fails with `Cannot find module @rollup/rollup-darwin-arm64`, run `rm -rf node_modules package-lock.json && npm install`. Before pushing the regenerated lockfile, check `grep -c "rollup-linux-x64-gnu" package-lock.json` prints a number above 0 (Cloudflare builds on Linux).
 
 ---
@@ -529,6 +530,10 @@ Content edits don't go through GitHub: content lives in Sanity, code lives in Gi
 
 If Sanity is unreachable, the run fails (GitHub emails the repo owner) and nothing is committed; the next night retries. Note that snapshot photos are still served from Sanity's image CDN.
 
+> **Heads-up for developers: a bot commits to `main`.** Because the Action pushes snapshot commits on its own, your local copy can fall behind GitHub. **Run `git pull` before you start working.** If a `git push` is rejected ("Updates were rejected… fetch first"), run `git pull`, then push again. The snapshot only touches `snapshot/sanity-content.json`, so it never conflicts with code changes.
+
+If the first run fails with a permission error (HTTP 403 on `git push`), allow the Action to write: repo **Settings → Actions → General → Workflow permissions → "Read and write permissions"**.
+
 **The editing dashboard ("Studio")** lives in `studio/` (its own packages; needs Node 22.12+). Locally: `cd studio && npm install && npm run dev` → http://localhost:3333. It has four sections: Events, News, People, and Team lists (Board of Directors, Junior Board, Mentors, Volunteers, Core Instructors; each a drag-to-reorder list of People, so a person is entered once and can appear in several lists). Photos have a focal-point tool ("hotspot") that the site uses to frame them.
 
 **How the site gets the content:** `npm run build` first runs `scripts/fetch-content.mjs`, which reads the *published* content from Sanity and saves it to `content/sanity-content.json` (not committed). Pages read it through `cms.js`:
@@ -562,4 +567,7 @@ Then commit. If you add a field the website should show, also add it to the quer
 | Someone can't see the project in the Studio | They logged in with a different method than the one invited, or haven't accepted the invite. |
 | A section disappeared | Empty team lists hide their section (Junior Board, Volunteers, Mentors); add people back in **Team lists**. |
 | `npm run content` says "Missing script" | You're in `studio/`; run it from the repo root. |
+| `git push` rejected ("fetch first") | The nightly snapshot Action committed since your last pull: `git pull`, then push again. |
+| Snapshot Action fails with 403 | Repo Settings → Actions → General → Workflow permissions → "Read and write permissions". |
+| Snapshot Action fails with "Couldn't fetch content from Sanity" | Sanity was briefly unreachable; it retries the next night, or re-run it by hand. |
 
