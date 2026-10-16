@@ -1,8 +1,8 @@
-# Project Alpaca — Alpacee Directory · Technical Documentation
+# Project Alpaca Website · Technical Documentation
 
 _Last updated: October 2026_
 
-This document describes the Alpacee Directory web app: what it is, how it's built, where its data comes from, how to do common maintenance tasks, and what's still open. It's written for whoever maintains the site next (a developer or a technically comfortable team member).
+This document describes the Project Alpaca website: the Alpacee Directory, the marketing pages, and the Sanity CMS the team uses to edit content. It covers what it is, how it's built, where its data comes from, how to do common maintenance tasks, and what's still open. It's written for whoever maintains the site next (a developer or a technically comfortable team member). **Non-technical editors** don't need this file; see the editor guide (section "Content management").
 
 ---
 
@@ -14,9 +14,11 @@ The **Alpacee Directory** is a public web app that showcases Project Alpaca's st
 - **Repo:** `https://github.com/jellyfishing2346/project-alpaca` (public)
 - **Hosting:** Cloudflare Pages (auto-deploys on every push to `main`)
 
-> **Scope:** The repo also contains marketing pages (Home, About, Get Involved, Community Programs, Flagship, Contact, Donate). The marketing site is being built in **Framer** so the team can edit it without code; those pages here are not the deliverable. **The directory is the focus.** Its header and footer follow the same Studio Haven design the Framer site will use, so the two will match.
+> **Scope:** The site has two parts, all in this repo:
+> - **The Alpacee Directory** (`/directory`): student profiles, read live from a Google Sheet.
+> - **The marketing site:** Home, About, Get Involved, Community Programs, Flagship, Contact, Donate, built to the Studio Haven Figma designs (sections 8–8g).
 >
-> **Consistent look in the meantime:** the marketing pages here share the directory's style (Studio Haven palette, GT America headings, Merriweather text, lime/outlined buttons, the directory's newsletter and footer). Their content and layouts are unchanged; it's a styling layer in the "Marketing pages: shared Studio Haven look" block of `styles.css`, scoped to `.root:not(.root-dir)`, so the directory isn't affected. They don't match their individual Figma page designs; that work is planned in Framer.
+> The original plan was to build the marketing site in Framer so the team could edit it without code. Since no Framer volunteers were available, it was built here instead (Oct 2026), and a **Sanity CMS** was added so non-technical editors can update events, news and people themselves (see "Content management (Sanity CMS)"). Everything else is still edited in the code.
 
 ---
 
@@ -28,6 +30,8 @@ The **Alpacee Directory** is a public web app that showcases Project Alpaca's st
 | Build tool | Vite 5 |
 | Routing | React Router (`react-router-dom`) |
 | Styling | Plain CSS in one global file (`styles.css`) |
+| Content (events, news, people) | Sanity CMS, fetched at build time (`scripts/fetch-content.mjs`, `cms.js`) |
+| Content editing dashboard | Sanity Studio in `studio/`, hosted at https://projectalpaca.sanity.studio |
 | Data | Google Sheet, fetched in the browser as CSV (gviz endpoint) |
 | Images | Committed to the repo under `public/photos/` |
 | Fonts | GT America Compressed (self-hosted), Merriweather + Public Sans (Google Fonts) |
@@ -43,27 +47,36 @@ No backend server: a static build plus a client-side fetch of the Google Sheet.
 project-alpaca/
 ├── index.html                    # page shell; <title>, favicon, font preloads
 ├── main.jsx                      # entry point -> mounts App.jsx
-├── App.jsx                       # React Router routes + ScrollToTop
+├── App.jsx                       # React Router routes, ScrollToTop, per-page tab titles
 ├── alpacees-directory-final.jsx  # the directory + profile (and shared Nav/Footer/Newsletter for marketing pages)
 ├── sheet.js                      # loads + normalizes the roster from Google Sheets
+├── cms.js                        # gives pages the Sanity content (or null -> built-in lists)
 ├── styles.css                    # ALL styling (global stylesheet)
 ├── Home.jsx, About.jsx, GetInvolved.jsx, CommunityPrograms.jsx,
-│   Flagship.jsx, Contact.jsx, Donate.jsx   # marketing pages (out of scope - Framer)
+│   Flagship.jsx, Contact.jsx, Donate.jsx   # marketing pages (sections 8–8g)
+├── scripts/
+│   └── fetch-content.mjs         # build step: saves published Sanity content to content/
+├── content/                      # generated at build time; not committed (.gitignore)
+├── studio/                       # Sanity Studio (separate project, its own package.json)
+│   ├── sanity.config.js          # Studio setup (project 9uh7bydp, dataset production)
+│   ├── sanity.cli.js             # deploy settings (studio host, app ID)
+│   ├── structure.js              # the Studio's left-hand menu
+│   ├── schemaTypes/              # the editing forms: event, newsItem, person, teamLists
+│   └── scripts/import-current-content.js   # one-time import of the original content
 ├── public/
+│   ├── favicon.png               # tab icon (from projectalpaca.org)
 │   ├── logo-dark.svg / logo-white.svg # transparent vector logos (from the Figma export)
-│   ├── project-alpaca-logo.png       # old PNG logo (white background), no longer used
-│   ├── project-alpaca-logo-white.png # broken: a solid white square, unused
-│   ├── fonts/                        # GT America Compressed Medium + Black (woff2/woff)
-│   ├── images/get-involved/          # Get Involved photos (to be added, see section 8)
-│   ├── photos/                       # headshots, one file per student
-│   └── _redirects                    # Cloudflare SPA fallback (section 12)
-├── vite.config.js
+│   ├── fonts/                    # GT America Compressed Medium + Black (woff2/woff)
+│   ├── images/                   # page photos, by page (home/, flagship/, community/, about/, people/, …)
+│   ├── photos/                   # directory headshots, one file per student
+│   └── _redirects                # Cloudflare SPA fallback (section 12)
+├── vite.config.js                # Vite + the macOS dev-server page-refresh fix
 ├── package.json / package-lock.json
 ├── DOCS.md                       # this file
 └── README.md
 ```
 
-**Render flow:** `index.html` -> `main.jsx` -> `App.jsx` (router) -> the directory (`alpacees-directory-final.jsx`) or a marketing page. `sheet.js` feeds live data into the directory.
+**Render flow:** `index.html` -> `main.jsx` -> `App.jsx` (router) -> the directory (`alpacees-directory-final.jsx`) or a marketing page. `sheet.js` feeds live data into the directory; `cms.js` feeds Sanity content (events, news, people) into the marketing pages.
 
 ---
 
@@ -369,17 +382,23 @@ Edit `DirFooter` / `DirHeader` in `alpacees-directory-final.jsx`. The marketing 
 
 ## 12. Deployment and local development
 
-- Cloudflare Pages watches `main` and rebuilds on every push. No manual deploy step.
+- Cloudflare Pages rebuilds the site in two situations, with no manual deploy step:
+  - **a push to `main`** (code changes), and
+  - **a Publish in the Sanity Studio** (content changes): Sanity calls a Cloudflare deploy hook (see "Content management").
+- Cloudflare's build command is **`npm run build`**, which fetches Sanity content first. Don't change it to `vite build`, or content updates stop reaching the site.
 - **SPA fallback:** `public/_redirects` contains `/*  /index.html  200`, so opening a deep link (e.g. `/directory`) directly doesn't 404.
 - `html, body { margin:0 }` is set globally so full-width sections reach the screen edges.
 
 ```
 npm install            # first time only
 npm run dev            # local dev server (usually http://localhost:5173)
+npm run content        # pull the latest published Sanity content for local dev
 npm run build          # production build; run before committing
 npm run preview        # preview the production build locally
 ```
 - Files added to `public/` while `npm run dev` is running aren't picked up until you **restart the dev server**.
+- **macOS dev-server fix (`vite.config.js`):** page files sit in the project root and macOS ignores capitalization, so loading `/about` directly used to make Vite serve `About.jsx`'s source. A small plugin now sends every browser page request to `index.html`. Production is unaffected. Changes to `vite.config.js` need a dev-server restart.
+- The **website** and the **Studio** are separate projects with separate commands: run website commands from the repo root, Studio commands from `studio/`.
 - If `npm run dev` fails with `Cannot find module @rollup/rollup-darwin-arm64`, run `rm -rf node_modules package-lock.json && npm install`. Before pushing the regenerated lockfile, check `grep -c "rollup-linux-x64-gnu" package-lock.json` prints a number above 0 (Cloudflare builds on Linux).
 
 ---
@@ -420,10 +439,15 @@ npm run preview        # preview the production build locally
 
 **Waiting on the team (Michelle):**
 - **Sheet sharing fix** (section 6) - the most important open item.
+- **Sanity nonprofit plan:** apply (signed in as hello@) before the Growth trial ends (~Nov 11, 2026); Sanity reviews within 14 business days. Needs Project ID `9uh7bydp`. Form linked at sanity.io/docs/non-profit-plan.
+- **hello@ Sanity password:** change it (it was shared in Slack), store it in 1Password, delete the Slack message.
+- **Editors:** who should get Studio access (invite as **Editor**).
+- **Placeholder content** to replace in the Studio: Junior Board (repeats the Board), Mentors and Volunteers (show staff), the sample Summer Picnic event, board role/job lines.
+- **History timeline:** confirm the 2020/2021/2025 entries (marked `unconfirmed` in `About.jsx`) and supply the remaining milestones.
+- **Donations:** which payment platform, and whether a Donate page design exists.
 - **Sub-buckets** for each category.
 - **MailerLite** details to connect the newsletter form.
 - **Projects page** design (then point "See Projects" at it).
-- **Assets:** the homepage hero photo (the design's is the group on the couch in front of the mountain mural; export the **Banner Image** layer at 2x). Michelle is also granting fuller Figma access (the current view seat hits a lookup limit).
 - **Action shots** - photos to add (section 10).
 
 **Ready to build once unblocked:**
@@ -433,7 +457,7 @@ npm run preview        # preview the production build locally
 **Worth confirming:**
 - **Repo is public** with real student names - confirm that's intentional.
 - **GT America web license** covers the live domain.
-- **Subdomain:** `alpacees.projectalpaca.org` was the original plan (needs a DNS CNAME).
+- **Subdomain:** `alpacees.projectalpaca.org` was the original plan: add it under Cloudflare Pages → Custom domains, plus a DNS CNAME `alpacees` → `project-alpaca.pages.dev` wherever projectalpaca.org's DNS is managed. Decide whether that address should open the homepage or the directory.
 - **Inboxes:** hello@, partnership@ and giving@ are live and monitored.
 
 ---
@@ -452,6 +476,10 @@ npm run preview        # preview the production build locally
 | Change directory header/footer links | `DirHeader` / `DirFooter` in `alpacees-directory-final.jsx` |
 | A text value shows blank | Google's type guessing (section 4); fixed by the public-sheet formula |
 | Fix a "wrong data" issue | Almost always the sheet: check the exact header and cell value |
+| Edit events, news, board, mentors… | https://projectalpaca.sanity.studio → edit → **Publish** (live in ~1–2 min) |
+| Give someone editing access | sanity.io/manage → Project Alpaca → Members → Invite (role: Editor) |
+| See Sanity content in local dev | `npm run content`, then refresh |
+| Publishing didn't update the site | See "Troubleshooting" in the Content management section |
 
 ### Donate page: donation breakdown
 The "What does your donation go towards?" graphic on `/donate` is built in code (`DonationBreakdown` in `Donate.jsx`), not an image, so it stays sharp and is readable by screen readers. To update it, edit the four entries in `BREAKDOWN` (percentage, label, color); the donut and legend redraw automatically. Percentages should add up to 100. The Donate page itself has no design in the export yet, and the donation form isn't connected to a payment platform (pending the team's choice).
@@ -464,7 +492,30 @@ Each page sets its tab title as "Project Alpaca - <Page>": `TITLES` in `App.jsx`
 
 ## Content management (Sanity CMS)
 
-Events, news and people are edited in **Sanity** (project `9uh7bydp`, dataset `production`, owned by the Project Alpaca organization; hello@projectalpaca.org is the owner account). Everything else is still in the code.
+Events, news and people are edited in **Sanity**, a hosted CMS. Everything else is still in the code.
+
+**Where editors go:** https://projectalpaca.sanity.studio (log in, edit, click **Publish**). Edits are saved as drafts automatically; nothing reaches the website until **Publish**. Each publish rebuilds the site, live in about 1–2 minutes.
+
+### Accounts and ownership
+
+| What | Details |
+|---|---|
+| Sanity organization | **Project Alpaca** (ID `o8u21bong`) |
+| Sanity project | **Project Alpaca** (ID `9uh7bydp`), dataset `production` (public read; editing requires login) |
+| Owner account | hello@projectalpaca.org (password kept by Michelle / 1Password) |
+| Plan | Growth trial until ~Nov 11, 2026 → apply for the free **nonprofit plan** (see Open items) |
+| Studio address | https://projectalpaca.sanity.studio (app ID `pgec2kfga8hssg1k2yjj6qd3`, saved in `studio/sanity.cli.js`) |
+| Members | Manage at sanity.io/manage → Project Alpaca → Members. Editors get the **Editor** role; Administrator only for people who manage settings. |
+
+Each Sanity login method (Google, GitHub, email) is a separate account; invite the exact account a person will log in with.
+
+### How publishing updates the site
+
+**Publish** in the Studio → Sanity webhook **"Rebuild website"** (sanity.io/manage → Project Alpaca → API → Webhooks; dataset `production`; triggers on create/update/delete; filter `_type in ["event", "newsItem", "person", "teamLists"]`; drafts off) → calls the Cloudflare **deploy hook "Sanity publish"** (Cloudflare → project-alpaca → Settings → Builds → Deploy hooks, branch `main`) → Cloudflare runs `npm run build`, which fetches the published content → site live.
+
+The deploy hook URL is a secret (anyone with it can trigger rebuilds). To rotate it: delete the hook in Cloudflare, create a new one, paste its URL into the Sanity webhook.
+
+Content edits never touch GitHub: content lives in Sanity, code lives in GitHub, and each Cloudflare build combines the latest of both.
 
 **The editing dashboard ("Studio")** lives in `studio/` (its own packages; needs Node 22.12+). Locally: `cd studio && npm install && npm run dev` → http://localhost:3333. It has four sections: Events, News, People, and Team lists (Board of Directors, Junior Board, Mentors, Volunteers, Core Instructors; each a drag-to-reorder list of People, so a person is entered once and can appear in several lists). Photos have a focal-point tool ("hotspot") that the site uses to frame them.
 
@@ -477,4 +528,26 @@ Events, news and people are edited in **Sanity** (project `9uh7bydp`, dataset `p
 **If Sanity can't be reached**, the build prints a warning and the pages use their built-in lists (`EVENTS`, `BOARD`, `NEWS`, `MENTORS`, … at the top of each page file). The site never breaks because of Sanity. In local dev (`npm run dev`), run `npm run content` once to pull Sanity's latest content; without it you see the built-in lists.
 
 **Importing:** `studio/scripts/import-current-content.js` copied the site's original events, news and people into Sanity (run once on Oct 16, 2026). Re-running it never overwrites existing documents.
+
+### Changing the Studio (developers)
+
+The Studio's forms are defined in `studio/schemaTypes/` (`event.js`, `newsItem.js`, `person.js`, `teamLists.js`) and its menu in `studio/structure.js`. After changing them:
+
+```
+cd studio
+npm run dev        # check locally at http://localhost:3333
+npm run deploy     # publish to projectalpaca.sanity.studio
+```
+Then commit. If you add a field the website should show, also add it to the query and `transform()` in `scripts/fetch-content.mjs` and use it in the page. Sanity is pinned to **6.17.0** (`studio/package.json`); update deliberately, not via `npm audit fix --force`.
+
+### Troubleshooting
+
+| Problem | Check |
+|---|---|
+| Published, but the site didn't change | Cloudflare → Deployments: did a new deployment start? If not, open the Sanity webhook and check its delivery attempts. If the deployment ran, open its build log and look for "Sanity content saved…". |
+| Build log says "Couldn't fetch content from Sanity" | Sanity was unreachable; the site was built with the built-in lists. Re-run the deployment (Cloudflare → Deployments → Retry). |
+| Edit visible in the Studio but not on the site | It's still a draft (orange dot in the list): click **Publish**. |
+| Someone can't see the project in the Studio | They logged in with a different method than the one invited, or haven't accepted the invite. |
+| A section disappeared | Empty team lists hide their section (Junior Board, Volunteers, Mentors); add people back in **Team lists**. |
+| `npm run content` says "Missing script" | You're in `studio/`; run it from the repo root. |
 
