@@ -1,0 +1,197 @@
+{
+  "events": [
+    {
+      "date": "2026-07-20",
+      "title": "Summer Picnic",
+      "desc": "Our fun gathering that brings together our entire community for food.",
+      "where": "Central Park",
+      "imageUrl": "https://cdn.sanity.io/images/9uh7bydp/production/9b1567ba71f4cc253443fdb7a04763ee5e2466cf-822x640.jpg?w=1000&fit=max&auto=format&q=80",
+      "imagePos": "",
+      "alt": "Alpacees smiling at a picnic in Central Park, one holding an alpaca plush",
+      "keep": true,
+      "rsvp": ""
+    }
+  ],
+  "news": [
+    {
+      "meta": "2025 • Grant",
+      "text": "Project Alpaca received Community Leaders Grant from Citizens Committee for New York City.",
+      "image": "https://cdn.sanity.io/images/9uh7bydp/production/860b4fe2f3ce2f791192d5f3b8041a4588825821-822x640.png?w=1000&fit=max&auto=format&q=80",
+      "alt": "Citizens Committee for New York City logo",
+      "url": "https://www.citizensnyc.org"
+    }
+  ],
+  "team": {
+    "board": [
+      {
+        "name": "Catherine Man",
+        "eyebrow": "Co-Founder • Executive Director",
+        "job": "",
+        "photo": "https://cdn.sanity.io/images/9uh7bydp/production/128287b47fbeed6d6adfe464539502b5111796b3-805x900.jpg?w=900&fit=max&auto=format&q=80",
+        "pos": ""
+      },
+      {
+        "name": "Claire Igot",
+        "eyebrow": "Co-Founder • Board Chair",
+        "job": "",
+        "photo": "https://cdn.sanity.io/images/9uh7bydp/production/b508b405bcbd424980c45b78ccdff9e525e2f401-826x1199.jpg?w=900&fit=max&auto=format&q=80",
+        "pos": ""
+      },
+      {
+        "name": "Donna Meredith",
+        "eyebrow": "",
+        "job": "",
+        "photo": "https://cdn.sanity.io/images/9uh7bydp/production/6468ec9685bedad5fc4a8b8baab87b59ece82fa9-800x800.jpg?w=900&fit=max&auto=format&q=80",
+        "pos": ""
+      },
+      {
+        "name": "Fred Butterweck",
+        "eyebrow": "",
+        "job": "",
+        "photo": "https://cdn.sanity.io/images/9uh7bydp/production/4e2dc9bca3a0c9006cb27de1c0f0eaf03a2e0234-673x900.jpg?w=900&fit=max&auto=format&q=80",
+        "pos": ""
+      },
+      {
+        "name": "Mac Exume",
+        "eyebrow": "",
+        "job": "",
+        "photo": "https://cdn.sanity.io/images/9uh7bydp/production/56cc8c8d4fed5157276169ca026d18c0a41c1a00-900x900.jpg?w=900&fit=max&auto=format&q=80",
+        "pos": ""
+      },
+      {
+        "name": "Jenna Scherma",
+        "eyebrow": "",
+        "job": "",
+        "photo": "https://cdn.sanity.io/images/9uh7bydp/production/df50cfe076ddfec30bb5b1685fad7b525b46cd69-512x512.jpg?w=900&fit=max&auto=format&q=80",
+        "pos": ""
+      },
+      {
+        "name": "Courtney Leggett",
+        "eyebrow": "",
+        "job": "",
+        "photo": "https://cdn.sanity.io/images/9uh7bydp/production/7de5c1b9ee52d5b06324408736ed13557e92b254-641x641.jpg?w=900&fit=max&auto=format&q=80",
+        "pos": ""
+      }
+    ],
+    "juniorBoard": [
+      {
+        "name": "Catherine Man",
+        "eyebrow": "Co-Founder • Executive Director",
+        "job": "",
+        "photo": "https://cdn.sanity.io/images/9uh7bydp/production/128287b47fbeed6d6adfe464539502b5111796b3-805x900.jpg?w=900&fit=max&auto=format&q=80",
+        "pos": ""
+      },
+      {
+        "name": "Claire Igot",
+        "eyebrow": "Co-Founder • Board Chair",
+        "job": "",
+        "photo": "https://cdn.sanity.io/images/9uh7bydp/production/b508b405bcbd424980c45b78ccdff9e525e2f401-826x1199.jpg?w=900&fit=max&auto=format&q=80",
+        "pos": ""
+      },
+      {
+        "name": "Donna Meredith",
+        "eyebrow": "",
+        "job": "",
+        "photo": "https://cdn.sanity.io/images/9uh7bydp/production/6468ec9685bedad5fc4a8b8baab87b59ece82fa9-800x800.jpg?w=900&fit=max&auto=format&q=80",
+        "pos": ""
+      },
+      {
+        "name": "Fred Butterweck",
+        "eyebrow": "",
+        "job": "",
+        "photo": "https://cdn.sanity.io/images/9uh7bydp/production/4e2dc9bca3a0c9006cb27de1c0f0eaf03a2e0234-673x900.jpg?w=900&fit=max&auto=format&q=80",
+        "pos": ""
+      },
+      {
+        "name": "Mac Exume",
+        "eyebrow": "",
+        "job": "",
+        "photo": "https://cdn.sanity.io/images/9uh7bydp/production/56cc8c8d4fed5157276169ca026d18c0a41c1a00-900x900.jpg?w=900&fit=max&auto=format&q=80",
+        "pos": ""
+      },
+      {
+        "name": "Jenna Scherma",
+        "eyebrow": "",
+        "job": "",
+        "photo": "https://cdn.sanity.io/images/9uh7bydp/production/df50cfe076ddfec30bb5b1685fad7b525b46cd69-512x512.jpg?w=900&fit=max&auto=format&q=80",
+        "pos": ""
+      },
+      {
+        "name": "Courtney Leggett",
+        "eyebrow": "",
+        "job": "",
+        "photo": "https://cdn.sanity.io/images/9uh7bydp/production/7de5c1b9ee52d5b06324408736ed13557e92b254-641x641.jpg?w=900&fit=max&auto=format&q=80",
+        "pos": ""
+      }
+    ],
+    "mentors": [
+      {
+        "name": "Catherine Man",
+        "eyebrow": "Co-Founder • Executive Director",
+        "job": "",
+        "photo": "https://cdn.sanity.io/images/9uh7bydp/production/128287b47fbeed6d6adfe464539502b5111796b3-805x900.jpg?w=900&fit=max&auto=format&q=80",
+        "pos": ""
+      },
+      {
+        "name": "Claire Igot",
+        "eyebrow": "Co-Founder • Board Chair",
+        "job": "",
+        "photo": "https://cdn.sanity.io/images/9uh7bydp/production/b508b405bcbd424980c45b78ccdff9e525e2f401-826x1199.jpg?w=900&fit=max&auto=format&q=80",
+        "pos": ""
+      },
+      {
+        "name": "Donna Meredith",
+        "eyebrow": "",
+        "job": "",
+        "photo": "https://cdn.sanity.io/images/9uh7bydp/production/6468ec9685bedad5fc4a8b8baab87b59ece82fa9-800x800.jpg?w=900&fit=max&auto=format&q=80",
+        "pos": ""
+      }
+    ],
+    "volunteers": [
+      {
+        "name": "Catherine Man",
+        "eyebrow": "Co-Founder • Executive Director",
+        "job": "",
+        "photo": "https://cdn.sanity.io/images/9uh7bydp/production/128287b47fbeed6d6adfe464539502b5111796b3-805x900.jpg?w=900&fit=max&auto=format&q=80",
+        "pos": ""
+      },
+      {
+        "name": "Claire Igot",
+        "eyebrow": "Co-Founder • Board Chair",
+        "job": "",
+        "photo": "https://cdn.sanity.io/images/9uh7bydp/production/b508b405bcbd424980c45b78ccdff9e525e2f401-826x1199.jpg?w=900&fit=max&auto=format&q=80",
+        "pos": ""
+      },
+      {
+        "name": "Donna Meredith",
+        "eyebrow": "",
+        "job": "",
+        "photo": "https://cdn.sanity.io/images/9uh7bydp/production/6468ec9685bedad5fc4a8b8baab87b59ece82fa9-800x800.jpg?w=900&fit=max&auto=format&q=80",
+        "pos": ""
+      }
+    ],
+    "instructors": [
+      {
+        "name": "Catherine Man",
+        "eyebrow": "Co-Founder • Executive Director",
+        "job": "",
+        "photo": "https://cdn.sanity.io/images/9uh7bydp/production/128287b47fbeed6d6adfe464539502b5111796b3-805x900.jpg?w=900&fit=max&auto=format&q=80",
+        "pos": ""
+      },
+      {
+        "name": "Zsoreign Sanchez",
+        "eyebrow": "Teaching Team",
+        "job": "",
+        "photo": "https://cdn.sanity.io/images/9uh7bydp/production/e46addaace0277af74c83909c03e2ec39611ecdd-506x506.jpg?w=900&fit=max&auto=format&q=80",
+        "pos": ""
+      },
+      {
+        "name": "Marissa Fleming",
+        "eyebrow": "Teaching Team",
+        "job": "",
+        "photo": "https://cdn.sanity.io/images/9uh7bydp/production/634676cac96df2b374f7967331a0e58f89e36bd7-560x560.jpg?w=900&fit=max&auto=format&q=80",
+        "pos": ""
+      }
+    ]
+  }
+}
