@@ -117,12 +117,17 @@ project-alpaca/
 ├── snapshot/                  # nightly content snapshot (committed by a GitHub Action)
 ├── studio/                    # Sanity Studio (its own project and package.json)
 ├── docs/readme/               # images used in this README
-└── DOCS.md                    # full technical documentation
+├── DOCS.md                    # full technical documentation
+└── CONTRIBUTING.md            # how to contribute
 ```
 
 ## 📚 Documentation
 
 **[DOCS.md](DOCS.md)** is the maintainer's handbook: architecture, the Google Sheet and its privacy rules, every page's design notes, the CMS setup (accounts, webhooks, troubleshooting), deployment, and open items.
+
+## 🤝 Contributing
+
+Volunteers welcome! Read **[CONTRIBUTING.md](CONTRIBUTING.md)** for where each kind of change happens (Studio, Google Sheet or code), setup, the branch and commit conventions, the pull request checklist, and the privacy rules for this public repo.
 
 ## 💛 Credits
 

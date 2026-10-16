@@ -2,7 +2,7 @@
 
 _Last updated: October 2026_
 
-This document describes the Project Alpaca website: the Alpacee Directory, the marketing pages, and the Sanity CMS the team uses to edit content. It covers what it is, how it's built, where its data comes from, how to do common maintenance tasks, and what's still open. It's written for whoever maintains the site next (a developer or a technically comfortable team member). **Non-technical editors** don't need this file; see the editor guide (section "Content management").
+This document describes the Project Alpaca website: the Alpacee Directory, the marketing pages, and the Sanity CMS the team uses to edit content. It covers what it is, how it's built, where its data comes from, how to do common maintenance tasks, and what's still open. It's written for whoever maintains the site next (a developer or a technically comfortable team member). **Non-technical editors** don't need this file; see the editor guide (section "Content management"). **New contributors:** start with [CONTRIBUTING.md](CONTRIBUTING.md) for setup, conventions and the pull request checklist, then come back here for the details.
 
 ---
 
@@ -75,6 +75,7 @@ project-alpaca/
 ├── vite.config.js                # Vite + the macOS dev-server page-refresh fix
 ├── package.json / package-lock.json
 ├── DOCS.md                       # this file
+├── CONTRIBUTING.md               # how to contribute (setup, conventions, PR checklist)
 └── README.md
 ```
 
@@ -401,6 +402,7 @@ npm run preview        # preview the production build locally
 - Files added to `public/` while `npm run dev` is running aren't picked up until you **restart the dev server**.
 - **macOS dev-server fix (`vite.config.js`):** page files sit in the project root and macOS ignores capitalization, so loading `/about` directly used to make Vite serve `About.jsx`'s source. A small plugin now sends every browser page request to `index.html`. Production is unaffected. Changes to `vite.config.js` need a dev-server restart.
 - The **website** and the **Studio** are separate projects with separate commands: run website commands from the repo root, Studio commands from `studio/`.
+- **Contributing:** branch naming, commit style and the pull request checklist are in [CONTRIBUTING.md](CONTRIBUTING.md).
 - **Run `git pull` before starting work:** a nightly GitHub Action commits content snapshots to `main` (see "Nightly content snapshot"), so your local copy may be behind.
 - If `npm run dev` fails with `Cannot find module @rollup/rollup-darwin-arm64`, run `rm -rf node_modules package-lock.json && npm install`. Before pushing the regenerated lockfile, check `grep -c "rollup-linux-x64-gnu" package-lock.json` prints a number above 0 (Cloudflare builds on Linux).
 
