@@ -59,6 +59,7 @@ project-alpaca/
 ├── content/                      # generated at build time; not committed (.gitignore)
 ├── snapshot/                     # nightly copy of the Sanity content, committed by the GitHub Action
 ├── .github/workflows/            # sanity-snapshot.yml: the nightly snapshot Action
+├── .github/pull_request_template.md  # auto-filled into every new pull request
 ├── studio/                       # Sanity Studio (separate project, its own package.json)
 │   ├── sanity.config.js          # Studio setup (project 9uh7bydp, dataset production)
 │   ├── sanity.cli.js             # deploy settings (studio host, app ID)
@@ -402,7 +403,7 @@ npm run preview        # preview the production build locally
 - Files added to `public/` while `npm run dev` is running aren't picked up until you **restart the dev server**.
 - **macOS dev-server fix (`vite.config.js`):** page files sit in the project root and macOS ignores capitalization, so loading `/about` directly used to make Vite serve `About.jsx`'s source. A small plugin now sends every browser page request to `index.html`. Production is unaffected. Changes to `vite.config.js` need a dev-server restart.
 - The **website** and the **Studio** are separate projects with separate commands: run website commands from the repo root, Studio commands from `studio/`.
-- **Contributing:** branch naming, commit style and the pull request checklist are in [CONTRIBUTING.md](CONTRIBUTING.md).
+- **Contributing:** branch naming, commit style and the pull request checklist are in [CONTRIBUTING.md](CONTRIBUTING.md); new pull requests are pre-filled from `.github/pull_request_template.md`.
 - **Run `git pull` before starting work:** a nightly GitHub Action commits content snapshots to `main` (see "Nightly content snapshot"), so your local copy may be behind.
 - If `npm run dev` fails with `Cannot find module @rollup/rollup-darwin-arm64`, run `rm -rf node_modules package-lock.json && npm install`. Before pushing the regenerated lockfile, check `grep -c "rollup-linux-x64-gnu" package-lock.json` prints a number above 0 (Cloudflare builds on Linux).
 

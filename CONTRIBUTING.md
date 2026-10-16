@@ -88,7 +88,7 @@ Docs: explain the nightly snapshot
 
 ## ✅ Pull request checklist
 
-Copy this into your pull request description:
+When you open a pull request, GitHub **fills in our template automatically** ([`.github/pull_request_template.md`](.github/pull_request_template.md)) with this checklist, a before/after screenshot table and a privacy check. Here's the checklist at a glance:
 
 ```markdown
 - [ ] `npm run build` succeeds
