@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Nav, Footer, Newsletter, Squiggle } from "./alpacees-directory-final.jsx";
+import { cms } from "./cms.js";
 import "./styles.css";
 
 // About, per the Studio Haven design ("About" in the Figma export).
@@ -69,7 +70,7 @@ function People({ list }) {
     <div className="fl-grid3 ab-people">
       {list.map((m) => (
         <div key={m.name} className="fl-pcard fl-pcard-static gi-person">
-          <img src={m.photo} alt="" loading="lazy" />
+          <img src={m.photo} alt="" loading="lazy" style={m.pos ? { objectPosition: m.pos } : undefined} />
           <div className="fl-pcard-shade" aria-hidden="true" />
           <div className="fl-pcard-text">
             {m.eyebrow && <span className="gi-eyebrow">{m.eyebrow}</span>}
@@ -84,6 +85,10 @@ function People({ list }) {
 
 // ---- Page --------------------------------------------------------------------------
 export default function About() {
+  // Team lists and news come from Sanity when available (see cms.js); otherwise the built-in lists.
+  const board = cms?.team?.board ?? BOARD;
+  const juniorBoard = cms?.team?.juniorBoard ?? JUNIOR_BOARD;
+  const news = cms?.news ?? NEWS;
   return (
     <div className="root root-flag root-about">
       <div className="ab-wool">
@@ -127,11 +132,13 @@ export default function About() {
         <div className="fl-main">
           <h2 className="ab-h1">Meet the team</h2>
           <h3 className="ab-h2">Board of Directors</h3>
-          <People list={BOARD} />
-          <hr className="ab-rule ab-rule-team" />
-          <h3 className="ab-h2">Junior Board</h3>
-          <p className="ab-lead ab-junior-sub">Our Junior Board is made up of graduated Alpacees</p>
-          <People list={JUNIOR_BOARD} />
+          <People list={board} />
+          {juniorBoard.length > 0 && (<>
+            <hr className="ab-rule ab-rule-team" />
+            <h3 className="ab-h2">Junior Board</h3>
+            <p className="ab-lead ab-junior-sub">Our Junior Board is made up of graduated Alpacees</p>
+            <People list={juniorBoard} />
+          </>)}
         </div>
       </section>
 
@@ -139,12 +146,12 @@ export default function About() {
         <div className="fl-main ab-news-in">
           <h2 className="ab-h1">News</h2>
           <div className="ab-news-list">
-            {NEWS.map((n) => (
+            {news.map((n) => (
               <article key={n.text} className="ab-news-item">
-                <img src={n.image} alt="" loading="lazy" />
+                <img src={n.image} alt={n.alt || ""} loading="lazy" />
                 <div>
                   <div><div className="ab-news-meta">{n.meta}</div><p>{n.text}</p></div>
-                  <a className="fl-btn fl-btn-line" href={n.url} target="_blank" rel="noreferrer">Read <Squiggle /></a>
+                  {n.url && <a className="fl-btn fl-btn-line" href={n.url} target="_blank" rel="noreferrer">Read <Squiggle /></a>}
                 </div>
               </article>
             ))}

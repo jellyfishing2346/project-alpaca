@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Nav, Footer, Newsletter, GetInvolved, Squiggle, useAlpacees } from "./alpacees-directory-final.jsx";
+import { cms } from "./cms.js";
 import "./styles.css";
 
 // Homepage, per the Studio Haven design (Figma "Web design - Project Alpaca",
@@ -131,7 +132,9 @@ function Programs() {
 
 function Events() {
   const today = new Date().toISOString().slice(0, 10);
-  const upcoming = EVENTS.filter((e) => e.keep || e.date >= today).sort((a, b) => a.date.localeCompare(b.date));
+  // Events come from Sanity when available (see cms.js); otherwise the built-in EVENTS list.
+  const all = cms?.events ?? EVENTS;
+  const upcoming = all.filter((e) => e.keep || e.date >= today).sort((a, b) => a.date.localeCompare(b.date));
   return (
     <section className="hm-events">
       <div className="hm-events-intro">
@@ -141,15 +144,18 @@ function Events() {
       <div className="hm-events-list">
         {upcoming.length ? upcoming.map((e, i) => (
           <article key={i} className="hm-event">
-            <Img base={`/images/home/events/${e.image || ""}`} className="hm-event-img" exts={e.image ? ["jpg", "png"] : []}
-              fallback={<div className="hm-event-img hm-img-empty" />} />
+            {e.imageUrl
+              ? <img className="hm-event-img" src={e.imageUrl} alt={e.alt || ""} loading="lazy" style={e.imagePos ? { objectPosition: e.imagePos } : undefined} />
+              : <Img base={`/images/home/events/${e.image || ""}`} className="hm-event-img" exts={e.image ? ["jpg", "png"] : []}
+                  fallback={<div className="hm-event-img hm-img-empty" />} />}
             <div className="hm-event-body">
               <div>
                 <h3>{e.title}</h3>
                 <p className="hm-event-desc">{e.desc}</p>
                 <p className="hm-event-when">{fmtDate(e.date)}{e.where ? ` • ${e.where}` : ""}</p>
               </div>
-              <a className="hm-rsvp" href={`mailto:hello@projectalpaca.org?subject=${encodeURIComponent(`RSVP: ${e.title}`)}`}>RSVP <Squiggle /></a>
+              <a className="hm-rsvp" href={e.rsvp || `mailto:hello@projectalpaca.org?subject=${encodeURIComponent(`RSVP: ${e.title}`)}`}
+                {...(e.rsvp ? { target: "_blank", rel: "noreferrer" } : {})}>RSVP <Squiggle /></a>
             </div>
           </article>
         )) : (

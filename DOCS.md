@@ -462,3 +462,19 @@ Set in `index.html`. Files in `public/`: `favicon.svg` (modern browsers), `favic
 ### Browser tab titles
 Each page sets its tab title as "Project Alpaca - <Page>": `TITLES` in `App.jsx` (Flagship Program, Community Programs, Get Involved, About, Contact, Donate, Projects; the homepage is just "Project Alpaca"). The directory sets its own: "Project Alpaca - Alpacee Directory", or "Project Alpaca - <Name>" while a profile is open. Add new pages to `TITLES`.
 
+## Content management (Sanity CMS)
+
+Events, news and people are edited in **Sanity** (project `9uh7bydp`, dataset `production`, owned by the Project Alpaca organization; hello@projectalpaca.org is the owner account). Everything else is still in the code.
+
+**The editing dashboard ("Studio")** lives in `studio/` (its own packages; needs Node 22.12+). Locally: `cd studio && npm install && npm run dev` → http://localhost:3333. It has four sections: Events, News, People, and Team lists (Board of Directors, Junior Board, Mentors, Volunteers, Core Instructors; each a drag-to-reorder list of People, so a person is entered once and can appear in several lists). Photos have a focal-point tool ("hotspot") that the site uses to frame them.
+
+**How the site gets the content:** `npm run build` first runs `scripts/fetch-content.mjs`, which reads the *published* content from Sanity and saves it to `content/sanity-content.json` (not committed). Pages read it through `cms.js`:
+- Home: events (past events hide automatically unless "Keep showing after the date" is on; RSVP uses the event's link, or emails hello@)
+- About: Board, Junior Board (hidden if empty), News (newest first)
+- Get Involved: Mentors, Volunteers (hidden if empty)
+- Flagship: Core Instructors
+
+**If Sanity can't be reached**, the build prints a warning and the pages use their built-in lists (`EVENTS`, `BOARD`, `NEWS`, `MENTORS`, … at the top of each page file). The site never breaks because of Sanity. In local dev (`npm run dev`), run `npm run content` once to pull Sanity's latest content; without it you see the built-in lists.
+
+**Importing:** `studio/scripts/import-current-content.js` copied the site's original events, news and people into Sanity (run once on Oct 16, 2026). Re-running it never overwrites existing documents.
+

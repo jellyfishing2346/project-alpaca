@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Nav, Footer, Newsletter, Squiggle } from "./alpacees-directory-final.jsx";
 import { Link } from "react-router-dom";
+import { cms } from "./cms.js";
 import "./styles.css";
 
 // Get Involved, per the Studio Haven design ("Get Involved" in the Figma export).
@@ -93,10 +94,10 @@ function People({ list }) {
     <div className="fl-grid3">
       {list.map((m) => (
         <div key={m.name} className="fl-pcard fl-pcard-static gi-person">
-          <img src={m.photo} alt="" loading="lazy" />
+          <img src={m.photo} alt="" loading="lazy" style={m.pos ? { objectPosition: m.pos } : undefined} />
           <div className="fl-pcard-shade" aria-hidden="true" />
           <div className="fl-pcard-text">
-            <span className="gi-eyebrow">{m.eyebrow}</span>
+            {m.eyebrow && <span className="gi-eyebrow">{m.eyebrow}</span>}
             <h3>{m.name}</h3>
             {m.job && <p>{m.job}</p>}
           </div>
@@ -108,6 +109,9 @@ function People({ list }) {
 
 // ---- Page --------------------------------------------------------------------------
 export default function GetInvolved() {
+  // Mentors and volunteers come from Sanity when available (see cms.js); otherwise the built-in lists.
+  const mentors = cms?.team?.mentors ?? MENTORS;
+  const volunteers = cms?.team?.volunteers ?? VOLUNTEERS;
   return (
     <div className="root root-flag root-gi">
       <header className="fl-hero">
@@ -148,7 +152,7 @@ export default function GetInvolved() {
 
         <section className="fl-sec gi-s-meet gi-s-meet-m">
           <h2 className="fl-h2 gi-dark">Meet our Mentors</h2>
-          <People list={MENTORS} />
+          {mentors.length > 0 && <People list={mentors} />}
           <div className="gi-after"><Btn href={LINKS.mentorApply}>Apply to be a Mentor</Btn></div>
         </section>
 
@@ -164,10 +168,12 @@ export default function GetInvolved() {
           <img src="/images/flagship/curriculum.jpg" alt="" loading="lazy" />
         </section>
 
-        <section className="fl-sec gi-s-meet gi-s-meet-v">
-          <h2 className="fl-h2 gi-dark">Meet our Volunteers</h2>
-          <People list={VOLUNTEERS} />
-        </section>
+        {volunteers.length > 0 && (
+          <section className="fl-sec gi-s-meet gi-s-meet-v">
+            <h2 className="fl-h2 gi-dark">Meet our Volunteers</h2>
+            <People list={volunteers} />
+          </section>
+        )}
 
         <section className="gi-roles">
           {ROLES.map(([t, d]) => (

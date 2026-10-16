@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Nav, Footer, Newsletter, Squiggle, useAlpacees, CAT_COLORS } from "./alpacees-directory-final.jsx";
+import { cms } from "./cms.js";
 import "./styles.css";
 
 // Programs – Flagship, per the Studio Haven design ("Programs - Flagship" in the Figma export).
@@ -220,11 +221,12 @@ export default function Flagship() {
         <section id="fl-team" className="fl-sec fl-s-team">
           <h2 className="fl-h1">Core Instructors</h2>
           <div className="fl-grid3">
-            {INSTRUCTORS.map((t) => (
-              <div key={t.key} className="fl-pcard fl-pcard-static">
-                <img src={img(t.key)} alt="" loading="lazy" />
+            {/* Core Instructors come from Sanity when available (see cms.js); otherwise INSTRUCTORS. */}
+            {(cms?.team?.instructors ?? INSTRUCTORS).map((t) => (
+              <div key={t.name} className="fl-pcard fl-pcard-static">
+                <img src={t.photo || img(t.key)} alt="" loading="lazy" style={t.pos ? { objectPosition: t.pos } : undefined} />
                 <div className="fl-pcard-shade" aria-hidden="true" />
-                <div className="fl-pcard-text"><h3>{t.name}</h3><p>{t.role}</p></div>
+                <div className="fl-pcard-text"><h3>{t.name}</h3>{(t.role ?? t.eyebrow) && <p>{t.role ?? t.eyebrow}</p>}</div>
               </div>
             ))}
           </div>
