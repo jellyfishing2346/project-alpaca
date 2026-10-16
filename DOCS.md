@@ -57,6 +57,8 @@ project-alpaca/
 ├── scripts/
 │   └── fetch-content.mjs         # build step: saves published Sanity content to content/
 ├── content/                      # generated at build time; not committed (.gitignore)
+├── snapshot/                     # nightly copy of the Sanity content, committed by the GitHub Action
+├── .github/workflows/            # sanity-snapshot.yml: the nightly snapshot Action
 ├── studio/                       # Sanity Studio (separate project, its own package.json)
 │   ├── sanity.config.js          # Studio setup (project 9uh7bydp, dataset production)
 │   ├── sanity.cli.js             # deploy settings (studio host, app ID)
@@ -478,7 +480,9 @@ npm run preview        # preview the production build locally
 | Fix a "wrong data" issue | Almost always the sheet: check the exact header and cell value |
 | Edit events, news, board, mentors… | https://projectalpaca.sanity.studio → edit → **Publish** (live in ~1–2 min) |
 | Give someone editing access | sanity.io/manage → Project Alpaca → Members → Invite (role: Editor) |
-| See Sanity content in local dev | `npm run content`, then refresh |
+| See Sanity content in local dev | `npm run content`, then refresh (otherwise you see the nightly snapshot) |
+| See what content changed and when | `git log -p snapshot/` or the repo's commit history |
+| Refresh the snapshot now | GitHub → Actions → Sanity content snapshot → Run workflow |
 | Publishing didn't update the site | See "Troubleshooting" in the Content management section |
 
 ### Donate page: donation breakdown
@@ -515,7 +519,15 @@ Each Sanity login method (Google, GitHub, email) is a separate account; invite t
 
 The deploy hook URL is a secret (anyone with it can trigger rebuilds). To rotate it: delete the hook in Cloudflare, create a new one, paste its URL into the Sanity webhook.
 
-Content edits never touch GitHub: content lives in Sanity, code lives in GitHub, and each Cloudflare build combines the latest of both.
+Content edits don't go through GitHub: content lives in Sanity, code lives in GitHub, and each Cloudflare build combines the latest of both.
+
+### Nightly content snapshot
+
+`.github/workflows/sanity-snapshot.yml` (a GitHub Action) runs daily at 07:00 UTC and on demand (GitHub → **Actions** → **Sanity content snapshot** → **Run workflow**). It fetches the published content and commits `snapshot/sanity-content.json` **only when something changed**, as `github-actions[bot]`, with `[CF-Pages-Skip]` in the message so Cloudflare doesn't rebuild for it. This gives:
+- **A history of content edits** in the repo (`git log snapshot/`).
+- **An up-to-date fallback:** `cms.js` uses fresh build-time content first, then this snapshot, then the pages' built-in lists. Local dev without `npm run content` also shows the snapshot.
+
+If Sanity is unreachable, the run fails (GitHub emails the repo owner) and nothing is committed; the next night retries. Note that snapshot photos are still served from Sanity's image CDN.
 
 **The editing dashboard ("Studio")** lives in `studio/` (its own packages; needs Node 22.12+). Locally: `cd studio && npm install && npm run dev` → http://localhost:3333. It has four sections: Events, News, People, and Team lists (Board of Directors, Junior Board, Mentors, Volunteers, Core Instructors; each a drag-to-reorder list of People, so a person is entered once and can appear in several lists). Photos have a focal-point tool ("hotspot") that the site uses to frame them.
 

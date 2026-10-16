@@ -4,7 +4,12 @@
  * run it by hand with `npm run content` to see Sanity's latest content in local dev.
  *
  * If Sanity can't be reached, this prints a warning and exits normally: the build continues
- * and the pages use their built-in content. The site never breaks because of Sanity.
+ * and the pages fall back to the committed snapshot (or their built-in content).
+ * The site never breaks because of Sanity.
+ *
+ * Options (environment variables), used by the nightly snapshot workflow:
+ *   CONTENT_OUT=path     write somewhere else (default content/sanity-content.json)
+ *   CONTENT_STRICT=1     exit with an error if Sanity can't be reached
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -12,7 +17,7 @@ import path from "node:path";
 const PROJECT_ID = "9uh7bydp";
 const DATASET = "production";
 const API = `https://${PROJECT_ID}.apicdn.sanity.io/v2025-02-19/data/query/${DATASET}`;
-const OUT = path.resolve("content/sanity-content.json");
+const OUT = path.resolve(process.env.CONTENT_OUT || "content/sanity-content.json");
 
 const IMG = `{ alt, hotspot, "url": asset->url }`;
 const PERSON = `{ name, role, job, "photo": photo${IMG} }`;
@@ -32,8 +37,9 @@ const person = (p) => p && p.name ? { name: p.name, eyebrow: p.role || "", job: 
 const people = (list) => (list || []).map(person).filter(Boolean);
 
 export function transform(raw) {
+  // No timestamp in the output: identical content must produce an identical file,
+  // so the nightly snapshot only commits when something really changed.
   return {
-    fetchedAt: new Date().toISOString(),
     events: (raw.events || []).filter((e) => e.title && e.date).map((e) => ({
       date: e.date, title: e.title, desc: e.description || "", where: e.location || "",
       imageUrl: imageUrl(e.image), imagePos: imagePos(e.image), alt: e.image?.alt || "",
@@ -60,13 +66,14 @@ async function main() {
     if (!result) throw new Error("empty response");
     const content = transform(result);
     fs.mkdirSync(path.dirname(OUT), { recursive: true });
-    fs.writeFileSync(OUT, JSON.stringify(content, null, 2));
+    fs.writeFileSync(OUT, JSON.stringify(content, null, 2) + "\n");
     const t = content.team;
     console.log(`Sanity content saved: ${content.events.length} events, ${content.news.length} news, ` +
       (t ? `team lists (board ${t.board.length}, junior ${t.juniorBoard.length}, mentors ${t.mentors.length}, volunteers ${t.volunteers.length}, instructors ${t.instructors.length})` : "no team lists"));
   } catch (err) {
     console.warn(`\n⚠ Couldn't fetch content from Sanity (${err.message}).`);
-    console.warn(fs.existsSync(OUT) ? "  Using the previously saved content." : "  The site will use its built-in content.\n");
+    console.warn(fs.existsSync(OUT) ? "  Using the previously saved content." : "  The site will use the committed snapshot or its built-in content.\n");
+    if (process.env.CONTENT_STRICT) process.exitCode = 1;
   }
 }
 main();

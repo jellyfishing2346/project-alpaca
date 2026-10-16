@@ -67,6 +67,7 @@ flowchart LR
 - **Code** lives on GitHub; every push to `main` deploys.
 - **Content** lives in Sanity; every *Publish* deploys. Content edits never touch the repo.
 - **The directory** reads the student roster from Google Sheets directly in the browser.
+- **A nightly GitHub Action** commits a snapshot of the published content, so the repo keeps a history of content changes and an up-to-date backup.
 
 ## 🚀 Getting started
 
@@ -110,6 +111,7 @@ project-alpaca/
 ├── scripts/fetch-content.mjs  # build step: fetch published content from Sanity
 ├── styles.css                 # all styling
 ├── public/                    # fonts, logos, photos, page images
+├── snapshot/                  # nightly content snapshot (committed by a GitHub Action)
 ├── studio/                    # Sanity Studio (its own project and package.json)
 ├── docs/readme/               # images used in this README
 └── DOCS.md                    # full technical documentation

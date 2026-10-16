@@ -1,0 +1,45 @@
+# Nightly snapshot of the website content published in Sanity (events, news, team lists).
+# Commits snapshot/sanity-content.json only when the content changed, giving the repo a
+# history of content edits and keeping the site's fallback content up to date (see cms.js).
+# Run it by hand anytime: GitHub -> Actions -> "Sanity content snapshot" -> Run workflow.
+name: Sanity content snapshot
+
+on:
+  schedule:
+    - cron: "0 7 * * *" # daily at 07:00 UTC (3am New York in summer, 2am in winter)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sanity-snapshot
+  cancel-in-progress: false
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Fetch published content from Sanity
+        run: node scripts/fetch-content.mjs
+        env:
+          CONTENT_OUT: snapshot/sanity-content.json
+          CONTENT_STRICT: "1"
+
+      - name: Commit if the content changed
+        run: |
+          git add snapshot/sanity-content.json
+          if git diff --cached --quiet; then
+            echo "No content changes since the last snapshot."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Content snapshot from Sanity ($(date -u +%Y-%m-%d)) [CF-Pages-Skip]"
+          git push
