@@ -534,7 +534,21 @@ If Sanity is unreachable, the run fails (GitHub emails the repo owner) and nothi
 
 > **Heads-up for developers: a bot commits to `main`.** Because the Action pushes snapshot commits on its own, your local copy can fall behind GitHub. **Run `git pull` before you start working.** If a `git push` is rejected ("Updates were rejected… fetch first"), run `git pull`, then push again. The snapshot only touches `snapshot/sanity-content.json`, so it never conflicts with code changes.
 
-If the first run fails with a permission error (HTTP 403 on `git push`), allow the Action to write: repo **Settings → Actions → General → Workflow permissions → "Read and write permissions"**.
+**Pushing past the branch protection:** `main` is protected by the **"Protect main"** ruleset (see "Branch protection" below), which only lets the **repository admin** push directly. So the Action pushes with **`SNAPSHOT_TOKEN`**, a fine-grained personal access token from the admin's account, stored as a repository secret:
+- Create it at GitHub → your profile → **Settings → Developer settings → Personal access tokens → Fine-grained tokens → Generate new token**: repository access **Only select repositories → project-alpaca**; repository permissions **Contents: Read and write** (nothing else).
+- Save it in the repo at **Settings → Secrets and variables → Actions → New repository secret**, named `SNAPSHOT_TOKEN`.
+- **It expires** (GitHub caps fine-grained tokens at about a year). When it does, the nightly run fails with a 403 and GitHub emails you: generate a new token and update the secret. If the admin changes, the new admin creates their own token.
+
+Without the secret, the workflow falls back to GitHub's built-in Actions token, which is blocked by the ruleset.
+
+### Branch protection
+
+`main` is protected by the repository ruleset **"Protect main"** (Settings → Rules → Rulesets), applied to the default branch:
+- **Pull requests required** to change `main` (1 approval), with **Copilot code review** requested automatically.
+- **Restrict deletions** and **block force pushes:** `main` can't be deleted or have its history rewritten.
+- **Bypass:** the **Repository admin** role, so the maintainer can still push directly; the nightly snapshot Action pushes with the admin's token (above).
+
+Contributors without write access already work through forks and pull requests, which only the admin can merge.
 
 **The editing dashboard ("Studio")** lives in `studio/` (its own packages; needs Node 22.12+). Locally: `cd studio && npm install && npm run dev` → http://localhost:3333. It has four sections: Events, News, People, and Team lists (Board of Directors, Junior Board, Mentors, Volunteers, Core Instructors; each a drag-to-reorder list of People, so a person is entered once and can appear in several lists). Photos have a focal-point tool ("hotspot") that the site uses to frame them.
 
@@ -570,6 +584,6 @@ Then commit. If you add a field the website should show, also add it to the quer
 | A section disappeared | Empty team lists hide their section (Junior Board, Volunteers, Mentors); add people back in **Team lists**. |
 | `npm run content` says "Missing script" | You're in `studio/`; run it from the repo root. |
 | `git push` rejected ("fetch first") | The nightly snapshot Action committed since your last pull: `git pull`, then push again. |
-| Snapshot Action fails with 403 | Repo Settings → Actions → General → Workflow permissions → "Read and write permissions". |
+| Snapshot Action fails with 403 | `SNAPSHOT_TOKEN` is missing or expired: create a new fine-grained token (see "Nightly content snapshot") and update the repository secret. |
 | Snapshot Action fails with "Couldn't fetch content from Sanity" | Sanity was briefly unreachable; it retries the next night, or re-run it by hand. |
 

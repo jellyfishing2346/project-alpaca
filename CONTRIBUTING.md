@@ -81,7 +81,7 @@ Directory: fix filter pills wrapping on small phones
 Docs: explain the nightly snapshot
 ```
 
-**4. Open a pull request** into `main`, using the checklist below. Every push to `main` deploys the live site, so changes land there through reviewed pull requests.
+**4. Open a pull request** into `main`, using the checklist below. `main` is protected: changes land through **reviewed pull requests** (one approval; Copilot also reviews automatically), and every merge deploys the live site.
 
 > [!TIP]
 > If Cloudflare preview deployments are enabled, each branch gets its own preview link: a great way to show your change before it goes live.

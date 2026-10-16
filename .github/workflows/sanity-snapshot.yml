@@ -20,7 +20,12 @@ jobs:
   snapshot:
     runs-on: ubuntu-latest
     steps:
+      # Pushes with SNAPSHOT_TOKEN (a fine-grained token from the repo admin) so the
+      # "Protect main" ruleset's admin bypass applies; see DOCS.md -> Nightly content snapshot.
+      # Falls back to the built-in Actions token, which only works if main isn't protected.
       - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.SNAPSHOT_TOKEN || github.token }}
 
       - uses: actions/setup-node@v4
         with:
